@@ -1,0 +1,148 @@
+/* =====================================================================
+   광명 스마트데이터보드 · SHELL (shared chrome — every page uses this)
+   Topbar · Sidebar · Page wrapper · Page header (breadcrumb/title/desc) · Buttons
+   Rendered by assets/js/shell.js — do not hand-write this markup in pages.
+   ===================================================================== */
+@font-face{font-family:'S-Core Dream';font-weight:600;font-style:normal;font-display:swap;
+  src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff');}
+@font-face{font-family:'S-Core Dream';font-weight:400;font-style:normal;font-display:swap;
+  src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff');}
+
+:root{
+  /* Board shell variables */
+  --gp-point:#0C8AE5; --gp-point-strong:#0A74C2; --gp-point-soft:#E3F2FD;
+  --snb-bg:#003481;          /* deep navy sidebar rail */
+  --snb-active:#0C8AE5;      /* active 1-depth pill */
+  --snb-active-sub:#40DDEE;  /* active 2-depth item (aqua) */
+  --topbar-h:60px;
+  --content-bg:#F6F9FE;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;height:100%;}
+body{background:var(--content-bg);color:var(--fg-2);font-family:var(--font-sans);word-break:keep-all;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+
+/* ===================== TOP BAR ===================== */
+.tb{position:sticky;top:0;z-index:60;height:var(--topbar-h);background:#fff;
+  border-bottom:1px solid #E4E9F1;display:flex;align-items:center;padding:0 28px;gap:24px;}
+.tb__brand{display:flex;align-items:center;gap:11px;width:248px;flex:none;text-decoration:none;}
+.tb__brand img{width:34px;height:34px;object-fit:contain;}
+.tb__brand b{font:400 18px/1 "Pretendard GOV",var(--font-sans);color:#1E2124;letter-spacing:0;}
+.tb__center{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;min-width:0;}
+.tb__center img{height:30px;width:auto;}
+.tb__center .ct{font:600 24px/1 "S-Core Dream",var(--font-sans);color:#464C53;white-space:nowrap;}
+.tb__center .ct .ct-smart{color:#0C8AE5;font-weight:600;}
+.tb__center .ct .ct-board{color:#044E9E;font-weight:600;}
+.tb__util{display:flex;align-items:center;gap:22px;flex:none;}
+.tb__user{display:flex;align-items:center;gap:8px;color:#42506A;font:600 15px/1 var(--font-sans);}
+.tb__user .gp-ico{width:20px;height:20px;color:#7C8896;}
+.tb__bell{position:relative;color:#7C8896;cursor:pointer;border:none;background:none;padding:0;}
+.tb__bell .dot{position:absolute;top:-3px;right:-3px;min-width:15px;height:15px;border-radius:9px;
+  background:#E0483D;color:#fff;font:700 10px/15px var(--font-sans);text-align:center;padding:0 3px;}
+
+/* ===================== SHELL (sidebar + main) ===================== */
+.shell{display:flex;min-height:calc(100vh - var(--topbar-h));}
+
+/* ===================== SIDEBAR (navy, hover-expand, 2-depth) ===================== */
+.snb{width:80px;flex:none;background:var(--snb-bg);
+  transition:width .26s cubic-bezier(.16,1,.3,1);overflow:hidden;
+  position:sticky;top:var(--topbar-h);height:calc(100vh - var(--topbar-h));align-self:flex-start;
+  z-index:50;padding:16px 0 24px;display:flex;flex-direction:column;}
+.snb:hover{width:220px;}
+.snb__list{display:flex;flex-direction:column;gap:12px;padding:0 14px;}
+.snb__item{border-radius:12px;overflow:hidden;}
+/* collapsed: lb/ca take zero layout space → icon is the only flex child → padding centers it */
+.snb__link{display:flex;align-items:center;gap:6px;min-height:48px;padding:0 14px;border:none;width:100%;
+  background:transparent;color:#EAF0FA;cursor:pointer;border-radius:12px;
+  transition:background .15s,color .15s;text-decoration:none;}
+.snb__link .ic{width:24px;height:24px;flex:none;display:grid;place-items:center;color:#EAF0FA;}
+.snb__link .ic svg{width:21px;height:21px;}
+.snb__link .ic img{width:24px;height:24px;object-fit:contain;filter:brightness(0) invert(1);opacity:.85;}
+.snb__link .lb{flex:none;width:0;overflow:hidden;text-align:left;opacity:0;transition:opacity .18s;
+  font:400 15px/normal "Pretendard GOV",var(--font-sans);color:#FFF;
+  white-space:nowrap;word-break:keep-all;}
+.snb:hover .snb__link .lb,
+.snb--pinned .snb__link .lb{flex:1;width:auto;overflow:visible;opacity:1;white-space:normal;}
+.snb__link .ca{flex:none;width:0;height:16px;overflow:hidden;opacity:0;color:#9DB6DC;transform:rotate(180deg);
+  transition:opacity .18s,transform .2s;align-self:center;}
+.snb:hover .snb__link .ca,
+.snb--pinned .snb__link .ca{width:16px;opacity:1;margin-right:-2px;}
+.snb__link:hover{background:rgba(255,255,255,.10);color:#fff;}
+.snb__link:hover .ic{color:#fff;}
+.snb__link:hover .ic img{opacity:1;}
+.snb__item.active>.snb__link{background:var(--snb-active);color:#fff;font-weight:700;box-shadow:0 6px 16px rgba(0,90,180,.45);}
+.snb__item.active>.snb__link .ic{color:#fff;}
+.snb__item.active>.snb__link .ic img{opacity:1;}
+.snb__item.active>.snb__link .ca{color:#fff;}
+.snb__item.open>.snb__link .ca{transform:rotate(0deg);}
+.snb__sub{max-height:0;overflow:hidden;transition:max-height .26s ease;padding-top:4px;}
+.snb:hover .snb__item.open .snb__sub,
+.snb--pinned .snb__item.open .snb__sub{max-height:360px;}
+.snb__sub a{display:flex;align-items:center;gap:10px;height:40px;padding:0 13px 0 51px;
+  color:#C5D4EC;text-decoration:none;font:400 13px/1 var(--font-sans);white-space:nowrap;border-radius:9px;}
+.snb__sub a::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.6;
+  margin-left:-14px;}
+.snb__sub a:hover{color:#fff;background:rgba(255,255,255,.06);}
+.snb__sub a.active{color:var(--snb-active-sub);font-weight:700;}
+.snb__sub a.active::before{opacity:1;}
+/* pin + logo wrapper — 중앙정렬, 하단에서 100px 띄움 */
+.snb__bottom{margin-top:auto;padding-bottom:20px;display:flex;flex-direction:column;
+  align-items:center;gap:12px;}
+
+/* pin/unpin toggle button — 닫힌 상태에서는 완전히 숨김 */
+.snb__pin{display:flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:0 14px;
+  border:none;border-radius:8px;background:transparent;cursor:pointer;
+  color:#7A9DC4;white-space:nowrap;width:auto;
+  opacity:0;pointer-events:none;transition:opacity .18s;}
+.snb:hover .snb__pin,
+.snb--pinned .snb__pin{opacity:1;pointer-events:auto;}
+.snb__pin:hover{background:rgba(255,255,255,.10);color:#EAF0FA;}
+.snb__pin-ic{width:15px;height:15px;flex:none;display:grid;place-items:center;}
+.snb__pin-ic svg{width:15px;height:15px;}
+.snb__pin-ic--off{display:none;}
+.snb__pin-lb{font:400 13px/1 var(--font-sans);color:#9DB6DC;}
+.snb--pinned .snb__pin-ic--pin{display:none;}
+.snb--pinned .snb__pin-ic--off{display:grid;}
+/* pinned: sidebar locked at 220px */
+.snb--pinned{width:220px;}
+.snb--pinned + .content{grid-template-columns:410px minmax(0,1fr) 410px;}
+
+/* footer logo
+   닫힌 상태: 로고 왼쪽 심볼만 클립(flex-start = 왼쪽 기준 클립)
+   열린 상태: 전체 로고(80×40) 표시 */
+.snb__foot{display:flex;align-items:center;justify-content:flex-start;
+  width:30px;height:40px;overflow:hidden;transition:width .26s cubic-bezier(.16,1,.3,1);}
+.snb__foot img{width:80px;height:40px;flex:none;object-fit:fill;}
+.snb:hover .snb__foot,
+.snb--pinned .snb__foot{width:80px;}
+
+/* ===================== MAIN PAGE WRAPPER ===================== */
+.page{flex:1;min-width:0;padding:26px 30px 40px;}
+
+/* ===================== PAGE HEADER (breadcrumb · title · desc · actions) ===================== */
+.ph{margin-bottom:22px;}
+.crumbs{display:flex;align-items:center;gap:8px;font:400 13px/1 var(--font-sans);color:#6B778C;margin-bottom:14px;}
+.crumbs a{color:#6B778C;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+.crumbs a:hover{color:var(--gp-primary);}
+.crumbs .sep{color:#C2CBD8;}
+.crumbs .cur{color:#6B778C;font-weight:600;}
+.crumbs .gp-ico{width:15px;height:15px;}
+.ph__row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;}
+.ph__t{font:800 30px/1.2 var(--font-sans);color:#1A2942;margin:0;}
+.ph__d{font:500 15px/1.5 var(--font-sans);color:#7A8699;margin:9px 0 0;}
+.ph__right{display:flex;align-items:center;gap:18px;flex:none;padding-top:6px;}
+.ph__upd{font:500 14px/1 var(--font-sans);color:#8A95A6;}
+.ph__upd b{color:#3A465C;font-weight:700;}
+
+/* ===================== BUTTONS (shared) ===================== */
+.btn{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 18px;border-radius:10px;
+  font:700 14px/1 var(--font-sans);cursor:pointer;border:1px solid transparent;transition:.15s;}
+.btn .gp-ico{width:17px;height:17px;}
+.btn--line{background:#fff;border-color:#D9E1EC;color:#3A465C;}
+.btn--line:hover{border-color:var(--gp-primary);color:var(--gp-primary);}
+.btn--pri{background:var(--gp-primary);color:#fff;}
+.btn--pri:hover{background:var(--gp-primary-strong);}
+.btn--ghost{background:#F1F5FA;color:#3A465C;}
+.btn--ghost:hover{background:#E6EDF6;}
+
+@media(max-width:1400px){ .ph__t{font-size:26px;} }

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>연계 모니터링 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-linkage.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div id="gmsb-topbar"></div>
+
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- KPI -->
+    <div class="kpis">
+      <div class="kpi">
+        <span class="kpi__ic kpi__ic--blue"><i data-lucide="share-2"></i></span>
+        <div>
+          <div class="kpi__lb">전체 연계 시스템</div>
+          <div class="kpi__vl">12<span class="u">개</span></div>
+        </div>
+      </div>
+      <div class="kpi">
+        <span class="kpi__ic kpi__ic--green"><i data-lucide="check-circle"></i></span>
+        <div>
+          <div class="kpi__lb">정상 연계</div>
+          <div class="kpi__vl">8<span class="u">개</span></div>
+        </div>
+      </div>
+      <div class="kpi">
+        <span class="kpi__ic kpi__ic--red"><i data-lucide="triangle-alert"></i></span>
+        <div>
+          <div class="kpi__lb">연계 오류</div>
+          <div class="kpi__vl">1<span class="u">개</span></div>
+        </div>
+      </div>
+      <div class="kpi">
+        <span class="kpi__ic kpi__ic--amber"><i data-lucide="timer"></i></span>
+        <div>
+          <div class="kpi__lb">평균 응답</div>
+          <div class="kpi__vl">0.42<span class="u">초</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ① 필터 카드 -->
+    <section class="panel panel--filter">
+      <div class="filter-wrap">
+
+        <!-- 좌 컬럼: 연계상태 + 연계유형 -->
+        <div class="flt-col">
+          <div class="flt-row">
+            <span class="flt-lbl">연계 상태</span>
+            <div class="chip-group" data-field="status">
+              <button class="chip on" data-val="" type="button">전체</button>
+              <button class="chip" data-val="ok"    type="button">정상</button>
+              <button class="chip" data-val="delay" type="button">지연</button>
+              <button class="chip" data-val="err"   type="button">오류</button>
+              <button class="chip" data-val="stop"  type="button">중지</button>
+            </div>
+          </div>
+          <div class="flt-row">
+            <span class="flt-lbl">연계 유형</span>
+            <div class="chip-group" data-field="category">
+              <button class="chip on" data-val=""         type="button">전체</button>
+              <button class="chip" data-val="시스템"      type="button">시스템</button>
+              <button class="chip" data-val="알림/메시지" type="button">알림/메시지</button>
+              <button class="chip" data-val="API/데이터"  type="button">API/데이터</button>
+              <button class="chip" data-val="데이터"      type="button">데이터</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 우 컬럼: 연계구분 + 연계방식 -->
+        <div class="flt-col">
+          <div class="flt-row">
+            <span class="flt-lbl">연계 구분</span>
+            <div class="chip-group" data-field="division">
+              <button class="chip on" data-val=""   type="button">전체</button>
+              <button class="chip" data-val="내부"  type="button">내부</button>
+              <button class="chip" data-val="외부"  type="button">외부</button>
+              <button class="chip" data-val="공공"  type="button">공공</button>
+              <button class="chip" data-val="민간"  type="button">민간</button>
+            </div>
+          </div>
+          <div class="flt-row">
+            <span class="flt-lbl">연계 방식</span>
+            <div class="chip-group" data-field="proto">
+              <button class="chip on" data-val=""            type="button">전체</button>
+              <button class="chip" data-val="OpenAPI"        type="button">OpenAPI</button>
+              <button class="chip" data-val="REST API"       type="button">REST API</button>
+              <button class="chip" data-val="Batch"          type="button">Batch</button>
+              <button class="chip" data-val="MQTT"           type="button">MQTT</button>
+              <button class="chip" data-val="LoRa Gateway"   type="button">LoRa</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 검색 + 버튼 -->
+        <div class="flt-search">
+          <div class="search-box">
+            <input type="search" id="searchInput"
+              placeholder="시스템명, API명, Endpoint"
+              aria-label="연계 검색">
+            <button class="search-ico-btn" id="searchBtn" type="button" aria-label="검색">
+              <i data-lucide="search"></i>
+            </button>
+          </div>
+          <div class="search-acts">
+            <button class="flt-btn flt-btn--pri" id="searchBtnAlt" type="button">
+              <i data-lucide="search"></i>조회
+            </button>
+            <button class="flt-btn flt-btn--line" id="refreshDataBtn" type="button">
+              <i data-lucide="rotate-ccw"></i>새로고침
+            </button>
+            <button class="flt-btn flt-btn--line" id="addBtn" type="button">
+              <i data-lucide="plus"></i>연계등록
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ② 연계 상태 목록 카드 -->
+    <section class="panel">
+      <div class="panel__hd">
+        <h2 class="panel__t">연계 상태 목록</h2>
+      </div>
+      <table class="tbl" id="linkTable">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th class="l">연계명</th>
+            <th class="l">연계 설명</th>
+            <th class="l">Endpoint / 경로</th>
+            <th>연계 방식</th>
+            <th>인증 방식</th>
+            <th>연계 유형</th>
+            <th>상태</th>
+            <th>응답 시간</th>
+            <th>데이터 처리량</th>
+            <th>마지막 점검</th>
+            <th>관리</th>
+          </tr>
+        </thead>
+        <tbody id="linkBody"></tbody>
+      </table>
+    </section>
+
+    <!-- ③ 최근 장애/호출 이력 카드 -->
+    <section class="panel">
+      <div class="panel__hd">
+        <h2 class="panel__t">최근 장애/호출 이력</h2>
+      </div>
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>시간</th>
+            <th>구분</th>
+            <th>연계명</th>
+            <th>이벤트 유형</th>
+            <th>응답 코드·오류 코드</th>
+            <th>상태</th>
+            <th>담당부서</th>
+            <th>상세</th>
+          </tr>
+        </thead>
+        <tbody id="histBody"></tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<!-- DRAWER -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="연계 상세 정보">
+  <div class="dw__hd">
+    <div class="ti">
+      <h3>연계 상세 정보</h3>
+    </div>
+    <button class="dw__x" id="dwClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="dw__info-banner">
+      <i data-lucide="info" class="gp-ico"></i>
+      <p>선택한 연계 시스템의 상태, Endpoint, 인증 방식, 응답 시간 및 최근 오류 정보를 확인합니다.</p>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="server" class="gp-ico"></i>기본 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>연계명</dt><dd id="f_name">—</dd></div>
+        <div class="dl__r"><dt>구분</dt><dd id="f_type">—</dd></div>
+        <div class="dl__r"><dt>데이터/설명</dt><dd id="f_desc">—</dd></div>
+        <div class="dl__r"><dt>Endpoint</dt><dd id="f_endpoint" class="ep-dd">—</dd></div>
+        <div class="dl__r"><dt>Method</dt><dd id="f_method">—</dd></div>
+        <div class="dl__r"><dt>연계 방식</dt><dd id="f_proto">—</dd></div>
+        <div class="dl__r"><dt>인증 방식</dt><dd id="f_auth">—</dd></div>
+        <div class="dl__r"><dt>제공 포맷</dt><dd id="f_fmt">—</dd></div>
+      </dl>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="activity" class="gp-ico"></i>운영 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>갱신 주기</dt><dd id="f_cycle">—</dd></div>
+        <div class="dl__r"><dt>평균 응답 시간</dt><dd id="f_restime">—</dd></div>
+        <div class="dl__r"><dt>호출 수</dt><dd id="f_calls">—</dd></div>
+        <div class="dl__r"><dt>오류 수</dt><dd id="f_errors">—</dd></div>
+        <div class="dl__r"><dt>데이터 처리량</dt><dd id="f_throughput">—</dd></div>
+        <div class="dl__r"><dt>상태</dt><dd id="f_status">—</dd></div>
+      </dl>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="user" class="gp-ico"></i>담당 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>담당 부서</dt><dd id="f_dept">—</dd></div>
+        <div class="dl__r"><dt>최근 점검</dt><dd id="f_last">—</dd></div>
+        <div class="dl__r"><dt>최근 오류</dt><dd id="f_lasterr">—</dd></div>
+      </dl>
+    </div>
+  </div>
+  <div class="dw__ft">
+    <div class="dw__ft-row">
+      <button class="btn btn--line" type="button">
+        <i data-lucide="file-text" class="gp-ico"></i>API 문서 보기
+      </button>
+      <button class="btn btn--line" type="button">
+        <i data-lucide="key" class="gp-ico"></i>인증키 발급
+      </button>
+    </div>
+    <div class="dw__ft-row dw__ft-row--full">
+      <button class="btn btn--line" type="button">
+        <i data-lucide="list" class="gp-ico"></i>호출 로그 보기
+      </button>
+    </div>
+    <div class="dw__ft-row">
+      <button class="btn btn--ghost" type="button">
+        <i data-lucide="user-plus" class="gp-ico"></i>담당자 지정
+      </button>
+      <button class="btn btn--pri" type="button">
+        <i data-lucide="refresh-cw" class="gp-ico"></i>재연결 실행
+      </button>
+    </div>
+  </div>
+</aside>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'op.link-monitoring',
+  header: {
+    title: '연계 모니터링',
+    desc:  '내부·외부 연계 시스템과 API 상태를 실시간으로 확인합니다.',
+    actions: '<span class="ph__upd">마지막 갱신 : <b id="updTime">2026-06-16 15:10:22</b></span><button class="btn btn--line" id="refreshBtn"><i data-lucide="refresh-cw" class="gp-ico"></i>새로고침</button>'
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-linkage.js"></script>
+</body>
+</html>

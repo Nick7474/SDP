@@ -1,0 +1,795 @@
+/* =====================================================================
+   광명 스마트데이터보드 · 4종 마일별 데이터 지도
+   ===================================================================== */
+
+/* ---- 전체 GIS 래퍼 ---- */
+.gis-wrap {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 0;
+  height: calc(100vh - 60px - 56px - 40px); /* topbar + header + padding */
+  min-height: 520px;
+  max-height: 720px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: var(--elev-2);
+}
+
+/* ---- 좌측 필터 패널 ---- */
+.gis-filter {
+  background: #fff;
+  border-right: 1px solid var(--border-1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gis-filter__hd {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border-2);
+  flex: none;
+}
+
+.gis-filter__title {
+  font: 700 15px/1 var(--font-sans);
+  color: var(--fg-1);
+  margin: 0 0 12px;
+}
+
+/* 마일 유형 라디오 그룹 */
+.mile-radio-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.mile-radio {
+  position: relative;
+}
+
+.mile-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.mile-radio__label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border: 1.5px solid var(--border-1);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font: 600 13px/1 var(--font-sans);
+  color: var(--fg-3);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.mile-radio__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.mile-radio input:checked + .mile-radio__label {
+  color: var(--fg-1);
+  border-color: currentColor;
+}
+
+.mile-radio[data-mile="energy"] input:checked + .mile-radio__label  { border-color: var(--mile-energy);  color: var(--mile-energy);  background: var(--mile-energy-soft); }
+.mile-radio[data-mile="mobility"] input:checked + .mile-radio__label { border-color: var(--mile-mobility); color: var(--mile-mobility); background: var(--mile-mobility-soft); }
+.mile-radio[data-mile="safety"] input:checked + .mile-radio__label   { border-color: var(--mile-safety);  color: var(--mile-safety);  background: var(--mile-safety-soft); }
+.mile-radio[data-mile="data"] input:checked + .mile-radio__label     { border-color: var(--mile-data);    color: var(--mile-data);    background: var(--mile-data-soft); }
+
+.mile-radio[data-mile="energy"]  .mile-radio__dot { background: var(--mile-energy); }
+.mile-radio[data-mile="mobility"] .mile-radio__dot { background: var(--mile-mobility); }
+.mile-radio[data-mile="safety"]  .mile-radio__dot { background: var(--mile-safety); }
+.mile-radio[data-mile="data"]    .mile-radio__dot { background: var(--mile-data); }
+
+/* 필터 스크롤 영역 */
+.gis-filter__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 20px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-1) transparent;
+}
+
+.gis-filter__sec {
+  margin-bottom: 18px;
+}
+
+.gis-filter__sec-title {
+  font: 700 12px/1 var(--font-sans);
+  color: var(--fg-4);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin: 0 0 10px;
+}
+
+/* 레이어 체크박스 */
+.layer-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+.layer-check input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--gp-point);
+  cursor: pointer;
+  flex: none;
+}
+
+.layer-check__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.layer-check span:last-child {
+  font: 500 13px/1 var(--font-sans);
+  color: var(--fg-2);
+}
+
+/* 검색 */
+.gis-search {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  overflow: visible;
+  background: #fff;
+  position: relative;
+}
+
+.gis-search i {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  color: var(--fg-4);
+  flex: none;
+}
+
+.gis-search i svg { width: 14px; height: 14px; }
+
+.gis-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font: 400 13px/1 var(--font-sans);
+  color: var(--fg-1);
+  background: transparent;
+  padding: 0 8px 0 0;
+  min-width: 0;
+}
+
+.gis-search input::placeholder { color: var(--fg-4); }
+
+/* 검색 드롭다운 */
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: -1px;
+  right: -1px;
+  background: #fff;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--elev-3);
+  z-index: 500;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+}
+
+.search-dropdown.open { display: block; }
+
+.search-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: background .12s;
+  font: 500 13px/1.3 var(--font-sans);
+  color: var(--fg-2);
+}
+
+.search-item:hover { background: var(--surface-hover); }
+
+.search-item__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+/* ---- 지도 영역 ---- */
+.gis-map-area {
+  position: relative;
+  background: #E8EFF7;
+  overflow: hidden;
+}
+
+#gisMap {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* 지도 컨트롤 패널 (우상단 오버레이) */
+.map-ctrl-panel {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.map-ctrl-group {
+  background: #fff;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--elev-2);
+  overflow: hidden;
+}
+
+.map-ctrl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--fg-2);
+  transition: background .12s, color .12s;
+  border-bottom: 1px solid var(--border-2);
+}
+
+.map-ctrl-btn:last-child { border-bottom: none; }
+.map-ctrl-btn:hover { background: var(--surface-hover); color: var(--gp-point); }
+.map-ctrl-btn svg { width: 16px; height: 16px; }
+
+/* 도구 버튼 (우측 세로 스택) */
+.map-tool-panel {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.map-tool-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,.95);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  font: 600 12px/1 var(--font-sans);
+  color: var(--fg-2);
+  box-shadow: var(--elev-1);
+  transition: background .12s, color .12s;
+  white-space: nowrap;
+}
+
+.map-tool-btn:hover { background: #fff; color: var(--gp-point); }
+.map-tool-btn svg { width: 13px; height: 13px; }
+
+/* 범례 (좌하단) */
+.map-legend {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 400;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  box-shadow: var(--elev-2);
+  min-width: 140px;
+}
+
+.map-legend__title {
+  font: 700 11px/1 var(--font-sans);
+  color: var(--fg-4);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 0;
+  font: 500 12px/1 var(--font-sans);
+  color: var(--fg-2);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.legend-pin {
+  width: 14px;
+  height: 14px;
+  border-radius: 50% 50% 50% 3px;
+  transform: rotate(45deg);
+  flex: none;
+  border: 1.5px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,.2);
+}
+
+.legend-divider {
+  height: 1px;
+  background: var(--border-2);
+  margin: 6px 0;
+}
+
+/* Leaflet 커스텀 핀 */
+.lf-pin {
+  width: 36px;
+  height: 36px;
+  border-radius: 50% 50% 50% 4px;
+  transform: rotate(45deg);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 14px rgba(20,50,90,.28);
+  border: 2px solid #fff;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+}
+
+.lf-pin:hover {
+  transform: rotate(45deg) scale(1.12);
+  box-shadow: 0 8px 20px rgba(20,50,90,.38);
+}
+
+.lf-pin svg {
+  transform: rotate(-45deg);
+  width: 16px;
+  height: 16px;
+  color: #fff;
+}
+
+.lf-pin--energy   { background: var(--mile-energy); }
+.lf-pin--mobility { background: var(--mile-mobility); }
+.lf-pin--safety   { background: var(--mile-safety); }
+.lf-pin--data     { background: var(--mile-data); }
+
+/* 핀 라벨 */
+.lf-pin-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.lf-pin-label {
+  margin-top: 4px;
+  font: 700 11px/1 var(--font-sans);
+  color: var(--fg-1);
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(255,255,255,.9);
+  pointer-events: none;
+}
+
+/* 팝업 모달 (지도 위) */
+.map-popup {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.map-popup.open {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.map-popup__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(20,36,60,.28);
+}
+
+.map-popup__box {
+  position: relative;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-3);
+  width: 380px;
+  max-width: 90vw;
+  overflow: hidden;
+  transform: translateY(12px);
+  transition: transform .2s var(--ease-out);
+}
+
+.map-popup.open .map-popup__box {
+  transform: translateY(0);
+}
+
+.map-popup__hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid var(--border-2);
+}
+
+.map-popup__hd-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.map-popup__mile-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50% 50% 50% 4px;
+  transform: rotate(45deg);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.map-popup__mile-badge svg {
+  transform: rotate(-45deg);
+  width: 14px;
+  height: 14px;
+  color: #fff;
+}
+
+.map-popup__title {
+  font: 700 16px/1.3 var(--font-sans);
+  color: var(--fg-1);
+  margin: 0;
+}
+
+.map-popup__type {
+  font: 500 13px/1 var(--font-sans);
+  color: var(--fg-3);
+  margin: 2px 0 0;
+}
+
+.map-popup__close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--surface-hover);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--fg-3);
+  transition: background .12s;
+  flex: none;
+}
+
+.map-popup__close:hover { background: var(--border-1); }
+.map-popup__close svg { width: 16px; height: 16px; }
+
+.map-popup__bd {
+  padding: 16px 20px;
+}
+
+.map-popup__dl {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.map-popup__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-2);
+  gap: 12px;
+}
+
+.map-popup__row:last-child { border-bottom: none; }
+
+.map-popup__dt {
+  font: 500 13px/1 var(--font-sans);
+  color: var(--fg-3);
+  flex: none;
+}
+
+.map-popup__dd {
+  font: 600 13px/1 var(--font-sans);
+  color: var(--fg-1);
+  text-align: right;
+}
+
+.map-popup__ft {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border-2);
+  background: var(--bg-subtle);
+}
+
+.map-popup__ft .btn {
+  font-size: 12px;
+  height: 36px;
+  padding: 0 10px;
+  justify-content: center;
+}
+
+/* ---- 하단 마일별 상세 데이터 ---- */
+.mile-detail {
+  background: #fff;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-2);
+  overflow: hidden;
+}
+
+/* 탭 */
+.mile-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-1);
+}
+
+.mile-tab {
+  width: 160px;
+  height: 56px;
+  border: none;
+  border-right: 1px solid var(--border-1);
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: 600 14px/1 var(--font-sans);
+  color: var(--fg-3);
+  transition: background .15s, color .15s;
+  flex: none;
+  border-bottom: 2px solid transparent;
+}
+
+.mile-tab:last-child { border-right: none; }
+.mile-tab:hover { background: var(--surface-hover); color: var(--fg-1); }
+
+.mile-tab.on {
+  background: var(--gp-primary);
+  color: #fff;
+  border-bottom-color: var(--gp-primary);
+}
+
+.mile-tab__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.mile-tab.on .mile-tab__dot { background: rgba(255,255,255,.7); }
+.mile-tab[data-mile="energy"]  .mile-tab__dot { background: var(--mile-energy); }
+.mile-tab[data-mile="mobility"] .mile-tab__dot { background: var(--mile-mobility); }
+.mile-tab[data-mile="safety"]  .mile-tab__dot { background: var(--mile-safety); }
+.mile-tab[data-mile="data"]    .mile-tab__dot { background: var(--mile-data); }
+
+/* 탭 패널 */
+.mile-pane {
+  display: none;
+  padding: 24px 28px;
+}
+
+.mile-pane.on { display: block; }
+
+/* 패인 툴바 (날짜 + 지역 선택) */
+.mile-pane__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.mile-pane__toolbar .btn {
+  height: 36px;
+  font-size: 13px;
+}
+
+.mp-select {
+  height: 36px;
+  padding: 0 12px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font: 500 13px/1 var(--font-sans);
+  color: var(--fg-1);
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237C8896' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 10px center no-repeat;
+  appearance: none;
+  padding-right: 28px;
+  cursor: pointer;
+}
+
+/* KPI 스트립 */
+.mile-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.mile-kpi-item {
+  padding: 16px 18px;
+  border-right: 1px solid var(--border-1);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mile-kpi-item:last-child { border-right: none; }
+
+.mile-kpi__lb {
+  font: 600 12px/1 var(--font-sans);
+  color: var(--fg-3);
+  white-space: nowrap;
+}
+
+.mile-kpi__vl {
+  font: 700 22px/1 var(--font-sans);
+  color: var(--fg-1);
+}
+
+.mile-kpi__vl .u {
+  font: 500 12px/1 var(--font-sans);
+  color: var(--fg-4);
+  margin-left: 2px;
+}
+
+.mile-kpi__trend {
+  font: 600 12px/1 var(--font-sans);
+  color: var(--status-success);
+}
+
+/* 차트 3열 */
+.mile-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+.mile-chart-card {
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mile-chart-card__title {
+  font: 700 14px/1 var(--font-sans);
+  color: var(--fg-1);
+  margin: 0 0 14px;
+}
+
+.mile-chart-card__sub {
+  font: 400 12px/1 var(--font-sans);
+  color: var(--fg-3);
+  margin: -10px 0 14px;
+}
+
+.chart-canvas-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 160px;
+}
+
+.chart-canvas-wrap canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* 도넛 차트 래퍼 */
+.donut-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+}
+
+.donut-canvas-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  flex: none;
+}
+
+.donut-canvas-wrap canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.donut-legend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font: 500 12px/1 var(--font-sans);
+  color: var(--fg-2);
+}
+
+.donut-legend-item__left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.donut-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.donut-legend-pct {
+  font: 700 12px/1 var(--font-sans);
+  color: var(--fg-1);
+}
+
+/* X축 레이블 */
+.chart-xlabels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  padding: 0 2px;
+}
+
+.chart-xlabels span {
+  font: 400 10px/1 var(--font-sans);
+  color: var(--fg-4);
+  text-align: center;
+  flex: 1;
+}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>광명시 스마트데이터보드 · 데이터 모니터링</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-monitoring.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body data-screen-label="데이터 모니터링">
+
+<!-- ===================== TOP BAR ===================== -->
+<div id="gmsb-topbar"></div>
+
+<div class="shell">
+  <!-- ===================== SIDEBAR ===================== -->
+  <div id="gmsb-sidebar"></div>
+
+  <!-- ===================== PAGE ===================== -->
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- KPI -->
+    <div class="kpis">
+      <div class="kpi"><span class="kpi__ic kpi__ic--blue"><i data-lucide="database"></i></span><div><div class="kpi__lb">총 수집 데이터</div><div class="kpi__vl">2,456,789<span class="u">건</span></div></div></div>
+      <div class="kpi"><span class="kpi__ic kpi__ic--info"><i data-lucide="trending-up"></i></span><div><div class="kpi__lb">정상 수집률</div><div class="kpi__vl">98.5<span class="u">%</span></div></div></div>
+      <div class="kpi"><span class="kpi__ic kpi__ic--amber"><i data-lucide="clock"></i></span><div><div class="kpi__lb">지연 데이터</div><div class="kpi__vl">2<span class="u">건</span></div></div></div>
+      <div class="kpi"><span class="kpi__ic kpi__ic--red"><img src="../assets/img/Radio_Tower.svg" style="width:28px;height:28px;"></span><div><div class="kpi__lb">미수신 데이터</div><div class="kpi__vl">1<span class="u">건</span></div></div></div>
+    </div>
+
+    <!-- heatmap -->
+    <section class="panel">
+      <div class="panel__hd">
+        <h2 class="panel__t">데이터 수집 모니터링</h2>
+        <p class="panel__d">미션·시스템별 데이터 수집 상태와 지연·장애·중지 현황을 시간대별로 확인합니다.</p>
+      </div>
+      <div class="hm" id="heatmap">
+        <div class="hm__h hm__h--first">시간</div>
+        <div class="hm__h">00시</div><div class="hm__h">02시</div><div class="hm__h">04시</div><div class="hm__h">06시</div>
+        <div class="hm__h">08시</div><div class="hm__h">10시</div><div class="hm__h">12시</div><div class="hm__h">14시</div>
+        <div class="hm__h">16시</div><div class="hm__h">18시</div><div class="hm__h">20시</div><div class="hm__h">22시</div>
+        <!-- rows injected by JS -->
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--st-ok)"></i>정상</span>
+        <span><i style="background:var(--st-delay)"></i>지연</span>
+        <span><i style="background:var(--st-err)"></i>장애</span>
+        <span><i style="background:var(--st-stop)"></i>중지</span>
+        <span><i style="background:var(--st-wait)"></i>수집 대기</span>
+      </div>
+    </section>
+
+    <!-- recent history -->
+    <section class="panel">
+      <div class="panel__hd"><h2 class="panel__t">최근 수집 이력</h2></div>
+      <table class="tbl">
+        <thead><tr>
+          <th>시간</th><th>데이터명</th><th>데이터 구분</th><th>수집 방식</th><th>상태</th><th>수집 건수</th><th>마지막 수집</th><th>조치</th>
+        </tr></thead>
+        <tbody id="histBody"></tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<!-- ===================== DRAWER ===================== -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="데이터 수집 상세">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k"><i data-lucide="activity" class="gp-ico" style="width:15px;height:15px"></i>데이터 수집 상세</div>
+      <h3 id="dwName">—</h3>
+    </div>
+    <button class="dw__x" id="dwClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="dw__banner" id="dwBanner">
+      <i data-lucide="info" class="gp-ico"></i>
+      <div><div class="bt" id="dwBannerT">상태</div><div class="bs" id="dwBannerS"></div></div>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="file-text" class="gp-ico"></i>수집 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>데이터명</dt><dd id="f_name">—</dd></div>
+        <div class="dl__r"><dt>제공 기관</dt><dd id="f_partner">—</dd></div>
+        <div class="dl__r"><dt>데이터 구분</dt><dd id="f_type">—</dd></div>
+        <div class="dl__r"><dt>수집 방식</dt><dd id="f_method">—</dd></div>
+        <div class="dl__r"><dt>발생 시간대</dt><dd id="f_time">—</dd></div>
+        <div class="dl__r"><dt>상태</dt><dd id="f_status">—</dd></div>
+        <div class="dl__r"><dt>수집 건수</dt><dd id="f_count">—</dd></div>
+        <div class="dl__r"><dt>마지막 수집</dt><dd id="f_last">—</dd></div>
+      </dl>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="triangle-alert" class="gp-ico"></i>오류 진단</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>응답/오류 코드</dt><dd id="f_code">—</dd></div>
+        <div class="dl__r"><dt>오류 메시지</dt><dd id="f_msg">—</dd></div>
+        <div class="dl__r"><dt>담당 부서</dt><dd id="f_dept">—</dd></div>
+      </dl>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="history" class="gp-ico"></i>최근 수집 시도</h4>
+      <div class="log" id="dwLog"></div>
+    </div>
+  </div>
+  <div class="dw__ft">
+    <button class="btn btn--ghost"><i data-lucide="user-plus" class="gp-ico"></i>담당자 지정</button>
+    <button class="btn btn--pri"><i data-lucide="refresh-cw" class="gp-ico"></i>재수집 실행</button>
+  </div>
+</aside>
+
+<script>
+window.GMSB_BASE='../';
+window.GMSB_PAGE={
+  active:'op.data-monitoring',
+  header:{
+    title:'데이터 모니터링',
+    desc:'데이터 수집 상태와 지연·오류 현황을 시간대별로 확인합니다.',
+    actions:'<span class="ph__upd">마지막 갱신 : <b id="updTime">2026-06-17 09:30:00</b></span><button class="btn btn--line" id="refreshBtn"><i data-lucide="refresh-cw" class="gp-ico"></i>새로고침</button>'
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-monitoring.js"></script>
+</body>
+</html>
