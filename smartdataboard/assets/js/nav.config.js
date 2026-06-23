@@ -1,7 +1,10 @@
 ﻿/* =====================================================================
-   광명 스마트데이터보드 · 내비게이션 설정 (카탈로그 전용)
+   광명 스마트데이터보드 · 내비게이션 설정 (홈 + 카탈로그 전용)
    ===================================================================== */
 window.GMSB_NAV = [
+  { id: 'home', label: '홈', icon: 'home', img: '00_LM_IC.png', href: 'index.html' },
+
+  /* AI 데이터 카탈로그 */
   { id: 'catalog', label: 'AI 데이터 카탈로그', icon: 'database', img: '04_LM_IC.png', children: [
     { id: 'data-search',  label: '데이터 검색/조회',   href: 'pages/catalog-search.html' },
     { id: 'dataset',      label: '데이터셋 관리',      href: 'pages/catalog-dataset.html' },

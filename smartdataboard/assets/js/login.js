@@ -9,7 +9,7 @@
 
   // 이미 로그인 상태면 홈으로
   if (sessionStorage.getItem('gmsb-auth')) {
-    location.replace('pages/catalog-search.html');
+    location.replace('index.html');
     return;
   }
 
@@ -106,7 +106,7 @@
         if (remember && remember.checked) localStorage.setItem('gmsb-saved-id', id);
         else localStorage.removeItem('gmsb-saved-id');
         sessionStorage.setItem('gmsb-auth', JSON.stringify({ user: DEMO.user, id: id, role: DEMO.role }));
-        location.replace('pages/catalog-search.html');
+        location.replace('index.html');
       } else {
         if (errEl) { errEl.classList.add('show'); if (window.lucide) lucide.createIcons(); }
       }
