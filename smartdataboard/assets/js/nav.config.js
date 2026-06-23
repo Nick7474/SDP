@@ -1,15 +1,50 @@
 ﻿/* =====================================================================
-   광명 스마트데이터보드 · 내비게이션 설정 (홈 + 카탈로그 전용)
+   광명 스마트데이터보드 · 내비게이션 설정
    ===================================================================== */
 window.GMSB_NAV = [
   { id: 'home', label: '홈', icon: 'home', img: '00_LM_IC.png', href: 'index.html' },
 
-  /* AI 데이터 카탈로그 */
+  /* 1. 운영 모니터링 */
+  { id: 'op', label: '운영 모니터링', icon: 'monitor-dot', img: '01_LM_IC.png', children: [
+    { id: 'data-monitoring',   label: '데이터 모니터링', href: '#' },
+    { id: 'link-monitoring',   label: '연계 모니터링',   href: '#' },
+    { id: 'status-monitoring', label: '상태 모니터링',   href: '#' }
+  ]},
+
+  /* 2. GIS 기반 도시 데이터 조회 */
+  { id: 'gis', label: 'GIS 기반 도시<br>데이터 조회', icon: 'map', img: '02_LM_IC.png', children: [
+    { id: 'mile-map',      label: '4종 마일별 데이터 지도',  href: '#' },
+    { id: 'carbon-energy', label: '탄소·에너지 공간 데이터', href: '#' },
+    { id: 'theme-map',     label: '도시 데이터 주제도',      href: '#' },
+    { id: 'gis-manage',    label: 'GIS 데이터 관리',         href: '#' }
+  ]},
+
+  /* 3. 지표 기반 탄소중립 도시 현황 */
+  { id: 'carbon', label: '지표 기반 탄소중립<br>도시 현황', icon: 'leaf', img: '03_LM_IC.png', children: [
+    { id: 'carbon-dash',   label: '탄소중립 종합 현황', href: '#' },
+    { id: 'mile-analysis', label: '마일 지표 분석',     href: '#' },
+    { id: 'carbon-kpi',    label: '탄소·에너지 지표',   href: '#' }
+  ]},
+
+  /* 4. AI 데이터 카탈로그 */
   { id: 'catalog', label: 'AI 데이터 카탈로그', icon: 'database', img: '04_LM_IC.png', children: [
     { id: 'data-search',  label: '데이터 검색/조회',   href: 'pages/catalog-search.html' },
     { id: 'dataset',      label: '데이터셋 관리',      href: 'pages/catalog-dataset.html' },
     { id: 'ai-meta',      label: 'AI 메타데이터 추천', href: 'pages/catalog-ai-meta.html' },
     { id: 'data-access',  label: '데이터 접근 관리',   href: 'pages/catalog-access.html' }
+  ]},
+
+  /* 5. 데이터 분석·시각화 */
+  { id: 'analysis', label: '데이터 분석·시각화', icon: 'chart-column', img: '05_LM_IC.png', children: [
+    { id: 'analysis-dash', label: '분석 대시보드',    href: '#' },
+    { id: 'data-compare',  label: '데이터 비교 분석', href: '#' },
+    { id: 'result-manage', label: '분석 결과 관리',   href: '#' }
+  ]},
+
+  /* 6. 시스템관리 */
+  { id: 'system', label: '시스템관리', icon: 'settings', img: '06_LM_IC.png', children: [
+    { id: 'users', label: '사용자 관리',      href: '#' },
+    { id: 'prefs', label: '시스템 설정 관리', href: '#' }
   ]}
 ];
 
