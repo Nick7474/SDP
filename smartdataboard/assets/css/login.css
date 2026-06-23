@@ -1,0 +1,347 @@
+/* =====================================================================
+   광명 스마트데이터보드 · 로그인 페이지 (Figma 639:7828)
+   ===================================================================== */
+@font-face{font-family:'S-Core Dream';font-weight:600;font-style:normal;font-display:swap;
+  src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff');}
+
+/* ===== 기본 ===== */
+.lg-body{margin:0;min-height:100vh;font-family:"Pretendard GOV","Pretendard",-apple-system,sans-serif;overflow-x:hidden;}
+
+/* ===== 배경 이미지 (오버레이 없음) ===== */
+.lg-bg{
+  position:fixed;inset:0;z-index:0;
+  background:url('../img/00_00_Login_bg.jpg') center/cover no-repeat;
+}
+
+/* ===== 레이아웃 (2열 플렉스) ===== */
+.lg-layout{
+  position:relative;z-index:1;
+  min-height:100vh;
+  display:flex;
+  align-items:stretch;
+}
+
+/* ===== 좌측 COPY ===== */
+.lg-copy{
+  flex:1;
+  min-width:0;
+  padding:125px 60px 80px 193px;  /* Figma top:125px left:193px */
+  align-self:flex-start;
+}
+.lg-copy-inner{
+  display:flex;
+  flex-direction:column;
+  gap:60px;  /* Figma gap:80px → -20px: 텍스트블록 20px 위로 이동 */
+  width:495px;
+}
+
+/* 로고 */
+.lg-brand{
+  display:inline-flex;align-items:center;gap:10px;
+  text-decoration:none;
+}
+.lg-brand-ico{
+  display:flex;align-items:center;justify-content:center;
+  width:40px;height:47px;padding:10px;box-sizing:border-box;
+}
+.lg-brand-ico img{width:29px;height:27px;object-fit:contain;}
+.lg-brand-name{
+  margin-left:-6px;  /* Smart Data Board 텍스트 6px 좌측 이동 */
+  font:400 18px/normal "Pretendard GOV",sans-serif;
+  color:#1e2124;white-space:nowrap;
+}
+
+/* 타이틀 블록 */
+.lg-text-block{display:flex;flex-direction:column;gap:14px;}  /* Figma gap:14px */
+
+.lg-title{
+  margin:0;
+  font:600 50px/normal "S-Core Dream",sans-serif;  /* Figma 50px S-Core Dream 6 Bold */
+  white-space:nowrap;word-break:keep-all;
+}
+.lg-t-gray{color:#464c53;}
+.lg-t-blue{color:#0c8ae5;}
+.lg-t-navy{color:#044e9e;}
+
+.lg-desc{
+  margin:0;
+  font:400 18px/28px "Pretendard GOV",sans-serif;  /* Figma 18px/28px */
+  color:#464c53;
+  word-break:keep-all;
+}
+
+/* ===== 우측 패널 래퍼 ===== */
+.lg-panel-wrap{
+  flex:none;
+  display:flex;
+  align-items:center;
+  align-self:center;
+  padding:40px 273px 40px 0;  /* Figma right:273px */
+  box-sizing:border-box;
+}
+
+/* ===== 로그인 패널 (Figma 615×930, shadow 0 0 10px rgba(30,37,54,.1)) ===== */
+.lg-panel{
+  width:615px;
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 0 10px rgba(30,37,54,.10);
+  padding:52px 64px 62px;
+  display:flex;flex-direction:column;
+  box-sizing:border-box;
+}
+
+/* 패널 헤더 */
+.lg-panel-hd{margin-bottom:32px;}
+.lg-form-title{
+  margin:0 0 10px;
+  font:700 28px/1.3 "Pretendard GOV",sans-serif;
+  color:#044e9e;
+}
+.lg-form-sub{
+  margin:0;
+  font:500 15px/1.55 "Pretendard GOV",sans-serif;
+  color:#464c53;
+}
+
+/* ===== 폼 ===== */
+.lg-form{display:flex;flex-direction:column;gap:18px;}
+
+.lg-field{display:flex;flex-direction:column;gap:8px;}
+.lg-label{font:700 14px/1 "Pretendard GOV",sans-serif;color:#1e2124;}
+
+.lg-input-wrap{position:relative;}
+
+.lg-input{
+  width:100%;height:52px;
+  padding:0 16px;
+  border:1px solid #cdd1d8;border-radius:8px;
+  font:400 15px/1 "Pretendard GOV",sans-serif;
+  color:#1e2124;background:#fff;
+  outline:none;box-sizing:border-box;
+  transition:border-color .15s,box-shadow .15s;
+}
+.lg-input-wrap .lg-input{padding-right:48px;}
+.lg-input:focus{border-color:#044e9e;box-shadow:0 0 0 3px rgba(4,78,158,.10);}
+.lg-input::placeholder{color:#adb1b8;}
+
+.lg-pw-eye{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  width:26px;height:26px;border:none;background:none;padding:0;
+  cursor:pointer;color:#adb1b8;display:grid;place-items:center;border-radius:6px;
+  transition:color .13s;
+}
+.lg-pw-eye:hover{color:#464c53;}
+.lg-pw-eye svg{width:18px;height:18px;}
+
+/* 아이디 저장 */
+.lg-check{
+  display:inline-flex;align-items:center;gap:8px;
+  cursor:pointer;user-select:none;margin-top:-2px;
+}
+.lg-check input{position:absolute;opacity:0;width:0;height:0;}
+.lg-check-box{
+  width:18px;height:18px;border:1.5px solid #cdd1d8;border-radius:4px;
+  background:#fff;display:grid;place-items:center;flex:none;transition:.13s;
+}
+.lg-check input:checked + .lg-check-box{background:#044e9e;border-color:#044e9e;}
+.lg-check input:checked + .lg-check-box::after{
+  content:'';width:10px;height:8px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 8'%3E%3Cpath d='M1 4l3 3 5-6' stroke='%23fff' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.lg-check-txt{font:400 14px/1 "Pretendard GOV",sans-serif;color:#464c53;}
+
+/* 오류 */
+.lg-error{
+  display:none;align-items:center;gap:8px;
+  padding:12px 14px;border-radius:8px;
+  background:#fce8e6;color:#d32f2f;
+  font:500 13px/1.4 "Pretendard GOV",sans-serif;
+}
+.lg-error.show{display:flex;}
+.lg-error svg{width:16px;height:16px;flex:none;}
+
+/* 로그인 버튼 */
+.lg-btn-submit{
+  width:100%;height:54px;margin-top:8px;
+  border:none;border-radius:8px;
+  background:#044e9e;color:#fff;
+  font:700 16px/1 "Pretendard GOV",sans-serif;
+  cursor:pointer;transition:background .15s;
+}
+.lg-btn-submit:hover{background:#033b79;}
+.lg-btn-submit:active{background:#022b57;}
+
+/* 또는 구분선 */
+.lg-or{
+  display:flex;align-items:center;gap:14px;
+  margin:28px 0 22px;
+  font:400 13px/1 "Pretendard GOV",sans-serif;color:#adb1b8;
+}
+.lg-or::before,.lg-or::after{content:'';flex:1;height:1px;background:#e4e9f0;}
+
+/* 소셜 로그인 */
+.lg-social{display:flex;flex-direction:column;gap:12px;}
+
+.lg-btn-kakao,.lg-btn-naver{
+  width:100%;height:54px;
+  border:none;border-radius:8px;
+  font:700 15px/1 "Pretendard GOV",sans-serif;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  gap:10px;position:relative;
+  transition:filter .15s;
+}
+.lg-btn-kakao:hover,.lg-btn-naver:hover{filter:brightness(.95);}
+
+.lg-btn-kakao{background:#fee500;color:#191919;}
+.lg-btn-naver{background:#03c75a;color:#fff;}
+
+.lg-soc-ico{
+  position:absolute;left:20px;
+  display:flex;align-items:center;justify-content:center;
+  width:26px;height:26px;
+}
+.lg-btn-kakao .lg-soc-ico{color:#191919;}
+.lg-btn-kakao .lg-soc-ico svg{width:22px;height:22px;}
+
+.lg-naver-n{
+  width:22px;height:22px;border-radius:3px;
+  background:#fff;
+  font:900 15px/22px Arial,sans-serif;
+  color:#03c75a;text-align:center;
+  display:block;
+}
+
+/* 하단 링크 */
+.lg-links{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  margin-top:28px;
+  font:400 13px/1 "Pretendard GOV",sans-serif;
+}
+.lg-links a{color:#9da3ac;text-decoration:none;transition:color .13s;}
+.lg-links a:hover{color:#464c53;}
+.lg-link-sep{color:#d8dce2;}
+
+/* ===== 반응형 ===== */
+@media(max-width:1680px){
+  .lg-copy{padding-left:140px;}
+  .lg-panel-wrap{padding-right:140px;}
+}
+@media(max-width:1500px){
+  .lg-copy{padding-left:80px;}
+  .lg-copy-inner{width:440px;}
+  .lg-title{font-size:44px;}
+  .lg-panel-wrap{padding-right:80px;}
+}
+@media(max-width:1360px){
+  .lg-copy{padding-left:60px;}
+  .lg-copy-inner{width:380px;}
+  .lg-title{font-size:38px;}
+  .lg-panel{width:560px;padding:44px 52px 28px;}
+  .lg-panel-wrap{padding-right:48px;}
+}
+
+/* ===== 모달 ===== */
+.lg-scrim{
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(22,36,59,.45);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity var(--dur-base,220ms) var(--ease-out,ease);
+}
+.lg-scrim.on{opacity:1;pointer-events:auto;}
+
+.lg-modal{
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 10px 40px rgba(20,40,80,.18);
+  width:480px;
+  max-width:calc(100vw - 40px);
+  overflow:hidden;
+  transform:translateY(12px) scale(.98);
+  transition:transform var(--dur-base,220ms) var(--ease-out,ease);
+}
+.lg-scrim.on .lg-modal{transform:none;}
+
+.lg-modal-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 28px 20px;
+  border-bottom:1px solid #e4e9f1;
+}
+.lg-modal-hd h3{
+  margin:0;
+  font:700 18px/1.3 "Pretendard GOV",sans-serif;
+  color:#16243b;
+}
+.lg-modal-x{
+  width:32px;height:32px;border:none;background:none;padding:0;
+  display:grid;place-items:center;border-radius:8px;
+  cursor:pointer;color:#7c8896;transition:background .13s,color .13s;
+}
+.lg-modal-x:hover{background:#f4f7fb;color:#36445a;}
+.lg-modal-x svg{width:18px;height:18px;}
+
+.lg-modal-bd{
+  padding:24px 28px 28px;
+  display:flex;flex-direction:column;gap:16px;
+}
+.lg-modal-desc{
+  margin:0;
+  font:400 14px/1.6 "Pretendard GOV",sans-serif;
+  color:#5a6878;
+}
+.lg-modal-bd .lg-field{gap:6px;}
+.lg-modal-bd .lg-btn-submit{margin-top:8px;}
+
+.lg-modal-err{
+  display:flex;align-items:center;gap:6px;
+  padding:10px 14px;border-radius:8px;
+  background:#fce8e6;color:#d32f2f;
+  font:500 13px/1.4 "Pretendard GOV",sans-serif;
+}
+.lg-modal-err svg{width:15px;height:15px;flex:none;}
+
+/* 모달 결과 화면 */
+.lg-modal-result{
+  padding:36px 28px 32px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  text-align:center;
+}
+.lg-result-ico{
+  width:60px;height:60px;border-radius:50%;
+  display:grid;place-items:center;margin-bottom:6px;
+}
+.lg-result-ico--ok{background:#e4f6ec;color:#1aaa5e;}
+.lg-result-ico svg{width:28px;height:28px;}
+
+.lg-result-lbl{
+  margin:0;
+  font:600 14px/1 "Pretendard GOV",sans-serif;
+  color:#7c8896;
+}
+.lg-result-val{
+  margin:0;
+  font:700 24px/1.2 "Pretendard GOV",sans-serif;
+  color:#16243b;letter-spacing:.02em;
+}
+.lg-result-sub{
+  margin:0 0 12px;
+  font:400 13px/1.55 "Pretendard GOV",sans-serif;
+  color:#7c8896;
+}
+.lg-modal-result .lg-btn-submit{width:100%;}
+
+/* ===== 토스트 ===== */
+.lg-toast{
+  position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(16px);
+  z-index:9100;
+  padding:14px 22px;border-radius:10px;
+  background:#16243b;color:#fff;
+  font:500 14px/1.4 "Pretendard GOV",sans-serif;
+  box-shadow:0 6px 24px rgba(20,40,80,.22);
+  white-space:nowrap;
+  opacity:0;pointer-events:none;
+  transition:opacity .22s,transform .22s;
+}
+.lg-toast.on{opacity:1;transform:translateX(-50%) translateY(0);}

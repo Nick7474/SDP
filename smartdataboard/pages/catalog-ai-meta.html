@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 메타데이터 추천 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-catalog-ai-meta.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div id="gmsb-topbar"></div>
+
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- 탭 바 -->
+    <div class="page-tab-bar">
+      <button class="page-tab on" data-tab="term" type="button">표준용어 관리</button>
+    </div>
+
+    <!-- ══════════════════════════════
+         탭 1: 표준용어 관리
+    ══════════════════════════════ -->
+    <div id="tabTerm" class="am-tab-panel">
+
+      <!-- KPI -->
+      <div class="kpis">
+        <div class="kpi">
+          <span class="kpi__ic kpi__ic--green"><i data-lucide="book-open"></i></span>
+          <div>
+            <div class="kpi__lb">등록 표준어</div>
+            <div class="kpi__vl">2,418<span class="u">건</span></div>
+          </div>
+        </div>
+        <div class="kpi">
+          <span class="kpi__ic kpi__ic--blue"><i data-lucide="git-merge"></i></span>
+          <div>
+            <div class="kpi__lb">동의어</div>
+            <div class="kpi__vl">684<span class="u">건</span></div>
+          </div>
+        </div>
+        <div class="kpi">
+          <span class="kpi__ic kpi__ic--amber"><i data-lucide="file-plus"></i></span>
+          <div>
+            <div class="kpi__lb">신규 용어 요청</div>
+            <div class="kpi__vl">12<span class="u">건</span></div>
+          </div>
+        </div>
+        <div class="kpi">
+          <span class="kpi__ic kpi__ic--amber"><i data-lucide="clipboard-check"></i></span>
+          <div>
+            <div class="kpi__lb">검토 필요</div>
+            <div class="kpi__vl">8<span class="u">건</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 수평 필터 바 -->
+      <div class="term-filter">
+        <!-- Row 1: 용어 구분 + 분야 -->
+        <div class="term-filter-row">
+          <span class="term-filter-lbl">용어 구분</span>
+          <div class="term-chip-group" id="termTypeGroup">
+            <button class="term-chip on" data-val="" type="button">전체</button>
+            <button class="term-chip" data-val="all" type="button">표준어</button>
+            <button class="term-chip" data-val="syn" type="button">동의어</button>
+            <button class="term-chip" data-val="ban" type="button">금칙어</button>
+            <button class="term-chip" data-val="comp" type="button">복합어</button>
+          </div>
+          <span class="term-filter-divider"></span>
+          <span class="term-filter-lbl">분야</span>
+          <div class="term-chip-group" id="termFieldGroup">
+            <button class="term-chip on" data-val="" type="button">전체</button>
+            <button class="term-chip" data-val="energy" type="button">에너지</button>
+            <button class="term-chip" data-val="mobility" type="button">모빌리티</button>
+            <button class="term-chip" data-val="safety" type="button">세이프티</button>
+            <button class="term-chip" data-val="data" type="button">데이터</button>
+            <button class="term-chip" data-val="env" type="button">환경</button>
+          </div>
+        </div>
+        <!-- Row 2: 상태 + 검색 + 버튼 -->
+        <div class="term-filter-row">
+          <span class="term-filter-lbl">상태</span>
+          <div class="term-chip-group" id="termStatusGroup">
+            <button class="term-chip on" data-val="" type="button">전체</button>
+            <button class="term-chip" data-val="active" type="button">사용중</button>
+            <button class="term-chip" data-val="review" type="button">검토중</button>
+            <button class="term-chip" data-val="inactive" type="button">미사용</button>
+          </div>
+          <div class="term-search-box">
+            <i data-lucide="search"></i>
+            <input type="search" id="termSearch" placeholder="표준어, 영문명, 동의어 검색" aria-label="검색">
+          </div>
+          <div class="term-filter-actions">
+            <button class="btn btn--pri" id="btnTermSearch" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="search" style="width:14px;height:14px"></i>조회</button>
+            <button class="btn btn--line" id="btnTermReset" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="refresh-cw" style="width:13px;height:13px"></i>초기화</button>
+            <button class="btn btn--line" id="btnTermAdd" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="plus" style="width:14px;height:14px"></i>용어 등록</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 표준어 목록 테이블 -->
+      <div class="am-table-card">
+        <div class="am-table-hd">
+          <div class="am-table-hd__left">
+            <i data-lucide="book-open"></i>
+            <span>표준어 목록</span>
+            <span class="am-table-hd__count" id="termCount">전체 10건</span>
+          </div>
+          <div class="am-table-hd__actions">
+            <button class="btn btn--line" id="btnTermBatchApprove" type="button" style="display:none">
+              <i data-lucide="check-circle" class="gp-ico"></i>일괄 승인
+            </button>
+            <button class="btn btn--line" id="btnTermBatchReject" type="button" style="display:none" style="color:var(--status-danger)">
+              <i data-lucide="x-circle" class="gp-ico"></i>일괄 반려
+            </button>
+          </div>
+        </div>
+        <!-- 일괄처리 바 -->
+        <div class="am-batch-bar" id="termBatchBar">
+          <span><span class="am-batch-bar__count" id="termBatchCount">0</span>건 선택됨</span>
+          <div class="am-batch-bar__acts">
+            <button class="btn btn--line" id="btnBatchApprove" type="button"><i data-lucide="check-circle" class="gp-ico"></i>승인</button>
+            <button class="btn btn--line" id="btnBatchReject" type="button" style="color:var(--status-danger);border-color:var(--status-danger-soft)"><i data-lucide="x-circle" class="gp-ico"></i>반려</button>
+            <button class="btn btn--ghost" id="btnBatchCancel" type="button">선택 해제</button>
+          </div>
+        </div>
+        <div class="panel" style="padding:0;overflow:hidden">
+          <table class="tbl am-tbl">
+            <thead>
+              <tr>
+                <th style="width:40px;"><input type="checkbox" id="termChkAll" aria-label="전체 선택"></th>
+                <th class="l">표준어</th>
+                <th class="l">영문명</th>
+                <th>분야</th>
+                <th class="l">동의어</th>
+                <th>사용<br>데이터셋 수</th>
+                <th class="l">연결 데이터셋</th>
+                <th>AI 신뢰도</th>
+                <th>상태</th>
+                <th>등록일</th>
+                <th>최근 사용일</th>
+                <th>관리</th>
+              </tr>
+            </thead>
+            <tbody id="termTbody"></tbody>
+          </table>
+          <div class="ds-pagination" id="termPagination"></div>
+        </div>
+      </div>
+
+    </div><!-- /tabTerm -->
+
+
+  </main>
+</div>
+
+<!-- 스크림 -->
+<div class="scrim" id="scrim"></div>
+
+<!-- 표준어 편집 드로어 -->
+<aside class="drawer" id="termDrawer" aria-hidden="true" aria-label="표준어 상세">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k">표준어 기본 정보</div>
+      <h3 id="tdTitle">—</h3>
+    </div>
+    <button class="dw__x" id="tdClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="am-form-field">
+      <label class="am-form-lbl">표준어 <span class="am-req">*</span></label>
+      <input type="text" class="am-form-input" id="td_term" value="태양광 발전량">
+    </div>
+    <div class="am-form-field">
+      <label class="am-form-lbl">영문명 <span class="am-req">*</span></label>
+      <input type="text" class="am-form-input" id="td_eng" value="Solar Power Generation">
+    </div>
+    <div class="am-form-field">
+      <label class="am-form-lbl">분야 <span class="am-req">*</span></label>
+      <select class="am-form-select" id="td_field">
+        <option selected>에너지</option>
+        <option>모빌리티</option>
+        <option>세이프티</option>
+        <option>데이터</option>
+        <option>환경</option>
+      </select>
+    </div>
+    <div class="am-form-field" style="align-items:flex-start">
+      <label class="am-form-lbl" style="padding-top:9px">설명</label>
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <textarea class="am-form-textarea" id="td_desc" maxlength="500">태양광 발전 설비에서 생산한 전력의 총량을 시간 단위(또는 일/월/년 단위)로 집산한 값입니다.</textarea>
+        <div class="am-form-hint" id="td_descHint">60/500</div>
+      </div>
+    </div>
+    <div class="am-form-field" style="align-items:flex-start">
+      <label class="am-form-lbl" style="padding-top:6px">동의어</label>
+      <div class="am-syn-group" id="td_synGroup">
+        <span class="am-syn-chip">태양광발전 <button class="am-syn-del" type="button">×</button></span>
+        <span class="am-syn-chip">솔라발전 <button class="am-syn-del" type="button">×</button></span>
+        <button class="am-syn-add" id="td_synAdd" type="button">+ 추가</button>
+      </div>
+    </div>
+    <div class="am-form-row2">
+      <div class="am-form-field" style="flex:1">
+        <label class="am-form-lbl">상태</label>
+        <select class="am-form-select" id="td_status">
+          <option selected>사용중</option>
+          <option>검토중</option>
+          <option>미사용</option>
+        </select>
+      </div>
+      <div class="am-form-field" style="flex:1">
+        <label class="am-form-lbl">사용 데이터셋 수</label>
+        <input type="text" class="am-form-input" id="td_datasets" value="18건" readonly>
+      </div>
+    </div>
+    <div class="am-form-field">
+      <label class="am-form-lbl">연결 데이터셋</label>
+      <div class="am-linked-ds">
+        <span id="td_linked">태양광발전 실시, 신재생에너지 현황 외 17개</span>
+        <button class="tbtn tbtn--sm" type="button">보기</button>
+      </div>
+    </div>
+    <div class="am-form-field">
+      <label class="am-form-lbl">최근 사용일</label>
+      <input type="date" class="am-form-input" id="td_lastUsed" value="2026-06-18">
+    </div>
+    <!-- AI 신뢰도 -->
+    <div class="am-ai-conf-sec" id="td_aiConfSec">
+      <div class="am-ai-conf-sec__hd"><i data-lucide="sparkles"></i>AI 매핑 신뢰도</div>
+      <div class="am-ai-conf-score" id="td_aiScore">—</div>
+      <div class="am-ai-conf-desc" id="td_aiDesc">—</div>
+    </div>
+    <div class="am-form-field" style="align-items:flex-start">
+      <label class="am-form-lbl" style="padding-top:9px">변경 이력 메모</label>
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <textarea class="am-form-textarea" id="td_memo" placeholder="변경 이력 또는 메모를 입력하세요." maxlength="300"></textarea>
+        <div class="am-form-hint" id="td_memoHint">0/300</div>
+      </div>
+    </div>
+  </div>
+  <div class="dw__ft" style="grid-template-columns:1fr 1fr 1fr">
+    <button class="btn btn--ghost" id="tdCancelBtn" type="button">취소</button>
+    <button class="btn btn--line" id="tdHistBtn" type="button"><i data-lucide="history" class="gp-ico"></i>변경이력</button>
+    <button class="btn btn--pri" id="tdSaveBtn" type="button">저장</button>
+  </div>
+</aside>
+
+<!-- 변경이력 모달 -->
+<div class="am-hist-overlay" id="histOverlay">
+  <div class="am-hist-overlay__bg" id="histBg"></div>
+  <div class="am-hist-modal">
+    <div class="am-hist-modal__hd">
+      <h3>변경 이력 — <span id="histTermTitle">—</span></h3>
+      <button class="am-hist-modal__x" id="histCloseBtn" type="button" aria-label="닫기"><i data-lucide="x"></i></button>
+    </div>
+    <div class="am-hist-list" id="histList"></div>
+  </div>
+</div>
+
+<!-- 용어 등록 모달 -->
+<div class="am-add-overlay" id="addOverlay">
+  <div class="am-add-overlay__bg" id="addBg"></div>
+  <div class="am-add-modal">
+    <div class="am-add-modal__hd">
+      <h3>표준어 등록</h3>
+      <button class="am-add-modal__x" id="addCloseBtn" type="button" aria-label="닫기"><i data-lucide="x"></i></button>
+    </div>
+    <div class="am-form-field">
+      <label class="am-form-lbl">표준어 <span class="am-req">*</span></label>
+      <input type="text" class="am-form-input" id="add_term" placeholder="표준어를 입력하세요">
+    </div>
+    <div class="am-form-field">
+      <label class="am-form-lbl">영문명 <span class="am-req">*</span></label>
+      <input type="text" class="am-form-input" id="add_eng" placeholder="English term">
+    </div>
+    <div class="am-form-field">
+      <label class="am-form-lbl">분야 <span class="am-req">*</span></label>
+      <select class="am-form-select" id="add_field">
+        <option value="">선택</option>
+        <option>에너지</option>
+        <option>모빌리티</option>
+        <option>세이프티</option>
+        <option>데이터</option>
+        <option>환경</option>
+      </select>
+    </div>
+    <div class="am-form-field" style="align-items:flex-start">
+      <label class="am-form-lbl" style="padding-top:9px">설명</label>
+      <textarea class="am-form-textarea" id="add_desc" placeholder="용어 설명 (선택)" style="flex:1"></textarea>
+    </div>
+    <div class="am-add-modal__ft">
+      <button class="btn btn--line" id="addCancelBtn" type="button">취소</button>
+      <button class="btn btn--pri" id="addSaveBtn" type="button">등록</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'catalog.ai-meta',
+  header: {
+    title: 'AI 메타데이터 추천',
+    desc: '표준용어와 동의어를 관리하고 데이터셋과의 연결 상태를 확인합니다.',
+    actions: '<span class="ph__upd">마지막 갱신 : <b>2026-06-19 10:15:45</b></span><button class="btn btn--line" id="refreshBtn"><i data-lucide="refresh-cw" class="gp-ico"></i>새로고침</button>'
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-catalog-ai-meta.js"></script>
+</body>
+</html>

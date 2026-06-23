@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>데이터 검색·조회 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-catalog-search.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div id="gmsb-topbar"></div>
+
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- 검색 패널 -->
+    <section class="cs-search-panel">
+      <div class="cs-search-box-wrap">
+        <div class="cs-search-box">
+          <i data-lucide="search" class="cs-search-ico"></i>
+          <input type="text" id="csInput" class="cs-search-input"
+            placeholder="필요한 데이터를 자연어로 검색하세요. 예: 광명시 탄소배출 관련 데이터 찾아줘"
+            autocomplete="off" aria-label="데이터 검색" aria-autocomplete="list" aria-controls="csAutoList">
+        </div>
+        <button class="btn btn--pri cs-search-btn" id="csSearchBtn" type="button">검색</button>
+        <!-- 자동완성 드롭다운 -->
+        <div class="cs-autocomplete" id="csAutoList" role="listbox">
+          <div class="cs-autocomplete__hd">추천</div>
+        </div>
+      </div>
+      <div class="cs-suggest">
+        <span class="cs-suggest__lbl">추천 검색어</span>
+        <div class="cs-suggest__chips" id="suggestChips"></div>
+      </div>
+      <!-- 최근 검색어 -->
+      <div class="cs-recent" id="csRecent" style="display:none">
+        <span class="cs-suggest__lbl" style="white-space:nowrap">최근 검색어</span>
+        <div class="cs-recent__list" id="csRecentList"></div>
+        <button class="cs-recent__clear" id="csRecentClear" type="button">전체 삭제</button>
+      </div>
+    </section>
+
+    <!-- 메인 2열 -->
+    <div class="cs-main">
+
+      <!-- 좌: AI 분석 결과 -->
+      <aside class="cs-ai-panel" id="csAiPanel">
+        <div class="cs-ai-panel__hd">
+          <span class="cs-ai-icon"><i data-lucide="sparkles"></i></span>
+          <h3>AI 분석 결과</h3>
+        </div>
+        <div class="cs-ai-body" id="csAiBody">
+          <div class="cs-ai-placeholder">
+            <i data-lucide="search"></i>
+            <p>검색어를 입력하면<br>AI가 분석 결과를 제공합니다.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 우: 검색 결과 -->
+      <section class="cs-result-panel">
+        <div class="cs-result-hd" id="csResultHd" style="display:none">
+          <span class="cs-result-meta" id="csResultMeta"></span>
+          <div class="cs-sort">
+            <button class="cs-sort-btn on" data-sort="rel" type="button">관련도</button>
+            <button class="cs-sort-btn" data-sort="new" type="button">최신순</button>
+            <button class="cs-sort-btn" data-sort="pop" type="button">인기순</button>
+          </div>
+        </div>
+        <div id="csResultList">
+          <div class="cs-empty-state" id="csEmptyState">
+            <i data-lucide="database"></i>
+            <p>검색 결과가 여기에 표시됩니다.</p>
+            <span>자연어로 필요한 데이터를 검색해 보세요.</span>
+          </div>
+        </div>
+        <div class="cs-pagination" id="csPagination" style="display:none"></div>
+      </section>
+
+    </div><!-- /cs-main -->
+
+  </main>
+</div>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'catalog.data-search',
+  header: {
+    title: '데이터 검색·조회',
+    desc: 'AI 기반 검색으로 필요한 데이터셋을 찾고, 유사도와 제공 정보를 비교합니다.',
+    actions: '<span class="ph__upd">마지막 갱신 : <b>2026-06-19 10:15:45</b></span><button class="btn btn--line" id="refreshBtn"><i data-lucide="refresh-cw" class="gp-ico"></i>새로고침</button>'
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-catalog-search.js"></script>
+</body>
+</html>

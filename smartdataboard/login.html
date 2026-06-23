@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>로그인 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/login.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body class="lg-body">
+
+<!-- 배경 이미지 (오버레이 없음) -->
+<div class="lg-bg" aria-hidden="true"></div>
+
+<!-- ===== 전체 레이아웃 ===== -->
+<div class="lg-layout">
+
+  <!-- ===== 좌측 COPY ===== -->
+  <div class="lg-copy">
+    <div class="lg-copy-inner">
+      <a class="lg-brand" href="login.html">
+        <div class="lg-brand-ico"><img src="assets/img/bi-board.svg" alt=""></div>
+        <span class="lg-brand-name">Smart Data Board</span>
+      </a>
+      <div class="lg-text-block">
+        <h1 class="lg-title">
+          <span class="lg-t-gray">광명</span>&nbsp;<span class="lg-t-blue">스마트</span><span class="lg-t-navy">데이터보드</span>
+        </h1>
+        <p class="lg-desc">광명시 각 부서의 행정 데이터를 통합 분석하여<br>도시 운영 현황을 실시간으로 파악하고 지원합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 우측 로그인 패널 ===== -->
+  <div class="lg-panel-wrap">
+    <div class="lg-panel">
+
+      <div class="lg-panel-hd">
+        <h2 class="lg-form-title">로그인</h2>
+        <p class="lg-form-sub">광명 스마트데이터보드에 오신 것을 환영합니다.</p>
+      </div>
+
+      <form id="loginForm" class="lg-form" novalidate>
+        <div class="lg-field">
+          <label class="lg-label" for="userId">아이디</label>
+          <input class="lg-input" type="text" id="userId"
+            placeholder="아이디를 입력하세요" autocomplete="username" spellcheck="false">
+        </div>
+        <div class="lg-field">
+          <label class="lg-label" for="userPw">비밀번호</label>
+          <div class="lg-input-wrap">
+            <input class="lg-input" type="password" id="userPw"
+              placeholder="비밀번호를 입력하세요" autocomplete="current-password">
+            <button type="button" class="lg-pw-eye" id="pwToggle" aria-label="비밀번호 표시/숨김">
+              <i data-lucide="eye" id="pwEyeIco"></i>
+            </button>
+          </div>
+        </div>
+        <label class="lg-check">
+          <input type="checkbox" id="rememberMe">
+          <span class="lg-check-box"></span>
+          <span class="lg-check-txt">아이디 저장</span>
+        </label>
+        <div class="lg-error" id="loginError">
+          <i data-lucide="alert-circle"></i>
+          <span>아이디 또는 비밀번호가 올바르지 않습니다.</span>
+        </div>
+        <button type="submit" class="lg-btn-submit">로그인</button>
+      </form>
+
+      <div class="lg-or"><span>또는</span></div>
+
+      <div class="lg-social">
+        <button type="button" class="lg-btn-kakao" id="kakaoLoginBtn">
+          <span class="lg-soc-ico">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 3C6.477 3 2 6.812 2 11.4c0 2.916 1.7 5.49 4.267 7.07l-1.089 4.065a.33.33 0 0 0 .502.36l4.59-3.027A12.35 12.35 0 0 0 12 19.8c5.523 0 10-3.812 10-8.4S17.523 3 12 3Z"/>
+            </svg>
+          </span>
+          <span>카카오 로그인</span>
+        </button>
+        <button type="button" class="lg-btn-naver" id="naverLoginBtn">
+          <span class="lg-soc-ico"><span class="lg-naver-n">N</span></span>
+          <span>네이버 로그인</span>
+        </button>
+      </div>
+
+      <div class="lg-links">
+        <a href="#" id="findIdLink">아이디 찾기</a>
+        <span class="lg-link-sep">|</span>
+        <a href="#" id="findPwLink">비밀번호 찾기</a>
+        <span class="lg-link-sep">|</span>
+        <a href="#" id="signupLink">회원가입</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 아이디 찾기 모달 ===== -->
+<div class="lg-scrim" id="findIdScrim" role="dialog" aria-modal="true" aria-label="아이디 찾기">
+  <div class="lg-modal">
+    <div class="lg-modal-hd">
+      <h3>아이디 찾기</h3>
+      <button class="lg-modal-x" data-close="findIdScrim" type="button" aria-label="닫기"><i data-lucide="x"></i></button>
+    </div>
+    <!-- Step 1 -->
+    <div class="lg-modal-bd" id="findIdStep1">
+      <p class="lg-modal-desc">가입 시 등록한 이메일 주소로 아이디를 확인합니다.</p>
+      <div class="lg-field">
+        <label class="lg-label" for="findIdEmail">이메일 주소</label>
+        <input class="lg-input" type="email" id="findIdEmail" placeholder="이메일 주소를 입력하세요">
+      </div>
+      <div class="lg-modal-err" id="findIdErr" style="display:none">
+        <i data-lucide="alert-circle"></i><span>이메일 주소를 올바르게 입력하세요.</span>
+      </div>
+      <button class="lg-btn-submit" id="findIdBtn" type="button">아이디 확인</button>
+    </div>
+    <!-- Step 2 -->
+    <div class="lg-modal-result" id="findIdStep2" style="display:none">
+      <div class="lg-result-ico lg-result-ico--ok"><i data-lucide="circle-check-big"></i></div>
+      <p class="lg-result-lbl">확인된 아이디</p>
+      <p class="lg-result-val" id="findIdResult">ad***</p>
+      <p class="lg-result-sub">보안을 위해 일부 정보는 마스킹 처리됩니다.</p>
+      <button class="lg-btn-submit" id="findIdDone" type="button">로그인하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 비밀번호 찾기 모달 ===== -->
+<div class="lg-scrim" id="findPwScrim" role="dialog" aria-modal="true" aria-label="비밀번호 찾기">
+  <div class="lg-modal">
+    <div class="lg-modal-hd">
+      <h3>비밀번호 찾기</h3>
+      <button class="lg-modal-x" data-close="findPwScrim" type="button" aria-label="닫기"><i data-lucide="x"></i></button>
+    </div>
+    <!-- Step 1 -->
+    <div class="lg-modal-bd" id="findPwStep1">
+      <p class="lg-modal-desc">아이디와 등록된 이메일로 임시 비밀번호를 발송합니다.</p>
+      <div class="lg-field">
+        <label class="lg-label" for="findPwId">아이디</label>
+        <input class="lg-input" type="text" id="findPwId" placeholder="아이디를 입력하세요">
+      </div>
+      <div class="lg-field" style="margin-top:14px">
+        <label class="lg-label" for="findPwEmail">이메일 주소</label>
+        <input class="lg-input" type="email" id="findPwEmail" placeholder="이메일 주소를 입력하세요">
+      </div>
+      <div class="lg-modal-err" id="findPwErr" style="display:none">
+        <i data-lucide="alert-circle"></i><span id="findPwErrMsg">입력 정보가 올바르지 않습니다.</span>
+      </div>
+      <button class="lg-btn-submit" id="findPwBtn" type="button">임시 비밀번호 발송</button>
+    </div>
+    <!-- Step 2 -->
+    <div class="lg-modal-result" id="findPwStep2" style="display:none">
+      <div class="lg-result-ico lg-result-ico--ok"><i data-lucide="mail-check"></i></div>
+      <p class="lg-result-lbl">임시 비밀번호 발송 완료</p>
+      <p class="lg-result-val" id="findPwEmailResult" style="font-size:16px;word-break:break-all">ab***@mail.com</p>
+      <p class="lg-result-sub">임시 비밀번호로 로그인 후 반드시<br>비밀번호를 변경해 주세요.</p>
+      <button class="lg-btn-submit" id="findPwDone" type="button">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 토스트 메시지 ===== -->
+<div class="lg-toast" id="lgToast" role="status" aria-live="polite"></div>
+
+<script src="assets/js/login.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

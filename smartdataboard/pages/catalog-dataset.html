@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>데이터셋 관리 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-catalog-dataset.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div id="gmsb-topbar"></div>
+
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- KPI 4개 -->
+    <div class="kpis">
+      <div class="kpi">
+        <span class="kpi__ic kpi__ic--blue"><i data-lucide="database"></i></span>
+        <div>
+          <div class="kpi__lb">전체 데이터셋</div>
+          <div class="kpi__vl">72<span class="u">건</span></div>
+        </div>
+      </div>
+      <div class="kpi">
+        <span class="kpi__ic kpi__ic--green"><i data-lucide="globe"></i></span>
+        <div>
+          <div class="kpi__lb">공개 데이터셋</div>
+          <div class="kpi__vl">54<span class="u">건</span></div>
+        </div>
+      </div>
+      <div class="kpi">
+        <span class="kpi__ic kpi__ic--amber"><i data-lucide="clock"></i></span>
+        <div>
+          <div class="kpi__lb">검토 필요</div>
+          <div class="kpi__vl">12<span class="u">건</span></div>
+        </div>
+      </div>
+      <div class="kpi">
+        <span class="kpi__ic kpi__ic--red"><i data-lucide="triangle-alert"></i></span>
+        <div>
+          <div class="kpi__lb">메타데이터 오류</div>
+          <div class="kpi__vl">6<span class="u">건</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 수평 필터 2행 -->
+    <div class="cd-filter">
+      <!-- Row 1: 데이터 유형 + 공개 상태 칩 -->
+      <div class="cd-filter-row">
+        <span class="cd-filter-lbl">데이터 유형</span>
+        <div class="cd-chip-group" id="cgDtype">
+          <button class="cd-chip on" data-val="" type="button">전체</button>
+          <button class="cd-chip" data-val="인구" type="button">인구</button>
+          <button class="cd-chip" data-val="교통" type="button">교통</button>
+          <button class="cd-chip" data-val="복지" type="button">복지</button>
+          <button class="cd-chip" data-val="환경" type="button">환경</button>
+          <button class="cd-chip" data-val="안전·재난" type="button">안전·재난</button>
+          <button class="cd-chip" data-val="스마트시티" type="button">스마트시티</button>
+          <button class="cd-chip" data-val="경제" type="button">경제</button>
+        </div>
+        <span class="cd-divider"></span>
+        <span class="cd-filter-lbl">공개 상태</span>
+        <div class="cd-chip-group" id="cgPub">
+          <button class="cd-chip on" data-val="" type="button">전체</button>
+          <button class="cd-chip" data-val="open" type="button">공개</button>
+          <button class="cd-chip" data-val="limited" type="button">제한공개</button>
+          <button class="cd-chip" data-val="pending" type="button">승인대기</button>
+          <button class="cd-chip" data-val="closed" type="button">비공개</button>
+        </div>
+      </div>
+      <!-- Row 2: 드롭다운 + 검색 + 버튼 -->
+      <div class="cd-filter-row">
+        <span class="cd-filter-lbl">파일 형식</span>
+        <select class="cd-select" id="fFmt">
+          <option value="">전체</option>
+          <option value="API">API</option>
+          <option value="CSV">CSV</option>
+          <option value="JSON">JSON</option>
+          <option value="XLSX">XLSX</option>
+        </select>
+        <span class="cd-filter-lbl">등록 방식</span>
+        <select class="cd-select" id="fReg">
+          <option value="">전체</option>
+          <option value="manual">수동 등록</option>
+          <option value="auto">자동 생성</option>
+          <option value="external">외부 연계</option>
+          <option value="api">API 연계</option>
+        </select>
+        <span class="cd-filter-lbl">메타데이터</span>
+        <select class="cd-select" id="fMeta">
+          <option value="">전체</option>
+          <option value="ok">정상</option>
+          <option value="review">검토 필요</option>
+          <option value="err">오류</option>
+        </select>
+        <div class="cd-search">
+          <i data-lucide="search"></i>
+          <input type="search" id="dsSearchInput" placeholder="데이터셋명, ID, 담당부서 검색" aria-label="검색">
+        </div>
+        <div class="cd-filter-actions">
+          <button class="btn btn--pri" id="btnDsSearch" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="search" style="width:14px;height:14px"></i>조회</button>
+          <button class="btn btn--line" id="btnDsReset" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="refresh-cw" style="width:13px;height:13px"></i>초기화</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI 추천 스트립 -->
+    <div class="cd-ai-strip" id="cdAiStrip">
+      <div class="cd-ai-strip__hd">
+        <i data-lucide="sparkles"></i>AI 추천 데이터셋
+        <button class="cd-ai-strip__close" id="btnAiStripClose" type="button" aria-label="닫기"><i data-lucide="x"></i></button>
+      </div>
+      <div class="cd-ai-strip__list" id="cdAiList"></div>
+    </div>
+
+    <!-- 테이블 카드 -->
+    <div class="ds-table-card">
+      <div class="ds-table-hd">
+        <div class="ds-table-hd__left">
+          <i data-lucide="list"></i>
+          <span>데이터셋 목록</span>
+          <span class="ds-count" id="dsCount">전체 12건</span>
+        </div>
+        <div class="ds-table-hd__actions">
+          <div class="ds-view-toggle">
+            <button class="ds-view-btn on" id="dsViewList" type="button" title="목록 보기" aria-label="목록 보기"><i data-lucide="list"></i></button>
+            <button class="ds-view-btn" id="dsViewCard" type="button" title="카드 보기" aria-label="카드 보기"><i data-lucide="layout-grid"></i></button>
+          </div>
+          <button class="btn btn--pri" id="dsBtnAdd" type="button">
+            <i data-lucide="plus" class="gp-ico"></i>데이터셋 등록
+          </button>
+          <button class="btn btn--line" id="dsBtnReview" type="button">
+            <i data-lucide="check-circle" class="gp-ico"></i>일괄 검토
+          </button>
+          <button class="btn btn--line" id="dsBtnDl" type="button">
+            <i data-lucide="download" class="gp-ico"></i>다운로드
+          </button>
+        </div>
+      </div>
+      <div id="dsTableWrap">
+        <table class="tbl ds-tbl">
+          <thead>
+            <tr>
+              <th style="width:36px;"></th>
+              <th style="width:40px;"><input type="checkbox" id="dsChkAll" aria-label="전체 선택"></th>
+              <th class="l">데이터셋 ID</th>
+              <th class="l">데이터셋명</th>
+              <th>분류</th>
+              <th>유형</th>
+              <th>공개 상태</th>
+              <th>메타데이터 상태</th>
+              <th>품질 점수 <i data-lucide="info" style="width:13px;height:13px;vertical-align:-2px;color:var(--fg-4)"></i></th>
+              <th>표준어 매핑</th>
+              <th>수정일</th>
+              <th>담당 부서</th>
+              <th>관리</th>
+            </tr>
+          </thead>
+          <tbody id="dsTbody"></tbody>
+        </table>
+      </div>
+      <div id="dsCardWrap" style="display:none;"><div class="ds-card-grid" id="dsCardGrid"></div></div>
+      <div class="ds-pagination" id="dsPagination"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- 스크림 -->
+<div class="scrim" id="scrim"></div>
+
+<!-- 상세 드로어 -->
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="데이터셋 상세">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k" id="dwId">—</div>
+      <h3 id="dwTitle">—</h3>
+    </div>
+    <button class="dw__x" id="dwClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="dw__badge-row" id="dwBadgeRow"></div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="file-text" class="gp-ico"></i>1. 기본 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>데이터셋명</dt><dd id="f_name">—</dd></div>
+        <div class="dl__r"><dt>데이터셋 ID</dt><dd id="f_id">—</dd></div>
+        <div class="dl__r"><dt>분류</dt><dd id="f_dtype">—</dd></div>
+        <div class="dl__r"><dt>유형</dt><dd id="f_ftype">—</dd></div>
+        <div class="dl__r"><dt>파일 형식</dt><dd id="f_fmt">—</dd></div>
+      </dl>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="settings" class="gp-ico"></i>2. 운영 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>공개 상태</dt><dd id="f_pub">—</dd></div>
+        <div class="dl__r"><dt>등록 방식</dt><dd id="f_reg">—</dd></div>
+        <div class="dl__r"><dt>담당 부서</dt><dd id="f_dept">—</dd></div>
+        <div class="dl__r"><dt>원천 시스템</dt><dd id="f_src">—</dd></div>
+        <div class="dl__r"><dt>갱신 주기</dt><dd id="f_cycle">—</dd></div>
+        <div class="dl__r"><dt>최근 수정일</dt><dd id="f_modified">—</dd></div>
+      </dl>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="bar-chart-2" class="gp-ico"></i>3. 메타데이터 품질</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>메타데이터 상태</dt><dd id="f_meta">—</dd></div>
+        <div class="dl__r" style="flex-direction:column;gap:8px;">
+          <dt>품질 점수</dt>
+          <dd style="width:100%;text-align:left;">
+            <div class="ds-quality-bar"><div class="ds-quality-fill" id="f_qbar"></div></div>
+            <span id="f_qscore" style="font-size:13px;color:var(--fg-2);margin-top:4px;display:block"></span>
+          </dd>
+        </div>
+        <div class="dl__r"><dt>표준어 매핑</dt><dd id="f_mapping">—</dd></div>
+        <div class="dl__r"><dt>태그</dt><dd id="f_tags">—</dd></div>
+        <div class="dl__r"><dt>설명 요약</dt><dd id="f_desc" style="font-weight:400;text-align:left;font-size:13px;max-width:200px;">—</dd></div>
+      </dl>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="cloud" class="gp-ico"></i>4. 제공 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>제공 형태</dt><dd id="f_provide">—</dd></div>
+        <div class="dl__r"><dt>레코드 수</dt><dd id="f_records">—</dd></div>
+        <div class="dl__r"><dt>용량</dt><dd id="f_size">—</dd></div>
+        <div class="dl__r"><dt>공개 범위</dt><dd id="f_scope">—</dd></div>
+      </dl>
+    </div>
+
+    <div class="dw__links">
+      <a href="#" class="dw__link" id="dwLinkHistory"><i data-lucide="history"></i>변경 이력 보기 <i data-lucide="chevron-right"></i></a>
+      <a href="#" class="dw__link"><i data-lucide="file-search"></i>메타데이터 보기 <i data-lucide="chevron-right"></i></a>
+      <a href="#" class="dw__link"><i data-lucide="external-link"></i>원천 데이터 보기 <i data-lucide="chevron-right"></i></a>
+    </div>
+  </div>
+  <div class="dw__ft">
+    <div class="dw__ft-row">
+      <button class="btn btn--line" id="dwBtnFav" type="button"><i data-lucide="star" class="gp-ico"></i>즐겨찾기</button>
+      <button class="btn btn--line" id="dwBtnApply" type="button"><i data-lucide="send" class="gp-ico"></i>활용신청</button>
+    </div>
+    <div class="dw__ft-row">
+      <button class="btn btn--line" id="dwCloseBtn" type="button">닫기</button>
+      <button class="btn btn--pri" id="dwBtnEdit" type="button"><i data-lucide="edit" class="gp-ico"></i>수정</button>
+    </div>
+  </div>
+</aside>
+
+<!-- 활용신청 모달 -->
+<div class="cd-apply-overlay" id="applyOverlay">
+  <div class="cd-apply-overlay__bg" id="applyBg"></div>
+  <div class="cd-apply-modal">
+    <div class="cd-apply-modal__hd">
+      <h3>데이터셋 활용신청</h3>
+      <button class="cd-apply-modal__x" id="applyCloseBtn" type="button" aria-label="닫기"><i data-lucide="x"></i></button>
+    </div>
+    <div class="cd-apply-modal__ds">
+      <div class="cd-apply-modal__ds-id" id="applyDsId">—</div>
+      <div class="cd-apply-modal__ds-nm" id="applyDsNm">—</div>
+    </div>
+    <div class="cd-apply-field">
+      <label for="applyPurpose">활용 목적 <span style="color:var(--status-danger)">*</span></label>
+      <select id="applyPurpose">
+        <option value="">선택하세요</option>
+        <option value="policy">정책 수립 및 기획</option>
+        <option value="research">학술 연구</option>
+        <option value="service">공공 서비스 개발</option>
+        <option value="stats">통계 분석</option>
+        <option value="etc">기타</option>
+      </select>
+      <div class="cd-apply-tpl">
+        <button class="cd-apply-tpl-btn" data-tpl="정책 수립 및 기획" type="button">정책 수립</button>
+        <button class="cd-apply-tpl-btn" data-tpl="학술 연구" type="button">학술 연구</button>
+        <button class="cd-apply-tpl-btn" data-tpl="공공 서비스 개발" type="button">서비스 개발</button>
+        <button class="cd-apply-tpl-btn" data-tpl="통계 분석" type="button">통계 분석</button>
+      </div>
+    </div>
+    <div class="cd-apply-field">
+      <label for="applyOrg">소속 기관/부서 <span style="color:var(--status-danger)">*</span></label>
+      <input type="text" id="applyOrg" placeholder="예: 광명시 기획조정실">
+    </div>
+    <div class="cd-apply-field">
+      <label for="applyPeriod">활용 기간</label>
+      <select id="applyPeriod">
+        <option value="1m">1개월</option>
+        <option value="3m">3개월</option>
+        <option value="6m">6개월</option>
+        <option value="1y" selected>1년</option>
+        <option value="cont">지속</option>
+      </select>
+    </div>
+    <div class="cd-apply-field">
+      <label for="applyNote">활용 내용 상세</label>
+      <textarea id="applyNote" placeholder="데이터 활용 방법 및 기대 효과를 간략히 기술해 주세요."></textarea>
+    </div>
+    <div class="cd-apply-modal__ft">
+      <button class="btn btn--line" id="applyCancelBtn" type="button">취소</button>
+      <button class="btn btn--pri" id="applySubmitBtn" type="button"><i data-lucide="send" class="gp-ico"></i>신청하기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'catalog.dataset',
+  header: {
+    title: '데이터셋 관리',
+    desc: '등록된 데이터셋의 공개 상태, 메타데이터 품질, 표준어 매핑 상태를 한 화면에서 관리합니다.',
+    actions: '<span class="ph__upd">마지막 갱신 : <b>2026-06-19 10:15:45</b></span><button class="btn btn--line" id="refreshBtn"><i data-lucide="refresh-cw" class="gp-ico"></i>새로고침</button>'
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-catalog-dataset.js"></script>
+</body>
+</html>

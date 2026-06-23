@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>데이터 접근 관리 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-catalog-access.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div id="gmsb-topbar"></div>
+
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- 탭 바 -->
+    <div class="page-tab-bar">
+      <button class="page-tab on" data-tab="api" type="button">데이터 현황</button>
+      <div class="page-tab-divider"></div>
+      <button class="page-tab" data-tab="key" type="button">인증키 관리</button>
+    </div>
+
+    <!-- ══════════════════════════════
+         탭 1: 데이터 현황 (API)
+    ══════════════════════════════ -->
+    <div id="tabApi">
+
+      <!-- KPI -->
+      <div class="kpis">
+        <div class="kpi">
+          <span class="kpi__ic kpi__ic--blue"><i data-lucide="box"></i></span>
+          <div>
+            <div class="kpi__lb">제공 API</div>
+            <div class="kpi__vl">86<span class="u">건</span></div>
+          </div>
+        </div>
+        <div class="kpi">
+          <span class="kpi__ic kpi__ic--amber"><i data-lucide="key-round"></i></span>
+          <div>
+            <div class="kpi__lb">활성 인증키</div>
+            <div class="kpi__vl">142<span class="u">건</span></div>
+          </div>
+        </div>
+        <div class="kpi">
+          <span class="kpi__ic kpi__ic--green"><i data-lucide="trending-up"></i></span>
+          <div>
+            <div class="kpi__lb">오늘 호출 수</div>
+            <div class="kpi__vl">12,450<span class="u">건</span></div>
+          </div>
+        </div>
+        <div class="kpi">
+          <span class="kpi__ic kpi__ic--red"><i data-lucide="triangle-alert"></i></span>
+          <div>
+            <div class="kpi__lb">API 오류</div>
+            <div class="kpi__vl">2<span class="u">건</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 수평 필터 바 -->
+      <div class="api-filter">
+        <!-- Row 1: API 상태 + 데이터 분야 -->
+        <div class="api-filter-row">
+          <span class="api-filter-lbl">API 상태</span>
+          <div class="api-chip-group" id="apiStatusGroup">
+            <button class="api-chip on" data-val="" type="button">전체</button>
+            <button class="api-chip" data-val="ok" type="button">정상</button>
+            <button class="api-chip" data-val="err" type="button">오류</button>
+            <button class="api-chip" data-val="stop" type="button">중지</button>
+          </div>
+          <span class="api-filter-divider"></span>
+          <span class="api-filter-lbl">데이터 분야</span>
+          <div class="api-chip-group" id="apiFieldGroup">
+            <button class="api-chip on" data-val="" type="button">전체</button>
+            <button class="api-chip" data-val="mobility" type="button">교통/위치</button>
+            <button class="api-chip" data-val="energy" type="button">에너지</button>
+            <button class="api-chip" data-val="safety" type="button">안전</button>
+            <button class="api-chip" data-val="env" type="button">환경</button>
+            <button class="api-chip" data-val="admin" type="button">행정</button>
+          </div>
+        </div>
+        <!-- Row 2: 규격·인증 방식 셀렉트 + 검색 + 버튼 -->
+        <div class="api-filter-row">
+          <span class="api-filter-lbl">규격 방식</span>
+          <select class="api-select" id="apiSpec">
+            <option value="">전체</option>
+            <option value="openapi">OpenAPI</option>
+            <option value="rest">REST API</option>
+            <option value="json">JSON</option>
+            <option value="xml">XML</option>
+          </select>
+          <span class="api-filter-lbl">인증 방식</span>
+          <select class="api-select" id="apiAuth">
+            <option value="">전체</option>
+            <option value="key">인증키 발급</option>
+            <option value="open">공개 API</option>
+            <option value="internal">내부 전용</option>
+          </select>
+          <div class="api-search-box">
+            <i data-lucide="search"></i>
+            <input type="search" id="apiSearch" placeholder="API명, 데이터셋명, Endpoint 검색" aria-label="검색">
+          </div>
+          <div class="api-filter-actions">
+            <button class="btn btn--pri" id="btnApiSearch" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="search" style="width:14px;height:14px"></i>조회</button>
+            <button class="btn btn--line" id="btnApiReset" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="refresh-cw" style="width:13px;height:13px"></i>초기화</button>
+          </div>
+        </div>
+      </div>
+
+        <!-- API 테이블 -->
+        <div class="ac-table-wrap">
+          <div class="ac-table-hd">
+            <span class="am-sec-title" style="margin:0">API 제공 현황</span>
+          </div>
+          <div class="panel" style="padding:0;overflow:hidden;margin-bottom:20px">
+            <table class="tbl ac-tbl">
+              <thead>
+                <tr>
+                  <th class="l">API명</th>
+                  <th class="l">데이터셋명</th>
+                  <th class="l">Endpoint</th>
+                  <th>Method</th>
+                  <th>제공 방식</th>
+                  <th>인증 방식</th>
+                  <th>호출 수 ↑</th>
+                  <th>평균 응답</th>
+                  <th>상태</th>
+                  <th>최근 호출</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
+              <tbody id="apiTbody"></tbody>
+            </table>
+            <div class="ds-pagination" id="apiPagination"></div>
+          </div>
+
+          <!-- 최근 호출 현황 -->
+          <div class="am-sec-hd">
+            <h3>최근 호출 현황</h3>
+          </div>
+          <div class="panel" style="padding:0;overflow:hidden">
+            <table class="tbl ac-log-tbl">
+              <thead>
+                <tr>
+                  <th>시간</th>
+                  <th class="l">API명</th>
+                  <th class="l">Endpoint</th>
+                  <th>Method</th>
+                  <th>호출 수</th>
+                  <th>평균 응답</th>
+                  <th>상태</th>
+                  <th>응답 코드</th>
+                  <th>인증 방식</th>
+                  <th class="l">IP 주소</th>
+                </tr>
+              </thead>
+              <tbody id="apiLogTbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /ac-table-wrap -->
+    </div><!-- /tabApi -->
+
+    <!-- ══════════════════════════════
+         탭 2: 인증키 관리
+    ══════════════════════════════ -->
+    <div id="tabKey" style="display:none">
+
+      <!-- KPI -->
+      <div class="kpis">
+        <div class="kpi">
+          <span class="kpi__ic kpi__ic--blue">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </span>
+          <div>
+            <div class="kpi__lb">활성 권한</div>
+            <div class="kpi__vl">18<span class="u">건</span></div>
+          </div>
+        </div>
+        <div class="kpi">
+          <span class="kpi__ic kpi__ic--amber"><i data-lucide="clock"></i></span>
+          <div>
+            <div class="kpi__lb">만료 임박</div>
+            <div class="kpi__vl">3<span class="u">건</span></div>
+          </div>
+        </div>
+        <div class="kpi">
+          <span class="kpi__ic kpi__ic--gray"><i data-lucide="circle-x"></i></span>
+          <div>
+            <div class="kpi__lb">만료</div>
+            <div class="kpi__vl">42<span class="u">건</span></div>
+          </div>
+        </div>
+        <div class="kpi">
+          <span class="kpi__ic kpi__ic--green"><i data-lucide="calendar-check"></i></span>
+          <div>
+            <div class="kpi__lb">이번달 부여</div>
+            <div class="kpi__vl">7<span class="u">건</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2열: 권한부여 폼 + 목록 -->
+      <div class="ac-layout">
+
+        <!-- 좌: 권한 부여 폼 -->
+        <aside class="panel ac-grant-panel">
+          <p class="ac-grant__title"><i data-lucide="user-plus"></i>권한 부여</p>
+
+          <div class="ac-form-field">
+            <label class="ac-form-lbl">사용자 검색</label>
+            <div class="ac-search-box">
+              <i data-lucide="search"></i>
+              <input type="search" id="grantUserSearch" placeholder="이름·부서·계정 검색" aria-label="사용자 검색">
+            </div>
+            <div class="ac-user-chip-wrap" id="grantUserChip">
+              <div class="ac-user-chip">
+                <span class="ac-user-chip__avatar">이</span>
+                <span class="ac-user-chip__name">이OO</span>
+                <span class="ac-user-chip__dept">기후환경과</span>
+                <button class="ac-user-chip__del" type="button">×</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ac-form-field">
+            <label class="ac-form-lbl">데이터셋 선택</label>
+            <select class="ac-form-select" id="grantDataset">
+              <option>친환경DRT 운행 현황 데이터</option>
+              <option>태양광 발전량 및 탄소 배출량</option>
+              <option>대기측정소별 실시간 측정정보</option>
+              <option>AIoT 침수홍수 예측 데이터</option>
+              <option>주민등록인구 통계</option>
+              <option>통합관제 CCTV 목록</option>
+            </select>
+          </div>
+
+          <div class="ac-form-field">
+            <label class="ac-form-lbl">권한 종류</label>
+            <div class="ac-radio-group">
+              <label class="ac-radio"><input type="radio" name="grantType" value="read" checked>열람</label>
+              <label class="ac-radio"><input type="radio" name="grantType" value="download">다운로드</label>
+              <label class="ac-radio"><input type="radio" name="grantType" value="both">열람+다운로드</label>
+            </div>
+          </div>
+
+          <div class="ac-form-field">
+            <label class="ac-form-lbl">유효 기간</label>
+            <div class="ac-radio-group" style="margin-bottom:8px">
+              <label class="ac-radio"><input type="radio" name="grantPeriod" value="range" checked>기간 설정</label>
+              <label class="ac-radio"><input type="radio" name="grantPeriod" value="once">일회성</label>
+            </div>
+            <div class="ac-date-range">
+              <input type="date" class="ac-form-input ac-date-input" value="2026-06-10">
+              <span class="ac-date-sep">~</span>
+              <input type="date" class="ac-form-input ac-date-input" value="2026-12-31">
+            </div>
+          </div>
+
+          <div class="ac-form-field">
+            <label class="ac-form-lbl">메모 (선택)</label>
+            <textarea class="ac-form-textarea" id="grantMemo" placeholder="메모를 입력하세요"></textarea>
+            <div class="ac-tpl-chips">
+              <button class="ac-tpl-chip" type="button" data-tpl="정책수립 목적으로 데이터 분석 활용 예정입니다.">정책수립</button>
+              <button class="ac-tpl-chip" type="button" data-tpl="연구 과제 수행을 위한 데이터 분석 목적입니다.">연구</button>
+              <button class="ac-tpl-chip" type="button" data-tpl="시민 서비스 개발 및 시스템 연계 목적입니다.">서비스개발</button>
+              <button class="ac-tpl-chip" type="button" data-tpl="통계 분석 및 보고서 작성 목적입니다.">통계분석</button>
+            </div>
+          </div>
+
+          <button class="btn btn--pri" style="width:100%;height:46px;justify-content:center;margin-top:4px" id="grantBtn" type="button">
+            <i data-lucide="user-check" class="gp-ico"></i>권한 부여
+          </button>
+        </aside>
+
+        <!-- 우: 활성 권한 목록 -->
+        <div class="ac-table-wrap">
+          <div class="ac-table-hd">
+            <span class="am-sec-title" style="margin:0">활성 권한 목록</span>
+            <div class="ac-key-controls">
+              <div class="ac-search-box" style="width:280px">
+                <i data-lucide="search"></i>
+                <input type="search" placeholder="사용자 · 부서 · 데이터셋 검색" aria-label="검색">
+              </div>
+              <select class="ac-form-select" style="height:38px;width:120px">
+                <option>전체 상태</option>
+                <option>활성</option>
+                <option>만료임박</option>
+                <option>만료</option>
+              </select>
+            </div>
+          </div>
+          <div class="panel" style="padding:0;overflow:hidden">
+            <table class="tbl ac-key-tbl">
+              <thead>
+                <tr>
+                  <th>사용자</th>
+                  <th>소속부서</th>
+                  <th class="l">대상 데이터셋</th>
+                  <th>권한</th>
+                  <th>API 키</th>
+                  <th>D-Day</th>
+                  <th>유효 기간</th>
+                  <th>부여일</th>
+                  <th>부여자</th>
+                  <th>상태</th>
+                  <th class="l">반려사유</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
+              <tbody id="keyTbody"></tbody>
+            </table>
+            <div class="ds-pagination" id="keyPagination"></div>
+          </div>
+        </div>
+
+      </div><!-- /ac-layout -->
+    </div><!-- /tabKey -->
+
+  </main>
+</div>
+
+<!-- 스크림 -->
+<div class="scrim" id="scrim"></div>
+
+<!-- API 상세 드로어 -->
+<aside class="drawer" id="apiDrawer" aria-hidden="true" aria-label="API 상세 정보">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k" style="display:flex;align-items:center;gap:8px">
+        <i data-lucide="box" style="width:16px;height:16px"></i>
+        <span id="ad_title">—</span>
+        <span id="ad_statusBadge"></span>
+      </div>
+      <h3 id="ad_desc">—</h3>
+    </div>
+    <button class="dw__x" id="adClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="dw__badge-row" style="margin-bottom:14px">
+      <button class="tbtn" type="button"><i data-lucide="file-text" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"></i>문서 보기</button>
+      <button class="tbtn" type="button"><i data-lucide="key-round" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"></i>인증키 발급</button>
+      <button class="tbtn" type="button"><i data-lucide="list" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"></i>호출 로그</button>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="info" class="gp-ico"></i>API 기본 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>데이터셋명</dt><dd id="ad_dataset">—</dd></div>
+        <div class="dl__r"><dt>Endpoint</dt><dd id="ad_endpoint" style="font-family:monospace;font-size:12px">—</dd></div>
+        <div class="dl__r"><dt>Method</dt><dd id="ad_method">—</dd></div>
+        <div class="dl__r"><dt>제공 방식</dt><dd id="ad_provide">—</dd></div>
+        <div class="dl__r"><dt>인증 방식</dt><dd id="ad_auth">—</dd></div>
+        <div class="dl__r"><dt>제공 포맷</dt><dd id="ad_fmt">—</dd></div>
+        <div class="dl__r"><dt>갱신 주기</dt><dd id="ad_cycle">—</dd></div>
+        <div class="dl__r"><dt>평균 응답 시간</dt><dd id="ad_resp">—</dd></div>
+        <div class="dl__r"><dt>오늘 호출 수</dt><dd id="ad_calls">—</dd></div>
+        <div class="dl__r"><dt>최근 오류</dt><dd id="ad_lasterr">—</dd></div>
+        <div class="dl__r"><dt>담당 부서</dt><dd id="ad_dept">—</dd></div>
+        <div class="dl__r"><dt>상태</dt><dd id="ad_status">—</dd></div>
+      </dl>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="code" class="gp-ico"></i>응답 예시</h4>
+      <div class="ac-code-wrap">
+        <button class="ac-code-copy" id="adCopyBtn" type="button"><i data-lucide="copy"></i></button>
+        <pre class="ac-code" id="ad_code"></pre>
+      </div>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="book-open" class="gp-ico"></i>활용 가이드</h4>
+      <ul class="ac-guide-list" id="ad_guide"></ul>
+      <a href="#" class="ac-guide-link">활용 예시 및 자세한 가이드 보기 →</a>
+    </div>
+  </div>
+  <div class="dw__ft" style="grid-template-columns:1fr">
+    <button class="btn btn--line" id="adCloseBtn" type="button">닫기</button>
+  </div>
+</aside>
+
+<!-- 권한 요청 상세 드로어 -->
+<aside class="drawer" id="keyDrawer" aria-hidden="true" aria-label="권한 요청 상세">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k" style="display:flex;align-items:center;gap:8px">
+        <span id="kd_statusBadge"></span>
+        <span id="kd_typeLabel">열람+다운로드 권한 요청</span>
+      </div>
+      <h3>권한 요청 상세</h3>
+    </div>
+    <button class="dw__x" id="kdClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="dw__sec">
+      <h4><i data-lucide="user" class="gp-ico"></i>신청 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>요청일</dt><dd id="kd_reqDate">—</dd></div>
+        <div class="dl__r"><dt>요청자</dt><dd id="kd_reqUser">—</dd></div>
+        <div class="dl__r"><dt>요청자 부서</dt><dd id="kd_reqDept">—</dd></div>
+      </dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="database" class="gp-ico"></i>대상 데이터셋</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>데이터셋명</dt><dd id="kd_dataset">—</dd></div>
+        <div class="dl__r"><dt>데이터셋 설명</dt><dd id="kd_dsDesc" style="font-weight:400;text-align:left;font-size:12px">—</dd></div>
+      </dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="shield-check" class="gp-ico"></i>요청 권한</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>권한 유형</dt><dd id="kd_type">—</dd></div>
+        <div class="dl__r"><dt>권한 범위</dt><dd id="kd_scope">—</dd></div>
+        <div class="dl__r"><dt>요청 형식</dt><dd id="kd_fmt">—</dd></div>
+        <div class="dl__r"><dt>유효 기간</dt><dd id="kd_period">—</dd></div>
+        <div class="dl__r"><dt>현재 상태</dt><dd id="kd_status">—</dd></div>
+      </dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="message-square" class="gp-ico"></i>요청 상세</h4>
+      <dl class="dl">
+        <div class="dl__r" style="flex-direction:column;gap:4px"><dt>사용 목적</dt><dd id="kd_purpose" style="font-weight:400;text-align:left;font-size:13px;margin-top:4px">—</dd></div>
+        <div class="dl__r" style="flex-direction:column;gap:4px"><dt>요청 사유</dt><dd id="kd_reason" style="font-weight:400;text-align:left;font-size:13px;margin-top:4px">—</dd></div>
+      </dl>
+    </div>
+    <div class="dw__sec">
+      <label class="ac-form-lbl" style="font:600 13px/1 var(--font-sans);color:var(--fg-2);display:block;margin-bottom:6px">검토 메모</label>
+      <textarea class="ac-form-textarea" id="kdReviewMemo" placeholder="검토 내용을 입력하세요 (반려 시 반려사유로 기록됩니다)" style="width:100%;min-height:80px;padding:10px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);font:400 13px/1.5 var(--font-sans);resize:vertical;outline:none"></textarea>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="workflow" class="gp-ico"></i>처리 단계</h4>
+      <div class="kd-tracker" id="kd_tracker"></div>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="history" class="gp-ico"></i>처리 이력</h4>
+      <div class="log" id="kd_log"></div>
+    </div>
+  </div>
+  <div class="dw__ft" style="grid-template-columns:1fr 1fr 1fr 1fr">
+    <button class="btn" style="background:var(--status-success);color:#fff;height:46px;justify-content:center" type="button" id="kdApproveBtn">승인</button>
+    <button class="btn" style="background:var(--status-danger);color:#fff;height:46px;justify-content:center" type="button" id="kdRejectBtn">반려</button>
+    <button class="btn" style="background:var(--status-warning);color:#fff;height:46px;justify-content:center" type="button" id="kdHoldBtn">보류</button>
+    <button class="btn btn--line" id="kdCloseBtn" type="button" style="height:46px;justify-content:center">닫기</button>
+  </div>
+</aside>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'catalog.data-access',
+  header: {
+    title: '데이터 접근 관리',
+    desc: '제공 API와 데이터 접근 상태, 호출 현황, 오류 여부를 목록에서 확인합니다.',
+    actions: '<span class="ph__upd">마지막 갱신 : <b>2026-06-19 10:15:45</b></span><button class="btn btn--line" id="refreshBtn"><i data-lucide="refresh-cw" class="gp-ico"></i>새로고침</button>'
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-catalog-access.js"></script>
+</body>
+</html>

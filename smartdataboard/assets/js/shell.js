@@ -24,12 +24,11 @@
    3) nav.config.js → shell.js 순서로 로드. (lucide 는 그 전에 로드)
    ===================================================================== */
 (function () {
-  var BASE = window.GMSB_BASE || '';
-  var NAV = window.GMSB_NAV || [];
+  var BASE  = window.GMSB_BASE  || '';
+  var NAV   = window.GMSB_NAV   || [];
   var BRAND = window.GMSB_BRAND || {};
-  var PAGE = window.GMSB_PAGE || { active: 'home' };
+  var PAGE  = window.GMSB_PAGE  || { active: 'home' };
 
-  // base 를 href 에 적용 (외부링크/앵커는 그대로)
   function url(href) {
     if (!href || href === '#' || /^(https?:|mailto:|#)/.test(href)) return href || '#';
     return BASE + href;
@@ -39,11 +38,47 @@
   /* ---- active 파싱: 'section.sub' 또는 'home' ---- */
   var parts = (PAGE.active || '').split('.');
   var activeSection = parts[0] || '';
-  var activeSub = parts[1] || '';
+  var activeSub     = parts[1] || '';
+
+  /* ============ 인증 확인 ============ */
+  function checkAuth() {
+    if (!sessionStorage.getItem('gmsb-auth')) {
+      location.replace(BASE + 'login.html');
+      return false;
+    }
+    try {
+      var auth = JSON.parse(sessionStorage.getItem('gmsb-auth'));
+      if (auth && auth.user) BRAND.user = auth.user;
+    } catch (e) {}
+    return true;
+  }
+
+  /* ============ 알림 데이터 (프로토타입용 샘플) ============ */
+  var NOTIFS = [
+    { type: 'warn',    icon: 'alert-triangle',  title: '연계 시스템 응답 지연 감지',    time: '15분 전',  read: false, href: 'pages/linkage-monitoring.html'   },
+    { type: 'info',    icon: 'database',         title: '에너지 데이터 수집 완료',        time: '1시간 전', read: false, href: 'pages/operation-monitoring.html' },
+    { type: 'success', icon: 'check-circle-2',   title: 'GIS 배치 처리 완료',             time: '3시간 전', read: true,  href: 'pages/gis-manage.html'           },
+    { type: 'danger',  icon: 'alert-circle',     title: '스마트 센서 오류 감지 (3건)',    time: '어제',     read: true,  href: 'pages/status-monitoring.html'    },
+    { type: 'info',    icon: 'file-text',        title: '탄소중립 월간 보고서 업데이트', time: '어제',     read: true,  href: 'pages/carbon-summary.html'       }
+  ];
 
   /* ============ TOP BAR ============ */
   function renderTopbar() {
     var mount = el('gmsb-topbar'); if (!mount) return;
+
+    var unread = NOTIFS.filter(function (n) { return !n.read; }).length;
+
+    var notifItems = NOTIFS.map(function (n, i) {
+      return '<div class="tb__notif-item' + (n.read ? ' tb__notif-item--read' : '') + '" data-idx="' + i + '" role="button" tabindex="0">' +
+        '<span class="tb__notif-ic tb__notif-ic--' + n.type + '"><i data-lucide="' + n.icon + '"></i></span>' +
+        '<div class="tb__notif-bd">' +
+          '<p class="tb__notif-txt">' + n.title + '</p>' +
+          '<time class="tb__notif-tm">' + n.time + '</time>' +
+        '</div>' +
+        (n.read ? '' : '<span class="tb__notif-dot" aria-hidden="true"></span>') +
+      '</div>';
+    }).join('');
+
     mount.outerHTML =
       '<header class="tb">' +
         '<a class="tb__brand" href="' + url(BRAND.logo ? 'index.html' : '#') + '" aria-label="' + (BRAND.name || '') + ' 홈">' +
@@ -55,11 +90,54 @@
           '<span class="ct">' + (BRAND.cityTitle || '') + '</span>' +
         '</div>' +
         '<div class="tb__util">' +
-          '<span class="tb__user"><i data-lucide="user-round" class="gp-ico"></i>' + (BRAND.user || '') + '</span>' +
-          '<button class="tb__bell" aria-label="알림 ' + (BRAND.alerts || 0) + '건">' +
-            '<i data-lucide="bell" class="gp-ico"></i>' +
-            (BRAND.alerts ? '<span class="dot">' + BRAND.alerts + '</span>' : '') +
-          '</button>' +
+
+          /* ── 계정 드롭다운 ── */
+          '<div class="tb__user-wrap" id="gmsb-user-wrap">' +
+            '<button class="tb__user" id="gmsb-user-btn" type="button" aria-haspopup="menu" aria-expanded="false">' +
+              '<span class="tb__user-av"><i data-lucide="user-round"></i></span>' +
+              '<span class="tb__user-name">' + (BRAND.user || '') + '</span>' +
+              '<i data-lucide="chevron-down" class="tb__user-caret"></i>' +
+            '</button>' +
+            '<div class="tb__user-drop" id="gmsb-user-drop" role="menu" aria-hidden="true">' +
+              '<div class="tb__drop-info">' +
+                '<div class="tb__drop-av"><i data-lucide="user-round"></i></div>' +
+                '<div>' +
+                  '<p class="tb__drop-name">' + (BRAND.user || '') + '</p>' +
+                  '<p class="tb__drop-role">시스템 관리자</p>' +
+                '</div>' +
+              '</div>' +
+              '<hr class="tb__drop-sep">' +
+              '<a class="tb__drop-item" href="' + url('pages/system-users.html') + '" role="menuitem">' +
+                '<i data-lucide="user"></i>내 정보 관리' +
+              '</a>' +
+              '<a class="tb__drop-item" href="' + url('pages/system-prefs.html') + '" role="menuitem">' +
+                '<i data-lucide="settings"></i>시스템 설정' +
+              '</a>' +
+              '<hr class="tb__drop-sep">' +
+              '<button class="tb__drop-item tb__drop-item--out" id="gmsb-logout" type="button" role="menuitem">' +
+                '<i data-lucide="log-out"></i>로그아웃' +
+              '</button>' +
+            '</div>' +
+          '</div>' +
+
+          /* ── 알림 벨 + 패널 ── */
+          '<div class="tb__bell-wrap" id="gmsb-bell-wrap">' +
+            '<button class="tb__bell" id="gmsb-bell" type="button" aria-label="알림 ' + unread + '건" aria-haspopup="dialog" aria-expanded="false">' +
+              '<i data-lucide="bell" class="gp-ico"></i>' +
+              '<span class="dot" id="gmsb-bell-dot"' + (unread ? '' : ' style="display:none"') + '>' + unread + '</span>' +
+            '</button>' +
+            '<div class="tb__notif-panel" id="gmsb-notif-panel" role="dialog" aria-label="알림" aria-hidden="true">' +
+              '<div class="tb__notif-hd">' +
+                '<span>알림 <em class="tb__notif-badge" id="gmsb-notif-count">' + unread + '</em></span>' +
+                '<button class="tb__notif-x" id="gmsb-notif-close" type="button" aria-label="닫기"><i data-lucide="x"></i></button>' +
+              '</div>' +
+              '<div class="tb__notif-list" id="gmsb-notif-list">' + notifItems + '</div>' +
+              '<div class="tb__notif-ft">' +
+                '<button class="tb__notif-all" id="gmsb-notif-mark-all" type="button">모두 읽음 표시</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+
         '</div>' +
       '</header>';
   }
@@ -186,17 +264,151 @@
     });
   }
 
+  /* ============ UTIL — 계정 드롭다운 + 알림 패널 ============ */
+  function wireUtil() {
+    var userWrap   = el('gmsb-user-wrap');
+    var userBtn    = el('gmsb-user-btn');
+    var userDrop   = el('gmsb-user-drop');
+    var bellWrap   = el('gmsb-bell-wrap');
+    var bellBtn    = el('gmsb-bell');
+    var notifPanel = el('gmsb-notif-panel');
+    var notifClose = el('gmsb-notif-close');
+    var markAllBtn = el('gmsb-notif-mark-all');
+    var notifList  = el('gmsb-notif-list');
+    var logoutBtn  = el('gmsb-logout');
+
+    function closeUser() {
+      if (userDrop) { userDrop.classList.remove('on'); userDrop.setAttribute('aria-hidden', 'true'); }
+      if (userBtn)  { userBtn.setAttribute('aria-expanded', 'false'); }
+    }
+    function openUser() {
+      closeNotif();
+      if (userDrop) { userDrop.classList.add('on'); userDrop.removeAttribute('aria-hidden'); }
+      if (userBtn)  { userBtn.setAttribute('aria-expanded', 'true'); }
+    }
+    function closeNotif() {
+      if (notifPanel) { notifPanel.classList.remove('on'); notifPanel.setAttribute('aria-hidden', 'true'); }
+      if (bellBtn)    { bellBtn.setAttribute('aria-expanded', 'false'); }
+    }
+    function openNotif() {
+      closeUser();
+      if (notifPanel) { notifPanel.classList.add('on'); notifPanel.removeAttribute('aria-hidden'); }
+      if (bellBtn)    { bellBtn.setAttribute('aria-expanded', 'true'); }
+    }
+
+    if (userBtn) {
+      userBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        userDrop && userDrop.classList.contains('on') ? closeUser() : openUser();
+      });
+    }
+    if (bellBtn) {
+      bellBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        notifPanel && notifPanel.classList.contains('on') ? closeNotif() : openNotif();
+      });
+    }
+    if (notifClose) {
+      notifClose.addEventListener('click', function (e) {
+        e.stopPropagation();
+        closeNotif();
+      });
+    }
+
+    // 바깥 클릭 시 닫기
+    document.addEventListener('click', function (e) {
+      if (userWrap   && !userWrap.contains(e.target))   closeUser();
+      if (bellWrap   && !bellWrap.contains(e.target))   closeNotif();
+    });
+
+    // Esc 키로 닫기
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { closeUser(); closeNotif(); }
+    });
+
+    // 로그아웃
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function () {
+        sessionStorage.removeItem('gmsb-auth');
+        location.replace(BASE + 'login.html');
+      });
+    }
+
+    // 배지 업데이트 헬퍼
+    function updateBadge() {
+      var unread = NOTIFS.filter(function (n) { return !n.read; }).length;
+      var dot      = el('gmsb-bell-dot');
+      var countEl  = el('gmsb-notif-count');
+      if (dot)     { dot.textContent = unread; dot.style.display = unread ? '' : 'none'; }
+      if (countEl) { countEl.textContent = unread; }
+      if (bellBtn) { bellBtn.setAttribute('aria-label', '알림 ' + unread + '건'); }
+      // 외부 API 도 동기화
+      if (typeof window.GMSB_SET_ALERT_COUNT === 'function') {
+        window.GMSB_SET_ALERT_COUNT(unread);
+      }
+    }
+
+    // 모두 읽음
+    if (markAllBtn) {
+      markAllBtn.addEventListener('click', function () {
+        NOTIFS.forEach(function (n) { n.read = true; });
+        document.querySelectorAll('.tb__notif-item').forEach(function (item) {
+          item.classList.add('tb__notif-item--read');
+          var dot = item.querySelector('.tb__notif-dot');
+          if (dot) dot.remove();
+        });
+        updateBadge();
+      });
+    }
+
+    // 개별 알림 클릭 — 읽음 처리 후 관련 페이지로 이동
+    if (notifList) {
+      notifList.addEventListener('click', function (e) {
+        var item = e.target.closest('.tb__notif-item');
+        if (!item) return;
+        var idx = parseInt(item.getAttribute('data-idx'), 10);
+        if (isNaN(idx) || !NOTIFS[idx]) return;
+        var n = NOTIFS[idx];
+        if (!n.read) {
+          n.read = true;
+          item.classList.add('tb__notif-item--read');
+          var dot = item.querySelector('.tb__notif-dot');
+          if (dot) dot.remove();
+          updateBadge();
+        }
+        if (n.href) {
+          location.href = url(n.href);
+        }
+      });
+    }
+  }
+
   /* ============ 실행 ============ */
   function init() {
+    if (!checkAuth()) return;
     renderTopbar();
     renderSidebar();
     renderHeader();
     wireSidebar();
     wirePinButton();
+    wireUtil();
     if (window.lucide && lucide.createIcons) lucide.createIcons();
     window.GMSB_SHELL_READY = true;
+    /* 페이지 JS에서 window.GMSB_ALERT_COUNT = N 로 배지 설정 가능 */
+    window.GMSB_SET_ALERT_COUNT = function (n) {
+      var dot  = document.getElementById('gmsb-bell-dot');
+      var bell = document.getElementById('gmsb-bell');
+      if (!dot) return;
+      if (n > 0) { dot.textContent = n > 99 ? '99+' : n; dot.style.display = ''; }
+      else { dot.style.display = 'none'; }
+      if (bell) bell.setAttribute('aria-label', '알림 ' + n + '건');
+    };
+    if (typeof window.GMSB_ALERT_COUNT === 'number') {
+      window.GMSB_SET_ALERT_COUNT(window.GMSB_ALERT_COUNT);
+    }
     document.dispatchEvent(new CustomEvent('gmsb:shell-ready'));
   }
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
