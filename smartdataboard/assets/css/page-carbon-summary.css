@@ -1,0 +1,152 @@
+/* =====================================================================
+   광명 스마트데이터보드 · 탄소중립 종합 현황
+   ===================================================================== */
+
+/* ── 상단 2컬럼: 목표 달성 | 정책 지표 ── */
+.cs-top{display:grid;grid-template-columns:3fr 2fr;gap:20px;margin-bottom:20px;}
+
+/* ── 목표 달성 카드 ── */
+.goal-card{background:var(--surface-card);border:1px solid var(--border-1);border-radius:var(--radius-lg);box-shadow:var(--elev-2);padding:18px 22px;}
+.goal-card__hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.goal-card__title{font:700 17px/1 var(--font-sans);color:var(--fg-1);}
+.goal-card__meta{display:flex;align-items:center;gap:8px;font:400 13px/1 var(--font-sans);color:var(--fg-3);}
+.goal-card__meta i{color:var(--fg-4);}
+.goal-card__meta .btn{height:30px;padding:0 10px;font-size:13px;display:inline-flex;align-items:center;gap:5px;margin-left:4px;}
+.goal-card__body{display:flex;align-items:center;gap:20px;}
+
+/* 링 차트 */
+.ring-wrap{flex:none;position:relative;width:162px;height:162px;}
+.ring-wrap svg{width:162px;height:162px;transform:rotate(-90deg);}
+.ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
+.ring-label__pct{font:800 28px/1 var(--font-sans);color:var(--fg-1);}
+.ring-label__sub{font:500 11px/1.3 var(--font-sans);color:var(--fg-3);text-align:center;}
+
+/* 인라인 KPI 4개 — 외곽선 없음, 구분선만 */
+.goal-kpis{display:grid;grid-template-columns:repeat(4,1fr);flex:1;}
+.goal-kpi{padding:10px 14px;display:flex;flex-direction:column;}
+.goal-kpi + .goal-kpi{position:relative;}
+.goal-kpi + .goal-kpi::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:1px;height:20px;background:var(--border-strong);}
+/* 아이콘 + 타이틀 한 줄 */
+.goal-kpi__hd{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
+/* 아이콘: 배경 없이 아이콘 컬러만 */
+.goal-kpi__ico{width:23px;height:23px;display:flex;align-items:center;justify-content:center;flex:none;background:transparent !important;}
+.goal-kpi__ico svg,.goal-kpi__ico i{width:23px;height:23px;}
+.goal-kpi__lb{font:500 12px/1.2 var(--font-sans);color:var(--fg-3);}
+.goal-kpi__vl{font:800 24px/1 var(--font-sans);color:var(--fg-1);}
+.goal-kpi__vl .u{font:600 11px/1 var(--font-sans);color:var(--fg-4);margin-left:2px;}
+.goal-kpi__badge{display:inline-flex;align-items:center;gap:3px;margin-top:7px;font:700 12px/1 var(--font-sans);color:var(--status-success);background:var(--status-success-soft);padding:3px 8px;border-radius:6px;}
+.goal-kpi__badge svg{width:10px;height:10px;}
+.goal-kpi__status{display:inline-flex;align-items:center;gap:6px;font:800 22px/1 var(--font-sans);color:var(--status-success);}
+.goal-kpi__status-sub{display:block;font:400 12px/1.2 var(--font-sans);color:var(--fg-3);margin-top:5px;}
+
+/* ── 정책 지표 카드 ── */
+.policy-card{background:var(--surface-card);border:1px solid var(--border-1);border-radius:var(--radius-lg);box-shadow:var(--elev-2);padding:18px 20px;}
+.policy-card__hd{font:700 17px/1 var(--font-sans);color:var(--fg-1);margin-bottom:10px;}
+.policy-item{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--border-2);}
+.policy-card__hd + .policy-item{border-top:0;}
+/* 정책 아이콘: 배경 없음 */
+.policy-item__ico{width:23px;height:23px;border-radius:0;display:flex;align-items:center;justify-content:center;flex:none;background:transparent !important;}
+.policy-item__ico svg,.policy-item__ico i{width:23px;height:23px;}
+.policy-item__lb{font:500 13px/1.2 var(--font-sans);color:var(--fg-2);flex:1;}
+/* 한 줄: 값 + 트렌드 가로 정렬 */
+.policy-item__right{display:flex;flex-direction:row;align-items:center;gap:8px;}
+.policy-item__vl{font:800 17px/1 var(--font-sans);color:var(--fg-1);white-space:nowrap;}
+.policy-item__vl .u{font:600 11px/1 var(--font-sans);color:var(--fg-4);margin-left:2px;}
+.policy-item__trend{font:700 13px/1 var(--font-sans);color:var(--status-success);white-space:nowrap;}
+.policy-item__trend.down{color:var(--status-danger);}
+
+/* ── 중간 2컬럼: 균등 ── */
+.cs-mid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+
+/* ── 공통 차트 카드 ── */
+.cs-card{background:var(--surface-card);border:1px solid var(--border-1);border-radius:var(--radius-lg);box-shadow:var(--elev-2);padding:24px;}
+.cs-card__hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.cs-card__t{font:700 17px/1 var(--font-sans);color:var(--fg-1);}
+/* 단위 + 범례: 같은 행에 단위 왼쪽·범례 중앙 */
+.cs-card__axis-row{display:flex;align-items:center;position:relative;min-height:20px;margin-bottom:14px;}
+.cs-card__sub{font:400 13px/1 var(--font-sans);color:var(--fg-4);margin:0;}
+.cs-chart-legend{display:flex;gap:20px;position:absolute;left:50%;transform:translateX(-50%);}
+.cs-chart-legend span{display:flex;align-items:center;gap:6px;font:500 13px/1 var(--font-sans);color:var(--fg-3);white-space:nowrap;}
+.cs-chart-legend i{display:inline-block;width:18px;height:4px;border-radius:2px;flex:none;}
+.cs-chart-legend i.dashed{height:0;border-top:2px dashed currentColor;background:transparent;}
+.cs-card__chart{position:relative;height:200px;}
+
+/* ── 하단 3컬럼: 동일 너비 ── */
+.cs-bot{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:20px;}
+/* 부문별 감축 기여도: 도넛 좌·범례 우 */
+.donut-inner{display:flex;flex-direction:row;align-items:center;gap:40px;margin-top:34px;}
+.donut-canvas-box{flex:none;position:relative;width:140px;height:140px;}
+/* 도넛 차트 중앙 아이콘 */
+.donut-center-ico{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+.cs-legend{display:flex;flex-direction:column;gap:8px;flex:1;}
+.cs-legend-item{display:flex;align-items:center;gap:8px;font:500 13px/1.2 var(--font-sans);color:var(--fg-2);}
+.cs-legend-dot{width:9px;height:9px;border-radius:50%;flex:none;}
+.cs-legend-name{flex:1;}
+.cs-legend-pct{font-weight:700;color:var(--fg-1);}
+
+/* 주의/성과 목록 — 아이콘 배경 없음 */
+.issue-list{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+.issue-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg-subtle);border-radius:var(--radius-md);cursor:pointer;transition:background var(--dur-fast);}
+.issue-item:hover{background:var(--surface-hover);}
+.issue-item__ico{width:25px;height:25px;border-radius:0;display:flex;align-items:center;justify-content:center;flex:none;background:transparent !important;}
+.issue-item__ico svg,.issue-item__ico i{width:25px;height:25px;}
+.issue-item__body{flex:1;min-width:0;}
+.issue-item__t{font:600 14px/1.2 var(--font-sans);color:var(--fg-1);}
+.issue-item__d{font:400 13px/1.2 var(--font-sans);color:var(--fg-3);margin-top:3px;}
+
+/* ── 핵심 관리 지표 테이블 ── */
+.cs-table-wrap{background:var(--surface-card);border:1px solid var(--border-1);border-radius:var(--radius-lg);box-shadow:var(--elev-2);padding:24px;margin-bottom:20px;}
+.cs-table-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.cs-table-hd h2{font:700 17px/1 var(--font-sans);color:var(--fg-1);}
+.cs-table-hd__actions{display:flex;gap:8px;}
+
+/* 진행 바 */
+.prog{display:flex;align-items:center;gap:8px;}
+.prog__track{flex:1;min-width:80px;height:6px;background:var(--bg-sunken);border-radius:99px;overflow:hidden;}
+.prog__fill{height:100%;border-radius:99px;transition:width .6s var(--ease-out);}
+.prog__pct{min-width:38px;font:700 13px/1 var(--font-sans);color:var(--fg-2);text-align:right;}
+.tbl-up{color:var(--status-success);font-weight:700;}
+.tbl-down{color:var(--status-danger);font-weight:700;}
+
+/* ── 드로어 미니 차트 ── */
+.dw__mini-chart{position:relative;height:120px;margin-top:8px;}
+.dw__info-banner{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;border-radius:12px;background:var(--status-info-soft);margin-bottom:16px;}
+.dw__info-banner svg{width:18px;height:18px;color:var(--status-info);flex:none;margin-top:1px;}
+.dw__info-banner p{font:400 13px/1.5 var(--font-sans);color:var(--fg-2);margin:0;}
+
+/* ── 배출권 현황 카드 ── */
+.cs-credit-row{margin-bottom:20px;}
+.cs-credit-card{background:linear-gradient(135deg,var(--gp-primary) 0%,var(--gp-point) 100%);border-radius:var(--radius-lg);box-shadow:var(--elev-2);padding:22px 28px;cursor:pointer;transition:box-shadow var(--dur-base);color:#fff;}
+.cs-credit-card:hover{box-shadow:var(--elev-hover);}
+.cs-credit-card__hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.cs-credit-card__t{font:700 17px/1 var(--font-sans);color:#fff;}
+.cs-credit-badge{font:600 12px/1 var(--font-sans);color:rgba(255,255,255,.85);background:rgba(255,255,255,.18);padding:4px 10px;border-radius:var(--radius-pill);}
+.cs-credit-arrow{display:flex;align-items:center;gap:5px;font:600 13px/1 var(--font-sans);color:rgba(255,255,255,.75);}
+.cs-credit-arrow svg{width:15px;height:15px;}
+.cs-credit-stats{display:flex;align-items:center;gap:0;}
+.cs-credit-stat{flex:1;padding:0 20px;}
+.cs-credit-stat:first-child{padding-left:0;}
+.cs-credit-stat__lb{font:500 13px/1 var(--font-sans);color:rgba(255,255,255,.75);margin-bottom:8px;}
+.cs-credit-stat__vl{font:800 24px/1 var(--font-sans);color:#fff;}
+.cs-credit-stat__vl .u{font:600 12px/1 var(--font-sans);color:rgba(255,255,255,.8);margin-left:2px;}
+.cs-credit-divider{width:1px;height:50px;background:rgba(255,255,255,.25);flex:none;}
+
+/* 배출권 모달 */
+.cs-credit-overlay{position:fixed;inset:0;z-index:400;display:none;}
+.cs-credit-overlay.on{display:block;}
+.cs-credit-overlay__bg{position:absolute;inset:0;background:rgba(20,40,80,.45);}
+.cs-credit-modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:640px;max-height:80vh;overflow-y:auto;background:var(--surface-card);border-radius:var(--radius-xl);box-shadow:var(--elev-3);padding:28px;}
+.cs-credit-modal__hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.cs-credit-modal__hd h3{font:700 18px/1 var(--font-sans);color:var(--fg-1);}
+.cs-credit-modal__x{width:30px;height:30px;border:none;background:transparent;cursor:pointer;color:var(--fg-3);border-radius:var(--radius-xs);display:grid;place-items:center;transition:background var(--dur-fast);}
+.cs-credit-modal__x:hover{background:var(--surface-hover);color:var(--fg-1);}
+.cs-credit-modal__x svg{width:16px;height:16px;}
+.cs-credit-modal__kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.cs-credit-modal__kpi{background:var(--bg-subtle);border-radius:var(--radius-md);padding:14px;}
+.cs-credit-modal__kpi-lb{font:500 12px/1 var(--font-sans);color:var(--fg-3);margin-bottom:6px;}
+.cs-credit-modal__kpi-vl{font:700 18px/1 var(--font-sans);color:var(--fg-1);}
+.cs-credit-modal__sec{font:700 15px/1 var(--font-sans);color:var(--fg-1);margin:16px 0 10px;}
+
+/* ── 감축 프로젝트 ── */
+.cs-projects-wrap{background:var(--surface-card);border:1px solid var(--border-1);border-radius:var(--radius-lg);box-shadow:var(--elev-2);padding:24px;margin-bottom:20px;}
+.cs-project-select{height:32px;padding:0 8px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);font:400 13px/1 var(--font-sans);color:var(--fg-1);background:var(--surface-card);cursor:pointer;}

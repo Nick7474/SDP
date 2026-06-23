@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GIS 데이터 관리 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/gis-shared.css">
+<link rel="stylesheet" href="../assets/css/page-gis-manage.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div id="gmsb-topbar"></div>
+
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- 페이지 탭 바 -->
+    <div class="page-tab-bar">
+      <button class="page-tab on" data-tab="crud" type="button">GIS 데이터 관리(CRUD)</button>
+      <div class="page-tab-divider"></div>
+      <button class="page-tab" data-tab="layer" type="button">레이어 관리</button>
+    </div>
+
+    <!-- GIS 맵 래퍼 -->
+    <div class="gis-wrap gm-gis-wrap">
+
+      <!-- ══ 좌측 필터 패널 (탭 공유) ══ -->
+      <aside class="gis-filter">
+
+        <!-- CRUD 패널 -->
+        <div id="gmFilterCrud">
+          <p class="gis-filter__title">GIS 데이터 관리</p>
+          <div class="gis-filter__search">
+            <div class="gis-search gis-search--right">
+              <input type="search" id="gmSearchInput" placeholder="데이터명, 키워드 검색" autocomplete="off" aria-label="검색">
+              <i data-lucide="search"></i>
+              <div class="search-dropdown" id="gmSearchDropdown"></div>
+            </div>
+          </div>
+          <div class="gis-filter__body">
+            <!-- 관리 유형 -->
+            <div class="gm-section open" data-sec="mgmt">
+              <div class="gm-section__hd">
+                <span class="gm-section__hd-lbl">관리 유형</span>
+                <svg class="gm-section__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="gm-section__bd">
+                <div class="gm-check-grid">
+                  <label class="gm-check-item"><input type="checkbox" checked data-mgmt="all">전체</label>
+                  <label class="gm-check-item"><input type="checkbox" data-mgmt="del">삭제 후보</label>
+                  <label class="gm-check-item"><input type="checkbox" data-mgmt="new">신규 등록 대상</label>
+                  <label class="gm-check-item"><input type="checkbox" data-mgmt="pub">공개 데이터</label>
+                  <label class="gm-check-item"><input type="checkbox" data-mgmt="mod">수정 대상</label>
+                  <label class="gm-check-item"><input type="checkbox" data-mgmt="priv">비공개 데이터</label>
+                </div>
+              </div>
+            </div>
+            <!-- 데이터 유형 -->
+            <div class="gm-section open" data-sec="dtype">
+              <div class="gm-section__hd">
+                <span class="gm-section__hd-lbl">데이터 유형</span>
+                <svg class="gm-section__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="gm-section__bd">
+                <div class="gm-check-grid">
+                  <label class="gm-check-item"><input type="checkbox" data-dtype="point">포인트</label>
+                  <label class="gm-check-item"><input type="checkbox" data-dtype="line">라인</label>
+                  <label class="gm-check-item"><input type="checkbox" data-dtype="polygon">폴리곤</label>
+                  <label class="gm-check-item"><input type="checkbox" data-dtype="raster">래스터</label>
+                  <label class="gm-check-item"><input type="checkbox" data-dtype="shapefile">Shapefile</label>
+                  <label class="gm-check-item"><input type="checkbox" data-dtype="geojson">GeoJSON</label>
+                  <label class="gm-check-item"><input type="checkbox" data-dtype="api">API 연계</label>
+                </div>
+              </div>
+            </div>
+            <!-- 공개 상태 -->
+            <div class="gm-section open" data-sec="status">
+              <div class="gm-section__hd">
+                <span class="gm-section__hd-lbl">공개 상태</span>
+                <svg class="gm-section__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="gm-section__bd">
+                <div class="gm-status-grid">
+                  <label class="gm-status-item"><input type="checkbox" data-status="pub"><span class="gm-status-dot" style="background:var(--status-success)"></span>공개</label>
+                  <label class="gm-status-item"><input type="checkbox" data-status="review"><span class="gm-status-dot" style="background:var(--status-pending)"></span>검토중</label>
+                  <label class="gm-status-item"><input type="checkbox" data-status="priv"><span class="gm-status-dot" style="background:var(--status-warning)"></span>비공개</label>
+                  <label class="gm-status-item"><input type="checkbox" data-status="error"><span class="gm-status-dot" style="background:var(--status-danger)"></span>오류</label>
+                </div>
+              </div>
+            </div>
+            <!-- 분야 -->
+            <div class="gm-section open" data-sec="field">
+              <div class="gm-section__hd">
+                <span class="gm-section__hd-lbl">분야</span>
+                <svg class="gm-section__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="gm-section__bd">
+                <div class="gm-check-grid">
+                  <label class="gm-check-item"><input type="checkbox" data-field="energy">에너지</label>
+                  <label class="gm-check-item"><input type="checkbox" data-field="env">환경</label>
+                  <label class="gm-check-item"><input type="checkbox" data-field="mobility">모빌리티</label>
+                  <label class="gm-check-item"><input type="checkbox" data-field="data">데이터</label>
+                  <label class="gm-check-item"><input type="checkbox" data-field="safety">안전</label>
+                  <label class="gm-check-item"><input type="checkbox" data-field="public">공공시설</label>
+                </div>
+              </div>
+            </div>
+            <!-- 갱신 주기 -->
+            <div class="gm-section open" data-sec="freq">
+              <div class="gm-section__hd">
+                <span class="gm-section__hd-lbl">갱신 주기</span>
+                <svg class="gm-section__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="gm-section__bd">
+                <div class="gm-check-grid">
+                  <label class="gm-check-item"><input type="radio" name="gmFreq" value="all" checked>전체</label>
+                  <label class="gm-check-item"><input type="radio" name="gmFreq" value="realtime">실시간</label>
+                  <label class="gm-check-item"><input type="radio" name="gmFreq" value="daily">일간</label>
+                  <label class="gm-check-item"><input type="radio" name="gmFreq" value="weekly">주간</label>
+                  <label class="gm-check-item"><input type="radio" name="gmFreq" value="monthly">월간</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!-- /gmFilterCrud -->
+
+        <!-- 레이어 관리 패널 (초기 숨김) -->
+        <div id="gmFilterLayer" style="display:none">
+          <p class="gis-filter__title">레이어 관리</p>
+          <div class="gis-filter__body">
+            <!-- 1. 레이어 상태 -->
+            <div class="gm-section open" data-sec="lstate">
+              <div class="gm-section__hd">
+                <span class="gm-section__hd-lbl">1. 레이어 상태</span>
+                <svg class="gm-section__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="gm-section__bd">
+                <div class="gm-layer-stat-list">
+                  <label class="gm-layer-stat-item"><input type="radio" name="gmLState" value="all" checked><span class="gm-status-dot" style="background:var(--status-success)"></span>활성<span class="gm-layer-stat-cnt">28</span></label>
+                  <label class="gm-layer-stat-item"><input type="radio" name="gmLState" value="inactive"><span class="gm-status-dot" style="background:var(--fg-disabled)"></span>비활성<span class="gm-layer-stat-cnt">4</span></label>
+                  <label class="gm-layer-stat-item"><input type="radio" name="gmLState" value="review"><span class="gm-status-dot" style="background:var(--status-warning)"></span>검토중<span class="gm-layer-stat-cnt">2</span></label>
+                  <label class="gm-layer-stat-item"><input type="radio" name="gmLState" value="error"><span class="gm-status-dot" style="background:var(--status-danger)"></span>오류<span class="gm-layer-stat-cnt">2</span></label>
+                </div>
+              </div>
+            </div>
+            <!-- 2. 레이어 유형 -->
+            <div class="gm-section open" data-sec="ltype">
+              <div class="gm-section__hd">
+                <span class="gm-section__hd-lbl">2. 레이어 유형</span>
+                <svg class="gm-section__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="gm-section__bd">
+                <div class="gm-check-grid">
+                  <label class="gm-check-item gm-check-item--count"><label class="gm-check-item" style="padding:0;margin:0"><input type="checkbox" data-ltype="point" checked>포인트</label><span class="gm-layer-stat-cnt">16</span></label>
+                  <label class="gm-check-item gm-check-item--count"><label class="gm-check-item" style="padding:0;margin:0"><input type="checkbox" data-ltype="line" checked>라인</label><span class="gm-layer-stat-cnt">6</span></label>
+                  <label class="gm-check-item gm-check-item--count"><label class="gm-check-item" style="padding:0;margin:0"><input type="checkbox" data-ltype="polygon" checked>폴리곤</label><span class="gm-layer-stat-cnt">8</span></label>
+                  <label class="gm-check-item gm-check-item--count"><label class="gm-check-item" style="padding:0;margin:0"><input type="checkbox" data-ltype="heatmap" checked>히트맵</label><span class="gm-layer-stat-cnt">3</span></label>
+                  <label class="gm-check-item gm-check-item--count"><label class="gm-check-item" style="padding:0;margin:0"><input type="checkbox" data-ltype="bubble">버블</label><span class="gm-layer-stat-cnt">2</span></label>
+                  <label class="gm-check-item gm-check-item--count"><label class="gm-check-item" style="padding:0;margin:0"><input type="checkbox" data-ltype="grid">격자</label><span class="gm-layer-stat-cnt">1</span></label>
+                </div>
+              </div>
+            </div>
+            <!-- 3. 데이터 분야 -->
+            <div class="gm-section open" data-sec="lfield">
+              <div class="gm-section__hd">
+                <span class="gm-section__hd-lbl">3. 데이터 분야</span>
+                <svg class="gm-section__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="gm-section__bd">
+                <div class="gm-check-grid">
+                  <label class="gm-check-item gm-check-item--count"><label class="gm-check-item" style="padding:0;margin:0"><input type="checkbox" data-lfield="energy" checked>에너지</label><span class="gm-layer-stat-cnt">8</span></label>
+                  <label class="gm-check-item gm-check-item--count"><label class="gm-check-item" style="padding:0;margin:0"><input type="checkbox" data-lfield="mobility" checked>모빌리티</label><span class="gm-layer-stat-cnt">6</span></label>
+                  <label class="gm-check-item gm-check-item--count"><label class="gm-check-item" style="padding:0;margin:0"><input type="checkbox" data-lfield="safety" checked>안전</label><span class="gm-layer-stat-cnt">7</span></label>
+                  <label class="gm-check-item gm-check-item--count"><label class="gm-check-item" style="padding:0;margin:0"><input type="checkbox" data-lfield="data" checked>데이터</label><span class="gm-layer-stat-cnt">7</span></label>
+                  <label class="gm-check-item gm-check-item--count"><label class="gm-check-item" style="padding:0;margin:0"><input type="checkbox" data-lfield="env" checked>환경</label><span class="gm-layer-stat-cnt">8</span></label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="gis-filter__search" style="border-top:1px solid var(--border-2);border-bottom:none;padding-bottom:8px;">
+            <div class="gis-search gis-search--right">
+              <input type="search" id="gmLayerSearchInput" placeholder="레이어명, 데이터명 검색" autocomplete="off" aria-label="레이어 검색">
+              <i data-lucide="search"></i>
+            </div>
+          </div>
+        </div><!-- /gmFilterLayer -->
+
+        <!-- 레이어 목록 -->
+        <div class="gm-layer-list-wrap" id="gmLayerListWrap" style="display:none;">
+          <div class="gm-layer-list-hd">
+            <span class="gm-layer-list-hd__title">레이어 목록</span>
+            <span class="gm-layer-list-hd__cnt" id="gmLayerListCnt">0</span>
+          </div>
+          <div class="gm-layer-list" id="gmLayerList"></div>
+        </div>
+
+      </aside>
+
+      <!-- 우측 지도 -->
+      <div class="gis-map-area" id="gmMapArea">
+        <div id="gmMap"></div>
+
+        <!-- 상단 툴바 (CRUD 탭) -->
+        <div class="gm-map-toolbar" id="gmToolbarCrud">
+          <button class="gm-toolbar-btn gm-toolbar-btn--pri" id="gmBtnNew" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            신규 등록
+          </button>
+          <button class="gm-toolbar-btn" id="gmBtnEdit" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            선택 편집
+          </button>
+          <button class="gm-toolbar-btn" id="gmBtnHistory" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            변경 이력
+          </button>
+          <button class="gm-toolbar-btn" id="gmBtnExport" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            내보내기
+          </button>
+          <button class="gm-toolbar-btn" id="gmBtnFitCrud" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V5a2 2 0 0 1 2-2h4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M21 15v4a2 2 0 0 1-2 2h-4"/><path d="M9 21H5a2 2 0 0 1-2-2v-4"/></svg>
+            전체 보기
+          </button>
+        </div>
+
+        <!-- 상단 툴바 (레이어 관리 탭, 초기 숨김) -->
+        <div class="gm-map-toolbar" id="gmToolbarLayer" style="display:none">
+          <button class="gm-toolbar-btn" id="gmBtnLayerToggle" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            전체 토글
+          </button>
+          <button class="gm-toolbar-btn" id="gmBtnLayerOrder" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16h4"/><path d="M7 16V8"/><path d="M3 8h4"/><path d="M17 8h4"/><path d="M21 8v8"/><path d="M17 16h4"/><path d="M10 12h4"/></svg>
+            순서 변경
+          </button>
+          <button class="gm-toolbar-btn" id="gmBtnStylePreview" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            스타일 미리보기
+          </button>
+          <button class="gm-toolbar-btn" id="gmBtnFitLayer" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V5a2 2 0 0 1 2-2h4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M21 15v4a2 2 0 0 1-2 2h-4"/><path d="M9 21H5a2 2 0 0 1-2-2v-4"/></svg>
+            전체 보기
+          </button>
+          <button class="gm-toolbar-btn gm-toolbar-btn--pri" id="gmBtnLayerSave" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            저장
+          </button>
+        </div>
+
+        <!-- 지도 컨트롤 패널 -->
+        <div class="map-ctrl-panel">
+          <div class="map-ctrl-group">
+            <button class="map-ctrl-btn" id="gmBtnZoomIn" type="button" aria-label="확대">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            </button>
+            <button class="map-ctrl-btn" id="gmBtnZoomOut" type="button" aria-label="축소">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+            </button>
+          </div>
+          <div class="map-ctrl-group">
+            <button class="map-tool-btn2" id="gmBtnCenter" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+              <span>현재위치</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 오버레이 범례 -->
+        <div class="gm-overlay-legend" id="gmOverlayLegend">
+          <div class="map-legend__title">범례</div>
+          <div class="gm-legend-list" id="gmLegendList">
+            <div class="gm-legend-item"><span class="gm-legend-dot" style="background:var(--status-success)"></span>공개 데이터</div>
+            <div class="gm-legend-item"><span class="gm-legend-dot" style="background:var(--status-warning)"></span>비공개 데이터</div>
+            <div class="gm-legend-item"><span class="gm-legend-dot" style="background:var(--status-pending)"></span>관리 데이터</div>
+            <div class="gm-legend-divider legend-divider"></div>
+            <div class="gm-legend-item"><span class="gm-legend-rect" style="background:rgba(12,138,229,.15);border:1.5px solid var(--gp-point)"></span>공개 범위</div>
+            <div class="gm-legend-item"><span class="gm-legend-dashed"></span>비공개 범위</div>
+          </div>
+        </div>
+
+      </div><!-- /gis-map-area -->
+    </div><!-- /gis-wrap -->
+
+  </main>
+</div>
+
+<!-- ══ CRUD 정보 팝업 ══ -->
+<div class="map-popup" id="gmInfoPopup">
+  <div class="map-popup__scrim" id="gmInfoScrim"></div>
+  <div class="map-popup__box">
+    <div class="map-popup__hd">
+      <div class="map-popup__hd-left">
+        <div class="map-popup__mile-badge" id="gmInfoBadge"></div>
+        <div>
+          <h3 class="map-popup__title" id="gmInfoTitle"></h3>
+          <p class="map-popup__type" id="gmInfoType"></p>
+        </div>
+      </div>
+      <button class="map-popup__close" id="gmInfoClose" type="button" aria-label="닫기">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="map-popup__bd">
+      <div class="gm-info-dl" id="gmInfoDl"></div>
+    </div>
+    <div class="map-popup__ft" id="gmInfoFt" style="flex-wrap:wrap;gap:6px;">
+      <button class="btn btn--line" id="gmInfoPreviewBtn" type="button" style="flex:1">미리보기</button>
+      <button class="btn btn--line" id="gmInfoEditBtn" type="button" style="flex:1">수정</button>
+      <button class="btn btn--line" id="gmInfoDeleteBtn" type="button" style="flex:1;color:var(--status-danger);border-color:var(--status-danger-soft)">삭제</button>
+      <button class="btn btn--pri" id="gmInfoPubBtn" type="button" style="width:100%">공개 전환</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 레이어 관리 팝업 ══ -->
+<div class="map-popup" id="gmLayerPopup">
+  <div class="map-popup__scrim" id="gmLayerScrim"></div>
+  <div class="map-popup__box">
+    <div class="map-popup__hd">
+      <div class="map-popup__hd-left">
+        <div class="map-popup__mile-badge" id="gmLayerBadge"></div>
+        <div>
+          <h3 class="map-popup__title" id="gmLayerTitle"></h3>
+          <p class="map-popup__type" id="gmLayerType"></p>
+        </div>
+      </div>
+      <button class="map-popup__close" id="gmLayerClose" type="button" aria-label="닫기">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="map-popup__bd">
+      <div class="gm-info-dl" id="gmLayerDl"></div>
+    </div>
+    <div class="map-popup__ft" style="flex-wrap:wrap;gap:6px;">
+      <button class="btn btn--line" id="gmLayerPreviewBtn" type="button" style="flex:1">미리보기</button>
+      <button class="btn btn--line" id="gmLayerOrderBtn" type="button" style="flex:1">순서 변경</button>
+      <button class="btn btn--line" id="gmLayerStyleBtn" type="button" style="flex:1">스타일 편집</button>
+      <button class="btn btn--line" id="gmLayerDeactivateBtn" type="button" style="width:100%;color:var(--status-warning);border-color:var(--status-warning-soft)">비활성 처리</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CRUD 편집 드로어 ══ -->
+<div class="gm-drawer" id="gmEditDrawer">
+  <div class="gm-drawer__hd">
+    <h2 class="gm-drawer__title">데이터 속성 편집</h2>
+    <button class="gm-drawer__close" id="gmEditClose" type="button" aria-label="닫기">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+  </div>
+  <div class="gm-drawer__info-banner">
+    <i data-lucide="info"></i>
+    <p>지도의 선택된 항목 속성을 편집합니다.<br>변경 사항은 저장 후 적용됩니다.</p>
+  </div>
+  <div class="gm-drawer__bd">
+    <span class="gm-form-badge gm-type-badge gm-type-badge--point" id="gmEditTypeBadge">포인트</span>
+    <h3 class="gm-form-heading" id="gmEditFormTitle">태양광 발전 지점 레이어</h3>
+
+    <div class="gm-form-field">
+      <label class="gm-form-label">데이터명</label>
+      <input type="text" class="gm-form-input" id="gmEditName" value="태양광 발전 지점">
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">데이터 유형</label>
+      <select class="gm-form-select" id="gmEditDtype">
+        <option value="point" selected>포인트</option>
+        <option value="line">라인</option>
+        <option value="polygon">폴리곤</option>
+        <option value="raster">래스터</option>
+      </select>
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">파일 구분</label>
+      <select class="gm-form-select" id="gmEditFile">
+        <option value="shapefile" selected>벡터 데이터 (Shapefile)</option>
+        <option value="geojson">GeoJSON</option>
+        <option value="api">API 연계</option>
+        <option value="raster">래스터 데이터</option>
+      </select>
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">공간 유형</label>
+      <select class="gm-form-select" id="gmEditSpatial">
+        <option value="point" selected>지점</option>
+        <option value="area">구역</option>
+        <option value="line">경로</option>
+      </select>
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">좌표계</label>
+      <select class="gm-form-select" id="gmEditEpsg">
+        <option value="5186" selected>EPSG-5186 (Korea 2000 / Central Belt)</option>
+        <option value="4326">WGS84 (EPSG-4326)</option>
+        <option value="5179">EPSG-5179 (Korea 2000 / Unified CS)</option>
+      </select>
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">원천 시스템</label>
+      <select class="gm-form-select" id="gmEditSource">
+        <option value="energy-api" selected>에너지 지원 API - 태양광 발전 지점</option>
+        <option value="gwangmyeong">광명시 통합 데이터</option>
+        <option value="manual">직접 입력</option>
+      </select>
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">갱신 주기</label>
+      <select class="gm-form-select" id="gmEditFreq">
+        <option value="daily" selected>1일</option>
+        <option value="realtime">실시간</option>
+        <option value="weekly">주간</option>
+        <option value="monthly">월간</option>
+      </select>
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">공개 여부</label>
+      <div class="gm-form-toggle-row">
+        <label class="gm-toggle">
+          <input type="checkbox" id="gmEditPub" checked>
+          <span class="gm-toggle__track"></span>
+          <span class="gm-toggle__label" id="gmEditPubLabel">공개</span>
+        </label>
+      </div>
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">담당 부서</label>
+      <input type="text" class="gm-form-input" id="gmEditDept" value="기후에너지과" placeholder="담당 부서를 입력하세요">
+    </div>
+    <div class="gm-form-field" style="align-items:flex-start;">
+      <label class="gm-form-label" style="padding-top:9px;">설명</label>
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px;">
+        <textarea class="gm-form-textarea" id="gmEditDesc" maxlength="500" placeholder="데이터에 대한 상세 설명을 입력하세요.">광명시 내 태양광 발전 설비 설치 지점 데이터</textarea>
+        <div class="gm-form-hint" id="gmEditDescHint">23/500</div>
+      </div>
+    </div>
+    <div class="gm-form-field" style="align-items:flex-start;">
+      <label class="gm-form-label" style="padding-top:6px;">태그</label>
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+        <div class="gm-tag-group" id="gmEditTags">
+          <span class="gm-tag">태양광 <button class="gm-tag__del" data-tag="태양광" type="button">×</button></span>
+          <span class="gm-tag">에너지 <button class="gm-tag__del" data-tag="에너지" type="button">×</button></span>
+          <button class="gm-tag-add" id="gmTagAddBtn" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            태그 추가
+          </button>
+        </div>
+        <div class="gm-form-hint">최대 10개까지 추가할 수 있습니다.</div>
+      </div>
+    </div>
+
+    <div class="gm-form-divider"></div>
+    <div class="gm-form-meta" id="gmEditMeta">
+      최근 수정: 2026-05-20 10:15 (Admin)<br>
+      수정자: Admin · 기후에너지과<br>
+      생성일: 2026-04-18 09:30 (Admin)
+    </div>
+    <div style="margin-top:10px;text-align:right;">
+      <button class="btn btn--ghost" id="gmEditHistoryBtn" type="button" style="font-size:12px;padding:0 10px;height:30px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>변경 이력 보기
+      </button>
+    </div>
+  </div>
+  <div class="gm-drawer__ft">
+    <button class="btn btn--line" id="gmEditCancelBtn" type="button">취소</button>
+    <button class="btn btn--line" id="gmEditDraftBtn" type="button">임시저장</button>
+    <button class="btn btn--pri" id="gmEditSaveBtn" type="button">게시</button>
+  </div>
+</div>
+
+<!-- ══ 레이어 설정 드로어 ══ -->
+<div class="gm-drawer" id="gmLayerSettingDrawer">
+  <div class="gm-drawer__hd">
+    <h2 class="gm-drawer__title">레이어 설정</h2>
+    <button class="gm-drawer__close" id="gmLayerSettingClose" type="button" aria-label="닫기">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+  </div>
+  <div class="gm-drawer__info-banner">
+    <i data-lucide="info"></i>
+    <p>스타일 변경 사항은 지도에 실시간으로 반영됩니다.<br>따로 미리보기할 필요가 없습니다.</p>
+  </div>
+  <div class="gm-drawer__bd">
+    <div class="gm-form-sec-hd">기본 정보</div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">레이어명</label>
+      <input type="text" class="gm-form-input" id="gmLayerSettingName" value="태양광 발전 시설">
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">연결 데이터</label>
+      <select class="gm-form-select" id="gmLayerSettingData">
+        <option value="solar" selected>태양광 발전 지정</option>
+        <option value="energy">에너지 사용 현황</option>
+        <option value="mobility">모빌리티 현황</option>
+      </select>
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">레이어 유형</label>
+      <div style="flex:1;padding:8px 0;"><span class="gm-type-badge gm-type-badge--point">포인트</span></div>
+    </div>
+
+    <div class="gm-form-sec-hd">표시 설정</div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">아이콘 스타일</label>
+      <select class="gm-icon-select gm-form-select" id="gmLayerSettingIcon">
+        <option value="energy" selected>⚡ 에너지 (번개)</option>
+        <option value="mobility">🚌 모빌리티 (버스)</option>
+        <option value="safety">🛡 세이프티 (방패)</option>
+        <option value="data">💾 데이터 (DB)</option>
+        <option value="leaf">🌿 탄소 (잎)</option>
+      </select>
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">색상</label>
+      <div class="gm-color-row">
+        <div class="gm-color-swatch" id="gmLayerSettingColor" style="background:var(--gp-primary)"></div>
+        <select class="gm-form-select" id="gmLayerSettingColorSel">
+          <option value="#044E9E" selected>딥블루 (#044E9E)</option>
+          <option value="#0C8AE5">포인트 블루 (#0C8AE5)</option>
+          <option value="#1AAA5E">그린 (#1AAA5E)</option>
+          <option value="#ED8B16">오렌지 (#ED8B16)</option>
+          <option value="#6E74D6">퍼플 (#6E74D6)</option>
+          <option value="#E0483D">레드 (#E0483D)</option>
+        </select>
+      </div>
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">투명도</label>
+      <div class="gm-slider-row">
+        <input type="range" class="gm-slider" id="gmLayerSettingOpacity" min="0" max="100" value="80">
+        <span class="gm-slider-val" id="gmLayerSettingOpacityVal">80%</span>
+      </div>
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">라벨 표시</label>
+      <div class="gm-form-toggle-row">
+        <label class="gm-toggle">
+          <input type="checkbox" id="gmLayerSettingLabel" checked>
+          <span class="gm-toggle__track"></span>
+          <span class="gm-toggle__label">표시</span>
+        </label>
+      </div>
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">최소 줌 레벨</label>
+      <select class="gm-form-select" id="gmLayerSettingMinZoom">
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10" selected>10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+    </div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">최대 줌 레벨</label>
+      <select class="gm-form-select" id="gmLayerSettingMaxZoom">
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18" selected>18</option>
+        <option value="19">19</option>
+      </select>
+    </div>
+
+    <div class="gm-form-sec-hd">공개 설정</div>
+    <div class="gm-form-field">
+      <label class="gm-form-label">공개 여부</label>
+      <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+        <div class="gm-form-toggle-row">
+          <label class="gm-toggle">
+            <input type="checkbox" id="gmLayerSettingPub" checked>
+            <span class="gm-toggle__track"></span>
+          </label>
+        </div>
+        <div class="gm-form-hint" style="text-align:left;">활성화하면 다른 사용자도 이 레이어를 볼 수 있습니다.</div>
+      </div>
+    </div>
+  </div>
+  <div class="gm-drawer__ft">
+    <button class="btn btn--line" id="gmLayerSettingCancelBtn" type="button">취소</button>
+    <button class="btn btn--pri" id="gmLayerSettingSaveBtn" type="button">저장</button>
+  </div>
+</div>
+
+<!-- ══ 변경 이력 모달 ══ -->
+<div class="map-popup" id="gmHistoryModal" style="z-index:310;">
+  <div class="map-popup__scrim" id="gmHistoryScrim"></div>
+  <div class="map-popup__box" style="width:520px;max-width:94vw;max-height:80vh;overflow-y:auto;">
+    <div class="map-popup__hd">
+      <div class="map-popup__hd-left">
+        <div style="width:36px;height:36px;border-radius:8px;background:var(--gp-primary-soft);display:flex;align-items:center;justify-content:center;flex:none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gp-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div>
+          <div class="map-popup__title" id="gmHistoryTitle">변경 이력</div>
+          <div class="map-popup__type" id="gmHistorySubtitle">-</div>
+        </div>
+      </div>
+      <button class="map-popup__close" id="gmHistoryClose" type="button" aria-label="닫기">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="map-popup__bd" style="padding:0;">
+      <div id="gmHistoryBody"></div>
+    </div>
+    <div class="map-popup__ft">
+      <button class="btn btn--ghost" id="gmHistoryCloseBtn" type="button" style="flex:1">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 일괄업로드 모달 ══ -->
+<div class="map-popup" id="gmUploadModal" style="z-index:310;">
+  <div class="map-popup__scrim" id="gmUploadScrim"></div>
+  <div class="map-popup__box" style="width:480px;max-width:94vw;">
+    <div class="map-popup__hd">
+      <div class="map-popup__hd-left">
+        <div style="width:36px;height:36px;border-radius:8px;background:var(--gp-primary-soft);display:flex;align-items:center;justify-content:center;flex:none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gp-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div>
+          <div class="map-popup__title">GIS 데이터 등록</div>
+          <div class="map-popup__type">신규 데이터를 업로드하거나 등록합니다</div>
+        </div>
+      </div>
+      <button class="map-popup__close" id="gmUploadClose" type="button" aria-label="닫기">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="map-popup__bd" style="padding:16px 20px;">
+      <div style="margin-bottom:14px;">
+        <p style="font:600 13px/1 var(--font-sans);color:var(--fg-2);margin:0 0 8px;">등록 방식 선택</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <label class="gm-upload-type-btn" id="gmUploadTypeFile">
+            <input type="radio" name="gmUploadType" value="file" checked style="display:none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+            파일 업로드
+            <small>Shapefile, GeoJSON, CSV</small>
+          </label>
+          <label class="gm-upload-type-btn" id="gmUploadTypeApi">
+            <input type="radio" name="gmUploadType" value="api" style="display:none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            API 연계 등록
+            <small>외부 API 연결</small>
+          </label>
+        </div>
+      </div>
+      <div style="border:2px dashed var(--border-strong);border-radius:var(--radius-md);padding:28px;text-align:center;background:var(--bg-subtle);cursor:pointer;" id="gmUploadDropzone">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--fg-disabled)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 10px;display:block;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p style="font:600 14px/1 var(--font-sans);color:var(--fg-2);margin:0 0 6px;">파일을 여기에 드래그하거나 클릭하여 선택</p>
+        <p style="font:400 12px/1 var(--font-sans);color:var(--fg-4);margin:0;">지원 형식: .shp, .geojson, .csv, .zip (최대 100MB)</p>
+        <input type="file" id="gmUploadFileInput" accept=".shp,.geojson,.csv,.zip" style="display:none;">
+      </div>
+      <div id="gmUploadFileName" style="margin-top:8px;font:500 12px/1 var(--font-sans);color:var(--gp-primary);display:none;"></div>
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <label style="font:600 12px/1 var(--font-sans);color:var(--fg-3);flex:none;width:80px;">데이터명</label>
+          <input type="text" class="gm-form-input" id="gmUploadName" placeholder="데이터 이름을 입력하세요" style="flex:1;height:34px;">
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <label style="font:600 12px/1 var(--font-sans);color:var(--fg-3);flex:none;width:80px;">분야</label>
+          <select class="gm-form-select" id="gmUploadField" style="flex:1;height:34px;">
+            <option value="energy">에너지</option>
+            <option value="env">환경</option>
+            <option value="mobility">모빌리티</option>
+            <option value="safety">안전</option>
+            <option value="data">데이터</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <label style="font:600 12px/1 var(--font-sans);color:var(--fg-3);flex:none;width:80px;">좌표계</label>
+          <select class="gm-form-select" id="gmUploadEpsg" style="flex:1;height:34px;">
+            <option value="5186">EPSG-5186</option>
+            <option value="4326">WGS84 (EPSG-4326)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="map-popup__ft" style="gap:8px;">
+      <button class="btn btn--ghost" id="gmUploadCloseBtn" type="button" style="flex:1">취소</button>
+      <button class="btn btn--line" id="gmUploadDraftBtn" type="button" style="flex:1">임시저장</button>
+      <button class="btn btn--pri" id="gmUploadSubmitBtn" type="button" style="flex:1">등록</button>
+    </div>
+  </div>
+</div>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'gis.gis-manage',
+  header: {
+    title: 'GIS 데이터 관리',
+    desc:  '광명시 GIS 데이터를 지도에서 선택하고 데이터 유형·공개여부·공간 속성을 확인하여 등록 및 수정 관리할 수 있습니다.',
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a6adc7984a1e98b757e7666da6ab377b"></script>
+<script src="../assets/js/page-gis-manage.js"></script>
+</body>
+</html>

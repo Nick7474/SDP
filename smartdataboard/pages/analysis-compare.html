@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>데이터 비교 분석 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-analysis-compare.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="gmsb-topbar"></div>
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- ══ 필터 2행 ══ -->
+    <div class="ac-filter">
+      <!-- Row1: 데이터셋 4개 -->
+      <div class="ac-filter-row">
+        <div class="ac-ds-group">
+          <span class="ac-ds-label">A</span>
+          <span class="ac-filter__lb">데이터셋</span>
+          <select class="ac-select" id="dsA">
+            <option value="carbon">탄소배출 현황 데이터</option>
+            <option value="energy">에너지 사용 현황 데이터</option>
+            <option value="mobility">모빌리티 현황 데이터</option>
+            <option value="air">미세먼지 센서 데이터</option>
+            <option value="drt">DRT 운영 데이터</option>
+          </select>
+        </div>
+        <div class="ac-ds-group">
+          <span class="ac-ds-label">B</span>
+          <span class="ac-filter__lb">데이터셋</span>
+          <select class="ac-select" id="dsB">
+            <option value="energy">에너지 사용 현황 데이터</option>
+            <option value="carbon">탄소배출 현황 데이터</option>
+            <option value="mobility">모빌리티 현황 데이터</option>
+            <option value="air">미세먼지 센서 데이터</option>
+            <option value="drt">DRT 운영 데이터</option>
+          </select>
+        </div>
+        <div class="ac-ds-group">
+          <span class="ac-ds-label">C</span>
+          <span class="ac-filter__lb">데이터셋</span>
+          <select class="ac-select" id="dsC">
+            <option value="drt">DRT 운영 데이터</option>
+            <option value="carbon">탄소배출 현황 데이터</option>
+            <option value="energy">에너지 사용 현황 데이터</option>
+            <option value="mobility">모빌리티 현황 데이터</option>
+            <option value="air">미세먼지 센서 데이터</option>
+          </select>
+        </div>
+        <div class="ac-ds-group">
+          <span class="ac-ds-label">D</span>
+          <span class="ac-filter__lb">데이터셋</span>
+          <select class="ac-select" id="dsD">
+            <option value="air">미세먼지 센서 데이터</option>
+            <option value="carbon">탄소배출 현황 데이터</option>
+            <option value="energy">에너지 사용 현황 데이터</option>
+            <option value="mobility">모빌리티 현황 데이터</option>
+            <option value="drt">DRT 운영 데이터</option>
+          </select>
+        </div>
+      </div>
+      <!-- Row2: 기간·지역·기준 + 버튼 -->
+      <div class="ac-filter-row">
+        <span class="ac-filter__lb">기간</span>
+        <div class="ac-date-range">
+          <input type="date" id="dateFrom" value="2026-01-01">
+          <span class="ac-date-sep">~</span>
+          <input type="date" id="dateTo" value="2026-05-31">
+        </div>
+        <div class="ac-filter__sep"></div>
+        <span class="ac-filter__lb">지역</span>
+        <select class="ac-select ac-select--sm" id="acRegion">
+          <option value="all">광명시 전체</option>
+          <option value="gwangmyeong">광명동</option>
+          <option value="cheolsan">철산동</option>
+          <option value="haan">하안동</option>
+          <option value="soha">소하동</option>
+          <option value="iljik">일직동</option>
+        </select>
+        <div class="ac-filter__sep"></div>
+        <span class="ac-filter__lb">비교 기준</span>
+        <select class="ac-select ac-select--sm" id="acBasis">
+          <option value="dong">행정동</option>
+          <option value="sector">분야</option>
+          <option value="month">월별</option>
+        </select>
+        <div class="ac-filter__actions">
+          <div class="ac-hist-wrap">
+            <button class="btn btn--line" id="btnCondHistory" type="button" style="display:inline-flex;align-items:center;gap:5px;height:38px;padding:0 14px;font-size:13px"><i data-lucide="history" style="width:13px;height:13px"></i>이력<span class="ac-hist-badge" id="histBadge" style="display:none">0</span></button>
+            <div class="ac-hist-panel" id="histPanel" style="display:none">
+              <div class="ac-hist-panel__hd">저장된 분석 조건 이력</div>
+              <div id="histList"><p style="font:400 13px/1 var(--font-sans);color:var(--fg-4);padding:16px;text-align:center">저장된 이력이 없습니다.</p></div>
+            </div>
+          </div>
+          <button class="btn btn--line" id="btnSaveCond" type="button" style="display:inline-flex;align-items:center;gap:5px;height:38px;padding:0 14px;font-size:13px"><i data-lucide="bookmark" style="width:13px;height:13px"></i>조건 저장</button>
+          <button class="btn btn--pri" id="btnAnalyze" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="play" style="width:14px;height:14px"></i>분석 실행</button>
+          <button class="btn btn--line" id="btnAcReset" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="refresh-cw" style="width:13px;height:13px"></i>초기화</button>
+          <button class="btn btn--line" id="btnAcExport" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="download" style="width:13px;height:13px"></i>결과 다운로드</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ 탭 바 ══ -->
+    <div class="page-tab-bar">
+      <button class="page-tab on" data-tab="region" type="button">지역별 비교</button>
+      <div class="page-tab-divider"></div>
+      <button class="page-tab" data-tab="period" type="button">기간별 비교</button>
+      <div class="page-tab-divider"></div>
+      <button class="page-tab" data-tab="mile" type="button">마일별 비교</button>
+      <div class="page-tab-divider"></div>
+      <button class="page-tab" data-tab="corr" type="button">상관 분석</button>
+    </div>
+
+    <!-- ══════ 탭1: 지역별 비교 ══════ -->
+    <div class="ac-pane on" id="pane-region">
+
+      <!-- 섹션 A: 3열 -->
+      <div class="ac-row3">
+        <div class="ac-card">
+          <div class="ac-card__hd"><span class="ac-card__t">지역별 주요 지표 비교</span></div>
+          <p class="ac-card__sub" id="regionCompareTitle">2026.01 ~ 2026.05</p>
+          <div class="ac-card__chart"><canvas id="chartRegionCompare"></canvas></div>
+        </div>
+        <div class="ac-card">
+          <div class="ac-card__hd"><span class="ac-card__t">월별 변화 추이</span></div>
+          <p class="ac-card__sub">전체 지역 평균</p>
+          <div class="ac-card__chart"><canvas id="chartMonthlyTrend"></canvas></div>
+        </div>
+        <div class="ac-card">
+          <div class="ac-card__hd"><span class="ac-card__t">에너지 사용량 vs 탄소배출량</span></div>
+          <p class="ac-card__sub">2026.01 ~ 2026.05</p>
+          <div class="ac-card__chart"><canvas id="chartScatter"></canvas></div>
+        </div>
+      </div>
+
+      <!-- 섹션 B: 1:2 -->
+      <div class="ac-row12">
+        <div class="ac-card">
+          <div class="ac-card__hd"><span class="ac-card__t">지표 구성 비율 비교</span></div>
+          <p class="ac-card__sub">2026.01 ~ 2026.05</p>
+          <div class="ac-card__chart--sm"><canvas id="chartRatioBar"></canvas></div>
+        </div>
+        <div class="ac-card">
+          <div class="ac-card__hd"><span class="ac-card__t">DRT 운영 건수 순위</span></div>
+          <p class="ac-card__sub">2026.01 ~ 2026.05 (단위: 건)</p>
+          <div class="ac-rank-list" id="drtRankList" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <!-- 섹션 C: 결과 테이블 -->
+      <div class="ac-table-card">
+        <div class="ac-table-hd">
+          <h2>비교 분석 결과</h2>
+          <div class="ac-table-hd__actions">
+            <button class="btn btn--line" id="btnRegionExport" type="button" style="height:34px;padding:0 14px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="download" style="width:13px;height:13px"></i>CSV 내보내기</button>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th class="l">지역</th>
+              <th>탄소배출량(tCO₂)</th>
+              <th>탄소저감량(tCO₂)</th>
+              <th>에너지 사용량(MWh)</th>
+              <th>DRT 운영(건)</th>
+              <th>미세먼지 지수</th>
+              <th>분석 결과</th>
+              <th>상세</th>
+            </tr>
+          </thead>
+          <tbody id="regionTableBody"></tbody>
+        </table>
+      </div>
+    </div><!-- /pane-region -->
+
+    <!-- ══════ 탭2: 기간별 비교 ══════ -->
+    <div class="ac-pane" id="pane-period">
+      <div class="ac-row2">
+        <div class="ac-card">
+          <div class="ac-card__hd"><span class="ac-card__t">기간별 데이터셋 추이 비교</span></div>
+          <p class="ac-card__sub">선택 기간 구간별 데이터셋 A·B·C·D 변화량</p>
+          <div class="ac-chart-lg"><canvas id="chartPeriodTrend"></canvas></div>
+        </div>
+        <div class="ac-card">
+          <div class="ac-card__hd"><span class="ac-card__t">전월 대비 변동률</span></div>
+          <p class="ac-card__sub">데이터셋별 증감률 (%)</p>
+          <div class="ac-chart-lg"><canvas id="chartPeriodRate"></canvas></div>
+        </div>
+      </div>
+      <div class="ac-table-card">
+        <div class="ac-table-hd">
+          <h2>기간별 변동 현황</h2>
+          <div class="ac-table-hd__actions">
+            <button class="btn btn--line" id="btnPeriodExport" type="button" style="height:34px;padding:0 14px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="download" style="width:13px;height:13px"></i>CSV 내보내기</button>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>기간</th>
+              <th>데이터셋 A</th>
+              <th>전월 대비</th>
+              <th>데이터셋 B</th>
+              <th>전월 대비</th>
+              <th>데이터셋 C</th>
+              <th>전월 대비</th>
+              <th>데이터셋 D</th>
+              <th>전월 대비</th>
+            </tr>
+          </thead>
+          <tbody id="periodTableBody"></tbody>
+        </table>
+      </div>
+    </div><!-- /pane-period -->
+
+    <!-- ══════ 탭3: 마일별 비교 ══════ -->
+    <div class="ac-pane" id="pane-mile">
+      <div class="ac-row2">
+        <div class="ac-card">
+          <div class="ac-card__hd"><span class="ac-card__t">4대 마일 종합 비교</span></div>
+          <p class="ac-card__sub">데이터셋별 마일 점수 레이더 비교</p>
+          <div class="ac-chart-lg"><canvas id="chartMileRadar"></canvas></div>
+        </div>
+        <div class="ac-card">
+          <div class="ac-card__hd"><span class="ac-card__t">마일별 지표 그룹 비교</span></div>
+          <p class="ac-card__sub">데이터셋 A·B·C·D 비교 (정규화 점수)</p>
+          <div class="ac-chart-lg"><canvas id="chartMileBar"></canvas></div>
+        </div>
+      </div>
+      <div class="ac-table-card">
+        <div class="ac-table-hd">
+          <h2>마일별 지표 비교 결과</h2>
+          <div class="ac-table-hd__actions">
+            <button class="btn btn--line" id="btnMileExport" type="button" style="height:34px;padding:0 14px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="download" style="width:13px;height:13px"></i>CSV 내보내기</button>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th class="l">마일</th>
+              <th>데이터셋 A</th>
+              <th>데이터셋 B</th>
+              <th>데이터셋 C</th>
+              <th>데이터셋 D</th>
+              <th>최고값</th>
+              <th>차이</th>
+              <th>비고</th>
+            </tr>
+          </thead>
+          <tbody id="mileTableBody"></tbody>
+        </table>
+      </div>
+    </div><!-- /pane-mile -->
+
+    <!-- ══════ 탭4: 상관 분석 ══════ -->
+    <div class="ac-pane" id="pane-corr">
+      <div class="ac-row2">
+        <div class="ac-card">
+          <div class="ac-card__hd">
+            <span class="ac-card__t">산점도 분석</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <select class="ac-select ac-select--sm" id="corrX" style="min-width:120px;">
+                <option value="energy">에너지 사용량</option>
+                <option value="carbon">탄소배출량</option>
+                <option value="drt">DRT 운영</option>
+                <option value="air">미세먼지</option>
+              </select>
+              <span style="font:400 13px/1 var(--font-sans);color:var(--fg-4)">vs</span>
+              <select class="ac-select ac-select--sm" id="corrY" style="min-width:120px;">
+                <option value="carbon">탄소배출량</option>
+                <option value="energy">에너지 사용량</option>
+                <option value="drt">DRT 운영</option>
+                <option value="air">미세먼지</option>
+              </select>
+            </div>
+          </div>
+          <p class="ac-card__sub">피어슨 상관계수 : <strong id="corrCoef" style="color:var(--gp-point)">r = 0.87</strong></p>
+          <div class="ac-chart-lg"><canvas id="chartCorrScatter"></canvas></div>
+        </div>
+        <div class="ac-card">
+          <div class="ac-card__hd"><span class="ac-card__t">상관계수 매트릭스</span></div>
+          <p class="ac-card__sub">데이터셋 간 피어슨 상관계수 (색상 강도 표현)</p>
+          <div id="corrMatrix" style="margin-top:12px;overflow-x:auto;"></div>
+          <div class="ac-corr-legend" id="corrMatrixLegend" style="margin-top:12px;"></div>
+        </div>
+      </div>
+    </div><!-- /pane-corr -->
+
+  </main>
+</div>
+
+<!-- 드로어: 지역 상세 -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="지역 상세">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k"><i data-lucide="map-pin" class="gp-ico" style="width:15px;height:15px"></i>지역 상세</div>
+      <h3 id="dwTitle">—</h3>
+    </div>
+    <button class="dw__x" id="dwClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="dw__info-banner">
+      <i data-lucide="info"></i>
+      <p id="dwDesc">선택한 지역의 비교 분석 결과입니다.</p>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="bar-chart-2" class="gp-ico"></i>주요 지표</h4>
+      <dl class="dl" id="dwStatDl"></dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="history" class="gp-ico"></i>최근 추이</h4>
+      <div class="dw__mini-chart"><canvas id="dwChart"></canvas></div>
+    </div>
+  </div>
+  <div class="dw__ft">
+    <button class="btn btn--ghost" id="btnReport" type="button"><i data-lucide="file-text" class="gp-ico"></i>보고서 생성</button>
+    <button class="btn btn--pri" id="btnShare" type="button"><i data-lucide="share-2" class="gp-ico"></i>데이터 공유</button>
+  </div>
+</aside>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'analysis.data-compare',
+  header: {
+    title: '데이터 비교 분석',
+    desc: '광명시 주요 도시 데이터를 비교 분석하여 지역별 차이, 기간별 변화, 분야별 상관관계를 한눈에 확인합니다.',
+    actions: '<div class="hd-stat-bar"><div class="hd-stat">비교 데이터셋 <b>3개</b></div><div class="hd-stat">분석 항목 <b>47개</b></div><div class="hd-stat">기준 기간 <b>6개월</b></div><div class="hd-stat">마지막 갱신 <b class="blue">15:07</b></div></div>'+'<button class="btn btn--line" id="btnRefresh" type="button" style="height:32px;padding:0 12px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="refresh-cw" style="width:12px;height:12px"></i>새로고침</button>',
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-analysis-compare.js"></script>
+</body>
+</html>

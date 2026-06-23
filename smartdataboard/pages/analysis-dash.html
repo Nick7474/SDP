@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>분석 대시보드 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-analysis-dash.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="gmsb-topbar"></div>
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- ══ 전역 필터 바 ══ -->
+    <div class="ad-filter">
+      <div class="ad-filter__group">
+        <span class="ad-filter__lb">기간</span>
+        <div class="period-toggle" id="periodToggle">
+          <button class="period-btn on" data-period="1m" type="button">1개월</button>
+          <button class="period-btn" data-period="3m" type="button">3개월</button>
+          <button class="period-btn" data-period="q" type="button">분기</button>
+          <button class="period-btn" data-period="y" type="button">연간</button>
+        </div>
+      </div>
+      <div class="ad-filter__sep"></div>
+      <div class="ad-filter__group">
+        <span class="ad-filter__lb">분야</span>
+        <div class="cb-group">
+          <label class="cb-item"><input type="checkbox" value="탄소중립" checked> 탄소중립</label>
+          <label class="cb-item"><input type="checkbox" value="에너지" checked> 에너지</label>
+          <label class="cb-item"><input type="checkbox" value="모빌리티" checked> 모빌리티</label>
+          <label class="cb-item"><input type="checkbox" value="세이프티" checked> 세이프티</label>
+        </div>
+      </div>
+      <div class="ad-filter__actions">
+        <button class="btn btn--pri" id="btnSearch" type="button" style="height:34px;padding:0 14px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="bar-chart-2" style="width:13px;height:13px"></i>조회</button>
+        <button class="btn btn--line" id="btnReset" type="button" style="height:34px;padding:0 14px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="refresh-cw" style="width:13px;height:13px"></i>초기화</button>
+        <button class="btn btn--line" id="btnPrintPdf" type="button" style="height:34px;padding:0 14px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="printer" style="width:13px;height:13px"></i>PDF 내보내기</button>
+      </div>
+    </div>
+
+    <!-- ══ Row 1: 탄소저감 성과 분석 + 기여도 + 비중 ══ -->
+    <div class="ad-row1">
+
+      <!-- 탄소저감 성과 분석 (2fr) -->
+      <div class="ad-card">
+        <div class="ad-card__hd">
+          <span class="ad-card__t">탄소저감 성과 분석</span>
+          <select class="ad-period-sel" id="perfPeriod">
+            <option value="month">월별</option>
+            <option value="quarter">분기별</option>
+            <option value="year">연간</option>
+          </select>
+        </div>
+        <p class="ad-card__sub">월별 탄소저감량 추이 (단위: tCO₂)</p>
+        <div class="ad-inline-kpis">
+          <div class="ad-ikpi">
+            <div class="ad-ikpi__lb">총 탄소저감량</div>
+            <div class="ad-ikpi__vl">15,234<span class="u">tCO₂</span></div>
+            <div class="ad-ikpi__trend up">▲ +8.3%</div>
+          </div>
+          <div class="ad-ikpi">
+            <div class="ad-ikpi__lb">목표 대비</div>
+            <div class="ad-ikpi__vl">30.5<span class="u">%</span></div>
+            <div class="ad-ikpi__trend up">▲ +2.1p</div>
+          </div>
+          <div class="ad-ikpi">
+            <div class="ad-ikpi__lb">분석 데이터 수</div>
+            <div class="ad-ikpi__vl">24,547<span class="u">건</span></div>
+            <div class="ad-ikpi__trend up">▲ 전월 대비 +12.4%</div>
+          </div>
+          <div class="ad-ikpi">
+            <div class="ad-ikpi__lb">갱신 상태</div>
+            <div class="ad-ikpi__vl" style="color:var(--status-success);font-size:15px">● 정상</div>
+          </div>
+        </div>
+        <div class="ad-chart-legend">
+          <span><i style="background:#0C8AE5"></i>탄소저감량</span>
+        </div>
+        <div class="ad-card__chart"><canvas id="chartPerf"></canvas></div>
+      </div>
+
+      <!-- 마일별 저감 기여도 -->
+      <div class="ad-card">
+        <div class="ad-card__hd"><span class="ad-card__t">마일별 저감 기여도</span></div>
+        <p class="ad-card__sub">(단위: tCO₂, %)</p>
+        <div class="ad-mile-chart"><canvas id="chartMile"></canvas></div>
+      </div>
+
+      <!-- 분야별 데이터 비중 -->
+      <div class="ad-card">
+        <div class="ad-card__hd"><span class="ad-card__t">분야별 데이터 비중</span><span style="font:400 12px/1 var(--font-sans);color:var(--fg-4)">(단위: %)</span></div>
+        <div class="ad-donut" style="margin-top:10px;">
+          <div class="ad-donut-box"><canvas id="chartSectorDonut"></canvas></div>
+          <div class="ad-legend" id="sectorLegend"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Row 2: 지역별 현황 + 데이터 추이 + 시각화 유형 ══ -->
+    <div class="ad-row2">
+
+      <!-- 지역별 탄소저감 현황 -->
+      <div class="ad-card">
+        <div class="ad-card__hd"><span class="ad-card__t">지역별 탄소저감 현황</span><span style="font:400 12px/1 var(--font-sans);color:var(--fg-4)">(단위: tCO₂)</span></div>
+        <div class="ad-chart-legend" style="margin-bottom:8px;">
+          <span><i style="background:#0C8AE5"></i>직접 감축</span>
+          <span><i style="background:#A0D5F8"></i>간접 감축</span>
+        </div>
+        <div class="ad-card__chart"><canvas id="chartRegion"></canvas></div>
+      </div>
+
+      <!-- 월별 분석 데이터 추이 -->
+      <div class="ad-card">
+        <div class="ad-card__hd"><span class="ad-card__t">월별 분석 데이터 추이</span></div>
+        <div class="ad-chart-legend" style="margin-bottom:8px;">
+          <span><i style="background:#0C8AE5"></i>데이터 수</span>
+          <span><i class="dashed" style="color:#1AAA5E"></i>증가율(%)</span>
+        </div>
+        <div class="ad-card__chart"><canvas id="chartDataTrend"></canvas></div>
+      </div>
+
+      <!-- 시각화 유형별 사용 현황 -->
+      <div class="ad-card">
+        <div class="ad-card__hd"><span class="ad-card__t">시각화 유형별 사용 현황</span><span style="font:400 12px/1 var(--font-sans);color:var(--fg-4)">(단위: 건)</span></div>
+        <div class="ad-hbar-list" id="vizTypeList" style="margin-top:12px;"></div>
+      </div>
+    </div>
+
+    <!-- ══ Row 3: 대시보드 분석 결과 요약 ══ -->
+    <div class="ad-sec-hd">대시보드 분석 결과 요약</div>
+    <div class="ad-row3">
+
+      <!-- 탄소저감량 vs 목표 -->
+      <div class="ad-card">
+        <div class="ad-card__hd"><span class="ad-card__t">탄소저감량 vs 목표</span></div>
+        <p class="ad-card__sub">(단위: tCO₂)</p>
+        <div class="ad-chart-legend">
+          <span><i style="background:#0C8AE5"></i>실적</span>
+          <span><i class="dashed" style="color:#6E74D6"></i>목표</span>
+          <span><i class="dashed" style="color:#1AAA5E"></i>목표 대비(%)</span>
+        </div>
+        <div class="ad-card__chart"><canvas id="chartGoal"></canvas></div>
+      </div>
+
+      <!-- 분야별 월별 추이 -->
+      <div class="ad-card">
+        <div class="ad-card__hd"><span class="ad-card__t">분야별 월별 추이</span></div>
+        <p class="ad-card__sub">(단위: tCO₂)</p>
+        <div class="ad-chart-legend">
+          <span><i style="background:#0C8AE5"></i>에너지</span>
+          <span><i style="background:#1AAA5E"></i>모빌리티</span>
+          <span><i style="background:#ED8B16"></i>세이프티</span>
+          <span><i style="background:#6E74D6"></i>데이터</span>
+          <span><i style="background:#AEB7C2"></i>기타</span>
+        </div>
+        <div class="ad-card__chart"><canvas id="chartSectorTrend"></canvas></div>
+      </div>
+
+      <!-- 데이터 갱신 현황 -->
+      <div class="ad-card">
+        <div class="ad-card__hd"><span class="ad-card__t">데이터 갱신 현황</span></div>
+        <p class="ad-card__sub">(단위: 건)</p>
+        <div class="ad-chart-legend">
+          <span><i style="background:#1AAA5E"></i>정상</span>
+          <span><i style="background:#ED8B16"></i>갱신 지연</span>
+          <span><i style="background:#E0483D"></i>연결 오류</span>
+        </div>
+        <div class="ad-card__chart"><canvas id="chartRefresh"></canvas></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'analysis.analysis-dash',
+  header: {
+    title: '분석 대시보드',
+    desc: '광명시 주요 도시 데이터를 차트와 그래프로 시각화하여 분야별 현황, 변화 추이, 지역별 성과를 직관적으로 확인하는 분석 화면입니다.',
+    actions: '<div class="hd-stat-bar"><div class="hd-stat">데이터셋 <b>12개</b></div><div class="hd-stat">활성 시각화 <b>8개</b></div><div class="hd-stat">갱신 주기 <b>1시간</b></div><div class="hd-stat">마지막 갱신 <b class="blue" id="lastUpdated">15:07</b></div></div>'
+            +'<button class="btn btn--line" id="btnRefresh" type="button" style="height:32px;padding:0 12px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="refresh-cw" style="width:12px;height:12px"></i>새로고침</button>',
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-analysis-dash.js"></script>
+</body>
+</html>

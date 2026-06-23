@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사용자 관리 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-system-users.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div id="gmsb-topbar"></div>
+
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- 일괄 처리 액션 바 (선택 시 표시) -->
+    <div class="su-bulk-bar" id="suBulkBar" style="display:none">
+      <span class="su-bulk-count" id="suBulkCount">0명 선택됨</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn--line" id="suBulkDeactivate" type="button">비활성화</button>
+        <button class="btn btn--line" id="suBulkGroup" type="button">권한 그룹 변경</button>
+        <button class="btn btn--ghost" id="suBulkCancel" type="button">선택 해제</button>
+      </div>
+    </div>
+
+    <!-- 필터 바 -->
+    <div class="su-filter-bar">
+      <div class="su-filter-left">
+        <div class="su-filter-item">
+          <span class="su-filter-lbl">사용자 유형</span>
+          <select class="su-select" id="filterRole">
+            <option value="">전체</option>
+            <option value="admin">관리자</option>
+            <option value="dept">부서 담당자</option>
+            <option value="external">외부 연계 사용자</option>
+            <option value="user">일반 사용자</option>
+          </select>
+        </div>
+        <div class="su-filter-div"></div>
+        <div class="su-filter-item">
+          <span class="su-filter-lbl">부서</span>
+          <select class="su-select" id="filterDept">
+            <option value="">전체</option>
+            <option>스마트도시과</option>
+            <option>환경관리과</option>
+            <option>교통정책과</option>
+            <option>외부기관</option>
+            <option>정보통신과</option>
+            <option>안전총괄과</option>
+          </select>
+        </div>
+        <div class="su-filter-div"></div>
+        <div class="su-filter-item">
+          <span class="su-filter-lbl">상태</span>
+          <select class="su-select" id="filterStatus">
+            <option value="">전체</option>
+            <option value="active">사용 중</option>
+            <option value="pending">승인 대기</option>
+            <option value="inactive">비활성</option>
+            <option value="locked">잠김</option>
+          </select>
+        </div>
+        <div class="su-search-box">
+          <i data-lucide="search"></i>
+          <input type="search" id="userSearch" placeholder="이름·ID·부서 검색" aria-label="검색">
+        </div>
+        <button class="btn btn--pri" id="searchBtn" type="button">검색</button>
+        <button class="btn btn--line" id="resetBtn" type="button">초기화</button>
+      </div>
+      <button class="btn btn--pri" id="addUserBtn" type="button">
+        <i data-lucide="user-plus" class="gp-ico"></i>사용자 등록
+      </button>
+    </div>
+
+    <!-- 사용자 목록 -->
+    <div class="su-sec-hd">
+      <span class="su-sec-title">사용자 목록</span>
+      <button class="btn btn--line" id="btnExportCsv" type="button" style="height:34px;padding:0 12px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="download" style="width:13px;height:13px"></i>CSV 내보내기</button>
+    </div>
+    <div class="panel" style="padding:0;overflow:hidden">
+      <table class="tbl su-tbl">
+        <thead>
+          <tr>
+            <th style="width:40px;padding:0 10px"><input type="checkbox" id="suCheckAll" aria-label="전체 선택"></th>
+            <th class="l">사용자명</th>
+            <th>ID</th>
+            <th>부서</th>
+            <th>역할</th>
+            <th>권한 그룹</th>
+            <th>접근 메뉴 수</th>
+            <th>상태</th>
+            <th>최근 접속</th>
+            <th>등록일</th>
+            <th>관리</th>
+          </tr>
+        </thead>
+        <tbody id="userTbody"></tbody>
+      </table>
+      <div class="su-pagination" id="userPagination"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- 스크림 -->
+<div class="scrim" id="scrim"></div>
+
+<!-- 사용자 상세 드로어 -->
+<aside class="drawer" id="userDrawer" aria-hidden="true" aria-label="사용자 상세 및 권한 편집">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k">
+        <i data-lucide="user-round" style="width:14px;height:14px"></i>
+        <span id="ud_userId">—</span>
+        <span id="ud_roleBadgeK"></span>
+      </div>
+      <h3>사용자 상세 및 권한 편집</h3>
+    </div>
+    <button class="dw__x" id="udClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <p class="su-dw-desc">선택한 사용자의 계정 정보와 접근 권한을 확인하고 수정할 수 있습니다.</p>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="info" class="gp-ico"></i>계정 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>사용자명</dt><dd id="ud_name">—</dd></div>
+        <div class="dl__r"><dt>사용자 ID</dt><dd id="ud_id" style="font-family:monospace;font-weight:500">—</dd></div>
+        <div class="dl__r"><dt>소속 부서</dt><dd id="ud_dept">—</dd></div>
+        <div class="dl__r"><dt>역할</dt><dd id="ud_role">—</dd></div>
+        <div class="dl__r"><dt>권한 그룹</dt><dd id="ud_group">—</dd></div>
+        <div class="dl__r"><dt>최근 접속</dt><dd id="ud_lastLogin">—</dd></div>
+        <div class="dl__r"><dt>계정 생성일</dt><dd id="ud_regDate">—</dd></div>
+      </dl>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="layout-grid" class="gp-ico"></i>접근 가능 메뉴</h4>
+      <div class="su-menu-list" id="ud_menuList"></div>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="shield" class="gp-ico"></i>계정 상태</h4>
+      <div class="su-toggle-row" style="margin-bottom:16px">
+        <label class="su-toggle">
+          <input type="checkbox" id="ud_statusToggle" checked>
+          <span class="su-toggle__track"><span class="su-toggle__thumb"></span></span>
+        </label>
+        <span class="su-toggle-lbl" id="ud_toggleLbl">사용 중</span>
+      </div>
+      <button class="su-pw-btn" type="button" id="ud_pwBtn">
+        <i data-lucide="lock-keyhole"></i>비밀번호 초기화
+      </button>
+      <button class="su-pw-btn" type="button" id="ud_logBtn" style="margin-top:8px;background:var(--bg-subtle)">
+        <i data-lucide="clock"></i>접속 로그 조회
+      </button>
+    </div>
+  </div>
+  <div class="dw__ft" style="grid-template-columns:1fr 1fr 1fr">
+    <button class="btn btn--pri" id="udSave" type="button">저장</button>
+    <button class="btn su-btn--deactivate" id="udDeactivate" type="button">비활성화</button>
+    <button class="btn btn--line" id="udClose2" type="button">닫기</button>
+  </div>
+</aside>
+
+<!-- 사용자 등록 모달 -->
+<div class="sp-modal-scrim" id="suRegScrim" style="display:none"></div>
+<div class="sp-modal" id="suRegModal" style="display:none" role="dialog" aria-modal="true" aria-label="사용자 등록">
+  <div class="sp-modal__hd">
+    <h3>사용자 등록</h3>
+    <button class="dw__x" id="suRegClose" type="button" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="sp-modal__bd">
+    <div class="sp-form-grid">
+      <div class="sp-form-col">
+        <div class="sp-form-field"><span class="sp-form-lbl">사용자명 <em style="color:var(--status-danger)">*</em></span><input type="text" class="sp-form-input" id="regName" placeholder="홍길동"></div>
+        <div class="sp-form-field"><span class="sp-form-lbl">사용자 ID <em style="color:var(--status-danger)">*</em></span><input type="text" class="sp-form-input" id="regId" placeholder="hong01"></div>
+        <div class="sp-form-field"><span class="sp-form-lbl">이메일</span><input type="email" class="sp-form-input" id="regEmail" placeholder="user@gwangmyeong.go.kr"></div>
+        <div class="sp-form-field"><span class="sp-form-lbl">소속 부서 <em style="color:var(--status-danger)">*</em></span>
+          <select class="sp-form-select" id="regDept">
+            <option value="">선택</option>
+            <option>스마트도시과</option><option>환경관리과</option><option>교통정책과</option>
+            <option>외부기관</option><option>정보통신과</option><option>안전총괄과</option>
+          </select>
+        </div>
+      </div>
+      <div class="sp-form-col">
+        <div class="sp-form-field"><span class="sp-form-lbl">역할 <em style="color:var(--status-danger)">*</em></span>
+          <select class="sp-form-select" id="regRole">
+            <option value="user">일반 사용자</option>
+            <option value="dept">부서 담당자</option>
+            <option value="external">외부 연계 사용자</option>
+            <option value="admin">관리자</option>
+          </select>
+        </div>
+        <div class="sp-form-field"><span class="sp-form-lbl">권한 그룹</span>
+          <select class="sp-form-select" id="regGroup">
+            <option>데이터 조회</option>
+            <option>탄소중립 조회</option>
+            <option>모빌리티 조회</option>
+            <option>시스템 모니터링</option>
+            <option>전체 관리</option>
+          </select>
+        </div>
+        <div class="sp-form-field"><span class="sp-form-lbl">임시 비밀번호</span><input type="password" class="sp-form-input" id="regPw" placeholder="자동 생성됩니다" readonly style="background:var(--surface-inset);color:var(--fg-3)"></div>
+        <div class="sp-form-field"><span class="sp-form-lbl">메모</span><input type="text" class="sp-form-input" id="regNote" placeholder="추가 설명 (선택)"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sp-modal__ft">
+    <button class="btn btn--line" id="suRegCancel" type="button">취소</button>
+    <button class="btn btn--pri" id="suRegSave" type="button">등록</button>
+  </div>
+</div>
+
+<!-- 접속 로그 모달 -->
+<div class="sp-modal-scrim" id="suLogScrim" style="display:none"></div>
+<div class="sp-modal" id="suLogModal" style="display:none" role="dialog" aria-modal="true" aria-label="접속 로그">
+  <div class="sp-modal__hd">
+    <h3>접속 로그 — <span id="suLogUserName">—</span></h3>
+    <button class="dw__x" id="suLogClose" type="button" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="sp-modal__bd" style="padding:0">
+    <table class="tbl">
+      <thead><tr><th>접속 일시</th><th>IP 주소</th><th>브라우저</th><th>결과</th></tr></thead>
+      <tbody id="suLogBody"></tbody>
+    </table>
+  </div>
+  <div class="sp-modal__ft">
+    <button class="btn btn--line" id="suLogCloseBtn" type="button">닫기</button>
+  </div>
+</div>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'system.users',
+  header: {
+    title: '사용자 관리',
+    desc: '광명 스마트데이터보드 사용자 계정, 권한 그룹, 소속 부서 및 상태를 조회하고 관리합니다.',
+    actions: '<div class="hd-stat-bar"><div class="hd-stat">전체 사용자 <b>64명</b></div><div class="hd-stat">관리자 <b>8명</b></div><div class="hd-stat">부서 담당자 <b>42명</b></div><div class="hd-stat">비활성 계정 <b>3명</b></div><div class="hd-stat">최근 접속 <b class="blue">15:07</b></div></div>'+'<button class="btn btn--line" id="btnRefresh" type="button" style="height:32px;padding:0 12px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="refresh-cw" style="width:12px;height:12px"></i>새로고침</button>'
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-system-users.js"></script>
+</body>
+</html>

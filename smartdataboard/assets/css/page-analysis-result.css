@@ -1,0 +1,145 @@
+/* =====================================================================
+   광명 스마트데이터보드 · 분석 결과 관리
+   ===================================================================== */
+
+/* ── 필터 2행 ── */
+.ar-filter{background:var(--surface-card);border:1px solid var(--border-1);border-radius:var(--radius-lg);box-shadow:var(--elev-1);padding:0;margin-bottom:20px;overflow:hidden;}
+.ar-filter-row{display:flex;align-items:center;gap:12px;padding:13px 22px;flex-wrap:wrap;}
+.ar-filter-row+.ar-filter-row{border-top:1px solid var(--border-2);}
+.ar-filter__lb{font:600 14px/1 var(--font-sans);color:var(--fg-2);white-space:nowrap;flex:none;}
+.ar-select{height:36px;padding:0 10px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);font:400 14px/1 var(--font-sans);color:var(--fg-1);background:var(--surface-card);min-width:140px;cursor:pointer;}
+.ar-date-range{display:flex;align-items:center;gap:6px;}
+.ar-date-range input[type=date]{height:36px;padding:0 10px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);font:400 14px/1 var(--font-sans);color:var(--fg-1);background:var(--surface-card);cursor:pointer;}
+.ar-date-sep{font:500 13px/1 var(--font-sans);color:var(--fg-4);}
+.ar-search-box{display:flex;align-items:center;gap:0;border:1px solid var(--border-strong);border-radius:var(--radius-sm);overflow:hidden;background:var(--surface-card);flex:1;max-width:280px;}
+.ar-search-box i{padding:0 10px;color:var(--fg-4);}
+.ar-search-box i svg{width:15px;height:15px;display:block;}
+.ar-search-box input{flex:1;height:36px;border:none;background:transparent;font:400 14px/1 var(--font-sans);color:var(--fg-1);outline:none;padding-right:10px;}
+.ar-filter__sep{width:1px;height:22px;background:var(--border-1);flex:none;}
+.ar-filter__actions{display:flex;gap:8px;margin-left:auto;}
+
+/* ── 테이블 섹션 ── */
+.ar-table-card{background:var(--surface-card);border:1px solid var(--border-1);border-radius:var(--radius-lg);box-shadow:var(--elev-2);padding:22px 24px;}
+.ar-table-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;}
+.ar-table-hd h2{font:700 17px/1 var(--font-sans);color:var(--fg-1);}
+.ar-table-hd__mid{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.ar-count{font:500 14px/1 var(--font-sans);color:var(--fg-3);}
+.ar-count strong{font-weight:700;color:var(--fg-1);}
+.ar-tbl-search{display:flex;align-items:center;gap:0;border:1px solid var(--border-strong);border-radius:var(--radius-sm);overflow:hidden;background:var(--surface-card);}
+.ar-tbl-search input{height:34px;border:none;background:transparent;font:400 13px/1 var(--font-sans);color:var(--fg-1);outline:none;padding:0 10px;width:160px;}
+.ar-tbl-search button{height:34px;width:34px;border:none;background:transparent;cursor:pointer;color:var(--fg-4);display:grid;place-items:center;}
+.ar-tbl-search button svg{width:14px;height:14px;}
+
+/* 연계 도구 셀 */
+.tool-badge{display:inline-flex;align-items:center;gap:5px;font:600 13px/1 var(--font-sans);color:var(--fg-2);}
+.tool-badge__ico{width:18px;height:18px;object-fit:contain;}
+.tool-none{font:400 13px/1 var(--font-sans);color:var(--fg-4);}
+
+/* ── 페이지네이션 ── */
+.ar-pagination{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:20px;}
+.pg-btn{width:34px;height:34px;display:grid;place-items:center;border-radius:var(--radius-sm);border:1px solid var(--border-1);background:var(--surface-card);font:500 14px/1 var(--font-sans);color:var(--fg-2);cursor:pointer;transition:background var(--dur-fast);}
+.pg-btn:hover:not(.on):not(:disabled){background:var(--surface-hover);}
+.pg-btn.on{background:var(--gp-point);color:#fff;border-color:var(--gp-point);font-weight:700;}
+.pg-btn:disabled{opacity:.4;cursor:default;}
+.pg-arrow{color:var(--fg-4);}
+.pg-arrow svg{width:14px;height:14px;}
+.ar-per-page{display:flex;align-items:center;gap:8px;margin-left:16px;font:500 13px/1 var(--font-sans);color:var(--fg-3);}
+.ar-per-page select{height:34px;padding:0 8px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);font:500 13px/1 var(--font-sans);color:var(--fg-1);background:var(--surface-card);cursor:pointer;}
+
+/* ── 드로어 전용 ── */
+.dw__info-banner{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;border-radius:12px;background:var(--status-info-soft);margin-bottom:16px;}
+.dw__info-banner svg{width:18px;height:18px;color:var(--status-info);flex:none;margin-top:1px;}
+.dw__info-banner p{font:400 13px/1.5 var(--font-sans);color:var(--fg-2);margin:0;}
+
+/* 폼 필드 */
+.dw__field{margin-bottom:14px;}
+.dw__field-lb{font:600 13px/1 var(--font-sans);color:var(--fg-2);margin-bottom:6px;display:flex;align-items:center;gap:3px;}
+.dw__field-lb .req{color:var(--status-danger);}
+.dw__field input[type=text],
+.dw__field select,
+.dw__field textarea{width:100%;height:38px;padding:0 12px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);font:400 14px/1 var(--font-sans);color:var(--fg-1);background:var(--surface-card);box-sizing:border-box;outline:none;transition:border-color var(--dur-fast);}
+.dw__field input[type=text]:focus,
+.dw__field select:focus,
+.dw__field textarea:focus{border-color:var(--gp-point);}
+.dw__field textarea{height:80px;padding:10px 12px;line-height:1.5;resize:vertical;}
+.dw__field select{cursor:pointer;}
+
+/* 숫자 스핀박스 */
+.spinbox{display:flex;align-items:center;border:1px solid var(--border-strong);border-radius:var(--radius-sm);overflow:hidden;width:120px;}
+.spinbox input[type=number]{flex:1;height:38px;border:none;background:transparent;font:500 14px/1 var(--font-sans);color:var(--fg-1);text-align:center;outline:none;-moz-appearance:textfield;}
+.spinbox input[type=number]::-webkit-outer-spin-button,
+.spinbox input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;}
+.spinbox__btn{width:34px;height:38px;border:none;background:var(--bg-subtle);cursor:pointer;font:700 16px/1 var(--font-sans);color:var(--fg-2);display:grid;place-items:center;flex:none;transition:background var(--dur-fast);}
+.spinbox__btn:hover{background:var(--surface-hover);}
+
+/* 토글 스위치 */
+.toggle-wrap{display:flex;align-items:center;gap:10px;}
+.toggle{position:relative;width:44px;height:24px;flex:none;}
+.toggle input{opacity:0;width:0;height:0;position:absolute;}
+.toggle__track{position:absolute;inset:0;background:var(--border-strong);border-radius:99px;transition:background var(--dur-fast);}
+.toggle input:checked~.toggle__track{background:var(--gp-point);}
+.toggle__thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left var(--dur-fast);}
+.toggle input:checked~.toggle__thumb{left:23px;}
+.toggle-label{font:500 14px/1 var(--font-sans);color:var(--fg-2);}
+.toggle-label.active{color:var(--gp-point);font-weight:600;}
+
+/* 드로어 푸터 3행 */
+.dw__ft-3{background:#fff;border-top:1px solid #E6EBF2;padding:16px 24px;display:flex;flex-direction:column;gap:8px;}
+.dw__ft-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.dw__ft-row--full{grid-template-columns:1fr;}
+.dw__ft-3 .btn{height:44px;justify-content:center;width:100%;}
+
+/* ─── 즐겨찾기 버튼 ─── */
+.ar-fav-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--fg-disabled);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-xs);
+  padding: 0;
+  transition: color var(--dur-fast), background var(--dur-fast);
+}
+.ar-fav-btn svg { width: 15px; height: 15px }
+.ar-fav-btn:hover { color: var(--status-warning); background: var(--status-warning-soft) }
+.ar-fav-btn.on { color: var(--status-warning) }
+.ar-fav-btn.on svg { fill: var(--status-warning); stroke: var(--status-warning) }
+
+/* 즐겨찾기만 보기 토글 */
+.ar-fav-toggle {
+  height: 34px;
+  padding: 0 11px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font: 600 12px/1 var(--font-sans);
+  color: var(--fg-3);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all var(--dur-fast);
+}
+.ar-fav-toggle:hover { background: var(--surface-hover) }
+.ar-fav-toggle.on { background: var(--status-warning-soft); color: var(--status-warning); border-color: var(--status-warning) }
+.ar-fav-toggle svg { width: 12px; height: 12px }
+.ar-fav-toggle.on svg { fill: var(--status-warning); stroke: var(--status-warning) }
+
+/* ─── 로딩 스켈레톤 ─── */
+.ar-skeleton-row td { padding: 10px 12px; vertical-align: middle }
+.skeleton-bar {
+  display: block;
+  height: 13px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--bg-sunken) 25%, var(--surface-inset) 50%, var(--bg-sunken) 75%);
+  background-size: 200% 100%;
+  animation: ar-shimmer 1.3s ease-in-out infinite;
+}
+@keyframes ar-shimmer {
+  0%   { background-position: 200% 0 }
+  100% { background-position: -200% 0 }
+}

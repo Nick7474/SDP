@@ -1,0 +1,389 @@
+/* =====================================================================
+   광명 스마트데이터보드 · 탄소·에너지 공간 데이터 (전용 스타일)
+   공통 GIS 스타일은 gis-shared.css 참조
+   ===================================================================== */
+
+/* ---- 필터 패널 전환 ---- */
+.ce-filter-pane { display: block; }
+
+/* ---- 분석 기준 그리드 ---- */
+.ce-criteria-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ce-criteria-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ce-criteria-lb {
+  font: 500 12px/1 var(--font-sans);
+  color: var(--fg-3);
+  flex: none;
+  width: 64px;
+}
+
+.ce-select {
+  flex: 1;
+  height: 30px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xs);
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%237C8896' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 8px center no-repeat;
+  padding: 0 24px 0 8px;
+  font: 400 12px/1 var(--font-sans);
+  color: var(--fg-1);
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  min-width: 0;
+}
+
+/* ---- 지도 영역 id 오버라이드 ---- */
+#ceMap {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* ---- 범례 그라데이션 바 ---- */
+.ce-legend-gradient {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.ce-legend-low,
+.ce-legend-high {
+  font: 400 10px/1 var(--font-sans);
+  color: var(--fg-4);
+  white-space: nowrap;
+}
+
+.ce-legend-bar {
+  flex: 1;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(to right, #C8F5DA, #1AAA5E, #044E9E);
+}
+
+/* 에너지 탭 범례 */
+.ce-legend-bar--energy {
+  background: linear-gradient(to right, #FFF9C4, #FFB114, #E0483D);
+}
+
+/* ---- 하단 섹션 타이틀 ---- */
+.gis-detail__title {
+  font: 700 15px/1 var(--font-sans);
+  color: var(--fg-1);
+  margin: 0;
+}
+
+/* ---- 히트맵 캔버스 오버레이 ---- */
+#ceHeatmapCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  opacity: .72;
+}
+
+/* ---- Choropleth 단계 범례 ---- */
+.map-legend--choropleth {
+  min-width: 178px;
+}
+
+.ce-legend-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.ce-legend-step {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.ce-legend-step__swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  flex: none;
+  border: 1px solid rgba(0,0,0,.1);
+}
+
+.ce-legend-step__label {
+  font: 400 11px/1.3 var(--font-sans);
+  color: var(--fg-2);
+  white-space: nowrap;
+}
+
+.ce-legend-unit {
+  font: 400 10px/1 var(--font-sans);
+  color: var(--fg-4);
+  text-align: right;
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+/* ---- 구역 호버 툴팁 ---- */
+.ce-dong-tip {
+  position: fixed;
+  z-index: 2100;
+  background: rgba(22,36,59,.92);
+  color: #fff;
+  border-radius: 8px;
+  padding: 9px 13px;
+  pointer-events: none;
+  display: none;
+}
+.ce-dong-tip__name {
+  font: 700 13px/1.3 var(--font-sans);
+  margin-bottom: 4px;
+}
+.ce-dong-tip__val {
+  font: 400 12px/1 var(--font-sans);
+  opacity: .82;
+}
+
+/* ---- 행정동 상세 드로어 ---- */
+.ce-district-drawer {
+  position: fixed;
+  top: 60px;
+  right: 0;
+  bottom: 0;
+  width: 380px;
+  background: var(--bg-subtle);
+  border-left: 1px solid var(--border-1);
+  display: flex;
+  flex-direction: column;
+  z-index: 900;
+  transform: translateX(100%);
+  transition: transform var(--dur-slow) var(--ease-out);
+  box-shadow: -6px 0 32px rgba(20,40,80,.10);
+}
+.ce-district-drawer.open { transform: translateX(0); }
+
+.ce-dd__hd {
+  background: var(--surface-card);
+  padding: 20px 22px;
+  border-bottom: 1px solid var(--border-1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+}
+.ce-dd__hd-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.ce-dd__badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  flex: none;
+  display: inline-block;
+  border: 2px solid rgba(255,255,255,.35);
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
+.ce-dd__title {
+  font: 700 17px/1.2 var(--font-sans);
+  color: var(--fg-1);
+  margin: 0 0 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ce-dd__sub {
+  font: 400 12px/1 var(--font-sans);
+  color: var(--fg-3);
+  margin: 0;
+}
+.ce-dd__close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--bg-subtle);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  color: var(--fg-3);
+  transition: background var(--dur-fast);
+}
+.ce-dd__close:hover { background: var(--surface-hover); }
+
+.ce-dd__bd {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 18px;
+}
+.ce-dd__bd .dw__sec {
+  background: var(--surface-card);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.ce-dd__bd .dw__sec h4 {
+  font: 700 13px/1 var(--font-sans);
+  color: var(--fg-2);
+  margin: 0 0 14px;
+}
+
+.ce-dd__chart-wrap {
+  height: 192px;
+  position: relative;
+}
+.ce-dd__chart-wrap canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.ce-dd__legend {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 10px;
+}
+.ce-dd__leg-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font: 400 11px/1 var(--font-sans);
+  color: var(--fg-3);
+}
+.ce-dd__leg-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex: none;
+  display: inline-block;
+}
+
+.ce-dd__tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font: 400 12px/1.4 var(--font-sans);
+}
+.ce-dd__tbl th {
+  font: 600 11px/1 var(--font-sans);
+  color: var(--fg-3);
+  padding: 7px 6px;
+  text-align: right;
+  border-bottom: 1px solid var(--border-1);
+  background: var(--surface-inset);
+}
+.ce-dd__tbl th:first-child { text-align: left; }
+.ce-dd__tbl td {
+  padding: 9px 6px;
+  text-align: right;
+  border-bottom: 1px solid var(--border-2);
+  color: var(--fg-2);
+  font-variant-numeric: tabular-nums;
+}
+.ce-dd__tbl td:first-child { font-weight: 600; color: var(--fg-1); text-align: left; }
+.ce-dd__tbl tbody tr:last-child td { border-bottom: none; }
+
+.ce-dd__unit {
+  font: 400 10px/1 var(--font-sans);
+  color: var(--fg-4);
+  text-align: right;
+  margin: 8px 0 0;
+}
+
+.ce-dd__ft {
+  background: var(--surface-card);
+  border-top: 1px solid var(--border-1);
+  padding: 14px 18px;
+  display: flex;
+  gap: 10px;
+  flex: none;
+}
+.ce-dd__ft .btn { flex: 1; justify-content: center; height: 40px; font-size: 13px; }
+
+/* ── 기간 직접입력 ── */
+.ce-date-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font: 500 13px/1 var(--font-sans);
+  color: var(--fg-1);
+  width: 84px;
+  cursor: text;
+}
+.ce-date-input::placeholder { color: var(--fg-disabled); }
+.ce-date-input:focus { color: var(--gp-point); }
+
+/* ── 차트 다운로드 버튼 ── */
+.chart-dl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--fg-4);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: auto;
+  transition: background var(--dur-fast), color var(--dur-fast);
+}
+.chart-dl-btn:hover { background: var(--bg-subtle); color: var(--gp-primary); }
+.gis-chart-card__hd { display: flex; align-items: center; gap: 6px; }
+
+/* ── 행정동 집계 테이블 ── */
+.ce-dongtbl-wrap {
+  background: var(--surface-card);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-1);
+  margin-top: 20px;
+  overflow: hidden;
+}
+.ce-dongtbl__hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-2);
+  gap: 12px;
+}
+.ce-dongtbl__title {
+  font: 700 16px/1 var(--font-sans);
+  color: var(--fg-1);
+  flex: none;
+}
+.ce-dongtbl__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ce-dongtbl__search {
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font: 400 13px/1 var(--font-sans);
+  color: var(--fg-1);
+  outline: none;
+  width: 160px;
+}
+.ce-dongtbl__search:focus { border-color: var(--gp-point); }
+.ce-dongtbl-wrap .tbl { margin: 0; border-radius: 0; border: none; }
+.ce-dongtbl-wrap .tbl th, .ce-dongtbl-wrap .tbl td { padding: 10px 14px; }

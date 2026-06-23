@@ -289,7 +289,8 @@
         pgBtn('&laquo;', false), pgBtn('&lsaquo;', false),
         pgBtn('1', true), pgBtn('2'),
         pgBtn('&rsaquo;'), pgBtn('&raquo;'),
-      '</div>'
+      '</div>',
+      '<div></div>'
     ].join('');
   }
 

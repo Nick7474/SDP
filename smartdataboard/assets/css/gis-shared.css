@@ -1,0 +1,1081 @@
+/* =====================================================================
+   광명 스마트데이터보드 · GIS 공통 스타일
+   mile-map, carbon-energy 등 GIS 기반 페이지가 공유합니다.
+   ===================================================================== */
+
+/* ---- 전체 GIS 래퍼 ---- */
+.gis-wrap {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 0;
+  height: calc(100vh - 60px - 56px - 40px);
+  min-height: 520px;
+  max-height: 720px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: var(--elev-2);
+}
+
+/* ---- 좌측 필터 패널 ---- */
+.gis-filter {
+  background: #fff;
+  border-right: 1px solid var(--border-1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gis-filter__title {
+  padding: 16px 18px 14px;
+  font: 700 14px/1 var(--font-sans);
+  color: var(--fg-1);
+  border-bottom: 1px solid var(--border-2);
+  flex: none;
+  margin: 0;
+}
+
+.gis-filter__body {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-1) transparent;
+}
+
+.gis-filter__sec {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-2);
+}
+
+.gis-filter__sec:last-child { border-bottom: none; }
+
+.gis-filter__sec-hd {
+  font: 700 12px/1 var(--font-sans);
+  color: var(--fg-3);
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+/* 검색 박스 (타이틀 바로 아래 고정) */
+.gis-filter__search {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-2);
+  flex: none;
+}
+
+/* ---- 레이어 리스트 ---- */
+.layer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.layer-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+  cursor: pointer;
+  border-radius: var(--radius-xs);
+  transition: background .1s;
+}
+
+.layer-item:hover { background: var(--surface-hover); }
+
+.layer-item input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--gp-point);
+  cursor: pointer;
+  flex: none;
+}
+
+.layer-item__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.layer-item__label {
+  font: 500 13px/1.35 var(--font-sans);
+  color: var(--fg-2);
+  flex: 1;
+  min-width: 0;
+}
+
+.layer-item__count {
+  font: 600 11px/1 var(--font-sans);
+  color: var(--fg-4);
+  flex: none;
+  white-space: nowrap;
+}
+
+/* ---- 라디오/체크 리스트 (공통 패턴) ---- */
+.gis-radio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gis-radio-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 4px;
+  cursor: pointer;
+  border-radius: var(--radius-xs);
+  transition: background .1s;
+  font: 500 13px/1 var(--font-sans);
+  color: var(--fg-2);
+}
+
+.gis-radio-item:hover { background: var(--surface-hover); }
+
+.gis-radio-item input[type="radio"],
+.gis-radio-item input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--gp-point);
+  cursor: pointer;
+  flex: none;
+}
+
+.gis-radio-item__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+/* ---- 검색 ---- */
+.gis-search {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  position: relative;
+}
+
+.gis-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font: 400 13px/1 var(--font-sans);
+  color: var(--fg-1);
+  background: transparent;
+  padding: 0 4px 0 12px;
+  height: 36px;
+  min-width: 0;
+}
+
+.gis-search input::placeholder { color: var(--fg-4); }
+
+.gis-search--right i {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--fg-4);
+  flex: none;
+}
+
+.gis-search--right i svg { width: 14px; height: 14px; }
+
+/* 검색 드롭다운 */
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: -2px;
+  right: -2px;
+  background: #fff;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--elev-3);
+  z-index: 500;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+}
+
+.search-dropdown.open { display: block; }
+
+.search-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: background .12s;
+  font: 500 13px/1.3 var(--font-sans);
+  color: var(--fg-2);
+}
+
+.search-item:hover { background: var(--surface-hover); }
+
+.search-item__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+/* ---- 지도 영역 ---- */
+.gis-map-area {
+  position: relative;
+  background: #E8EFF7;
+  overflow: hidden;
+}
+
+#gisMap {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+#gisMap canvas {
+  filter: hue-rotate(200deg) saturate(0.75) brightness(0.93);
+}
+
+/* 지도 컨트롤 패널 (우상단 오버레이) */
+.map-ctrl-panel {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.map-ctrl-group {
+  background: #fff;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--elev-2);
+  overflow: hidden;
+  width: 46px;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-ctrl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 38px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--fg-2);
+  transition: background .12s, color .12s;
+  border-bottom: 1px solid var(--border-2);
+  flex: none;
+}
+
+.map-ctrl-btn:last-child { border-bottom: none; }
+.map-ctrl-btn:hover { background: var(--surface-hover); color: var(--gp-point); }
+.map-ctrl-btn svg { width: 16px; height: 16px; }
+
+.map-tool-btn2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 100%;
+  padding: 7px 4px;
+  border: none;
+  border-bottom: 1px solid var(--border-2);
+  background: transparent;
+  cursor: pointer;
+  font: 500 10px/1.2 var(--font-sans);
+  color: var(--fg-3);
+  transition: background .12s, color .12s;
+  white-space: nowrap;
+  flex: none;
+}
+
+.map-tool-btn2:last-child { border-bottom: none; }
+.map-tool-btn2:hover { background: var(--surface-hover); color: var(--gp-point); }
+.map-tool-btn2 svg { width: 15px; height: 15px; }
+
+/* 카카오맵 커스텀 핀 */
+.map-pin-wrap {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.22));
+  transition: filter .15s, transform .15s;
+}
+
+.map-pin-wrap:hover {
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,.32));
+  transform: translateY(-2px);
+}
+
+.map-pin-img {
+  width: 38px;
+  height: auto;
+  display: block;
+}
+
+.map-pin-status {
+  position: absolute;
+  top: 1px;
+  right: -1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  display: none;
+}
+
+.map-pin-status--warn   { background: var(--status-warning); display: block; }
+.map-pin-status--danger { background: var(--status-danger);  display: block; }
+
+.map-related-pin { transition: transform .12s; }
+.map-related-pin:hover { transform: scale(1.3); }
+
+.gis-wrap--no-filter { grid-template-columns: 0 1fr; }
+.gis-wrap--no-filter .gis-filter { display: none; }
+
+/* ---- 범례 ---- */
+.map-legend {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 400;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  box-shadow: var(--elev-2);
+  min-width: 140px;
+}
+
+.map-legend__title {
+  font: 700 11px/1 var(--font-sans);
+  color: var(--fg-4);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 0;
+  font: 500 12px/1 var(--font-sans);
+  color: var(--fg-2);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.legend-ring {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: transparent;
+  border: 2.5px solid #7B7FC4;
+  flex: none;
+}
+
+.legend-divider {
+  height: 1px;
+  background: var(--border-2);
+  margin: 6px 0;
+}
+
+.legend-pin {
+  width: 14px;
+  height: 14px;
+  border-radius: 50% 50% 50% 3px;
+  transform: rotate(45deg);
+  flex: none;
+  border: 1.5px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,.2);
+}
+
+.legend-divider {
+  height: 1px;
+  background: var(--border-2);
+  margin: 6px 0;
+}
+
+/* 핀 레이블 */
+.lf-pin-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.lf-pin-label {
+  margin-top: 4px;
+  font: 700 11px/1 var(--font-sans);
+  color: var(--fg-1);
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(255,255,255,.9);
+  pointer-events: none;
+}
+
+/* ---- 지도 팝업 ---- */
+.map-popup {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.map-popup.open {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.map-popup__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(20,36,60,.28);
+}
+
+.map-popup__box {
+  position: relative;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-3);
+  width: 380px;
+  max-width: 90vw;
+  overflow: hidden;
+  transform: translateY(12px);
+  transition: transform .2s var(--ease-out);
+}
+
+.map-popup.open .map-popup__box { transform: translateY(0); }
+
+.map-popup__hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid var(--border-2);
+}
+
+.map-popup__hd-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.map-popup__mile-badge {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.map-popup__title {
+  font: 700 16px/1.3 var(--font-sans);
+  color: var(--fg-1);
+  margin: 0;
+}
+
+.map-popup__type {
+  font: 500 13px/1 var(--font-sans);
+  color: var(--fg-3);
+  margin: 2px 0 0;
+}
+
+.map-popup__close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--surface-hover);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--fg-3);
+  transition: background .12s;
+  flex: none;
+}
+
+.map-popup__close:hover { background: var(--border-1); }
+.map-popup__close svg { width: 16px; height: 16px; }
+
+.map-popup__bd { padding: 16px 20px; }
+
+.map-popup__dl {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.map-popup__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-2);
+  gap: 12px;
+}
+
+.map-popup__row:last-child { border-bottom: none; }
+
+.map-popup__dt {
+  font: 500 13px/1 var(--font-sans);
+  color: var(--fg-3);
+  flex: none;
+}
+
+.map-popup__dd {
+  font: 600 13px/1 var(--font-sans);
+  color: var(--fg-1);
+  text-align: right;
+}
+
+.map-popup__ft {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border-2);
+  background: var(--bg-subtle);
+}
+
+.map-popup__ft .btn {
+  font-size: 12px;
+  height: 36px;
+  padding: 0 10px;
+  justify-content: center;
+}
+
+/* ---- 하단 데이터 공통 섹션 ---- */
+.gis-detail {
+  margin-top: 20px;
+  background: #fff;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-2);
+  overflow: visible;
+}
+
+/* 탭 + 컨트롤 통합 툴바 */
+.gis-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.gis-toolbar::after {
+  content: '';
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 0;
+  height: 1px;
+  background: var(--border-1);
+}
+
+/* 탭 (pill 스타일) */
+.gis-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface-inset);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+}
+
+.gis-tab {
+  height: 36px;
+  padding: 0 18px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 600 13px/1 var(--font-sans);
+  color: var(--fg-3);
+  transition: background .18s, color .18s, box-shadow .18s;
+  white-space: nowrap;
+}
+
+.gis-tab:hover { background: #fff; color: var(--fg-1); box-shadow: var(--elev-1); }
+
+.gis-tab.on {
+  background: var(--gp-primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(4,78,158,.22);
+}
+
+/* 우측 컨트롤 */
+.gis-controls {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  height: 36px;
+  position: relative;
+}
+
+.mc-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  height: 100%;
+  border-right: 1px solid var(--border-1);
+  position: relative;
+}
+
+.mc-group:last-child { border-right: none; }
+
+.mc-label {
+  font: 600 12px/1 var(--font-sans);
+  color: var(--fg-4);
+  white-space: nowrap;
+}
+
+.mc-date-range {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  position: relative;
+  font: 500 13px/1 var(--font-sans);
+  color: var(--fg-1);
+}
+
+.mc-date-part {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mc-date-sep {
+  color: var(--fg-4);
+  font-size: 12px;
+  padding: 0 1px;
+}
+
+/* ---- 캘린더 드롭다운 ---- */
+.date-picker-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  right: -20px;
+  background: #fff;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elev-3);
+  z-index: 600;
+  min-width: 272px;
+  overflow: hidden;
+}
+
+.date-picker-dropdown.open { display: block; }
+
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-2);
+  background: var(--bg-subtle);
+}
+
+.cal-nav-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border-1);
+  background: #fff;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--fg-3);
+  transition: background .1s, color .1s;
+  flex: none;
+}
+
+.cal-nav-btn:hover { background: var(--gp-primary-soft); color: var(--gp-primary); }
+
+.cal-month-label {
+  flex: 1;
+  text-align: center;
+  font: 700 13px/1 var(--font-sans);
+  color: var(--fg-1);
+}
+
+.cal-body { padding: 10px 12px 8px; }
+.cal-grid { width: 100%; }
+
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+}
+
+.cal-weekdays span {
+  font: 600 11px/1 var(--font-sans);
+  color: var(--fg-4);
+  text-align: center;
+  padding: 3px 0;
+}
+
+.cal-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+}
+
+.cal-day {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 500 12px/1 var(--font-sans);
+  color: var(--fg-2);
+  cursor: pointer;
+  border-radius: var(--radius-xs);
+  transition: background .1s, color .1s;
+  user-select: none;
+}
+
+.cal-day:hover:not(.cal-day--empty):not(.cal-day--start):not(.cal-day--end) {
+  background: var(--gp-primary-soft);
+  color: var(--gp-primary);
+}
+
+.cal-day--start,
+.cal-day--end {
+  background: var(--gp-primary);
+  color: #fff !important;
+  border-radius: var(--radius-xs);
+  font-weight: 700;
+}
+
+.cal-day--range {
+  background: var(--gp-primary-soft);
+  color: var(--gp-primary);
+  border-radius: 0;
+}
+
+.cal-day--hov-range {
+  background: var(--surface-inset);
+  border-radius: 0;
+}
+
+.cal-day--range-start-edge { border-radius: var(--radius-xs) 0 0 var(--radius-xs); }
+.cal-day--range-end-edge   { border-radius: 0 var(--radius-xs) var(--radius-xs) 0; }
+.cal-day--empty { cursor: default; pointer-events: none; }
+.cal-day--today { color: var(--gp-point); font-weight: 700; }
+
+.cal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border-2);
+  background: var(--bg-subtle);
+}
+
+.cal-selected-range {
+  font: 500 12px/1 var(--font-sans);
+  color: var(--fg-3);
+}
+
+.cal-actions { display: flex; gap: 6px; }
+.cal-actions .btn { height: 30px; font-size: 12px; padding: 0 12px; }
+
+/* 지역 선택 */
+.mc-select {
+  height: 100%;
+  border: none;
+  outline: none;
+  padding: 0 24px 0 0;
+  font: 500 13px/1 var(--font-sans);
+  color: var(--fg-1);
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%237C8896' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 0 center no-repeat;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* ---- 탭 패널 ---- */
+.gis-pane {
+  display: none;
+  padding: 22px 24px;
+}
+
+.gis-pane.on { display: block; }
+
+/* ---- KPI 스트립 ---- */
+.gis-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.gis-kpi-item {
+  padding: 14px 14px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  position: relative;
+}
+
+.gis-kpi-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 28px;
+  background: var(--border-1);
+}
+
+.gis-kpi-ico {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--ico-bg, var(--surface-inset));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.gis-kpi-ico i,
+.gis-kpi-ico svg {
+  width: 18px;
+  height: 18px;
+  color: var(--ico-color, var(--fg-3));
+}
+
+.gis-kpi__info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.gis-kpi__lb {
+  font: 500 11px/1 var(--font-sans);
+  color: var(--fg-3);
+  white-space: nowrap;
+}
+
+.gis-kpi__vl {
+  font: 700 18px/1 var(--font-sans);
+  color: var(--fg-1);
+  white-space: nowrap;
+  transition: color .18s;
+}
+
+.gis-kpi__vl .u {
+  font: 500 11px/1 var(--font-sans);
+  color: var(--fg-4);
+  margin-left: 2px;
+}
+
+/* ---- 차트 3열 ---- */
+.gis-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+
+.gis-chart-card {
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.gis-chart-card__hd {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.gis-chart-card__title {
+  font: 700 13px/1 var(--font-sans);
+  color: var(--fg-1);
+  margin: 0;
+}
+
+.gis-chart-card__sub {
+  font: 400 11px/1 var(--font-sans);
+  color: var(--fg-4);
+  white-space: nowrap;
+}
+
+.chart-canvas-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 150px;
+  margin-top: 10px;
+}
+
+.chart-canvas-wrap canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  cursor: crosshair;
+}
+
+/* 도넛 차트 */
+.donut-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  margin-top: 10px;
+}
+
+.donut-canvas-wrap {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  flex: none;
+}
+
+.donut-canvas-wrap canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  cursor: pointer;
+}
+
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.donut-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.donut-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.donut-legend-name {
+  font: 500 11px/1.3 var(--font-sans);
+  color: var(--fg-2);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.donut-legend-pct {
+  font: 700 12px/1 var(--font-sans);
+  color: var(--fg-1);
+  flex: none;
+  white-space: nowrap;
+}
+
+.donut-legend-val {
+  font: 400 10px/1 var(--font-sans);
+  color: var(--fg-4);
+  flex: none;
+  white-space: nowrap;
+}
+
+.chart-xlabels {
+  position: relative;
+  height: 16px;
+  margin-top: 4px;
+}
+
+.chart-xlabels span {
+  font: 400 10px/1 var(--font-sans);
+  color: var(--fg-4);
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* ---- 차트 호버 툴팁 ---- */
+.chart-tooltip {
+  position: fixed;
+  background: rgba(22,36,59,.88);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 7px 11px;
+  font: 600 12px/1.45 var(--font-sans);
+  pointer-events: none;
+  z-index: 800;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .1s;
+  box-shadow: 0 4px 12px rgba(0,0,0,.22);
+}
+
+.chart-tooltip.visible { opacity: 1; }
+
+.chart-tooltip__label {
+  font: 500 11px/1 var(--font-sans);
+  color: rgba(255,255,255,.7);
+  margin-bottom: 3px;
+}
+
+.chart-tooltip__value {
+  font: 700 13px/1 var(--font-sans);
+  color: #fff;
+}
+
+.tt-unit {
+  font: 400 11px/1 var(--font-sans);
+  color: rgba(255,255,255,.55);
+  margin-left: 2px;
+}

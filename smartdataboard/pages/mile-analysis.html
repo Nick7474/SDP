@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마일 지표 분석 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-mile-analysis.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="gmsb-topbar"></div>
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- 탭 바 -->
+    <div class="page-tab-bar">
+      <button class="page-tab on" data-tab="summary" type="button">마일별 종합 분석</button>
+      <div class="page-tab-divider"></div>
+      <button class="page-tab" data-tab="perf" type="button">마일별 운영실적</button>
+    </div>
+
+    <!-- ══════════════ 탭1: 마일별 종합 분석 ══════════════ -->
+    <div class="ma-pane on" id="pane-summary">
+
+      <!-- KPI 스트립 -->
+      <div class="ma-strip">
+        <div class="ma-kpi">
+          <div class="ma-kpi__ico" style="background:#E3F2FD;color:#0C8AE5"><i data-lucide="gauge"></i></div>
+          <div><div class="ma-kpi__lb">전체 평균</div><div class="ma-kpi__vl">70<span class="u">점</span></div><div class="ma-kpi__sub">전월 대비 +3점</div></div>
+        </div>
+        <div class="ma-kpi">
+          <div class="ma-kpi__ico" style="background:#E4F6EC;color:#1AAA5E"><i data-lucide="trophy"></i></div>
+          <div><div class="ma-kpi__lb">최고 성과</div><div class="ma-kpi__vl">78<span class="u">점</span></div><div class="ma-kpi__sub">에너지 마일</div></div>
+        </div>
+        <div class="ma-kpi">
+          <div class="ma-kpi__ico" style="background:#FDF1DF;color:#ED8B16"><i data-lucide="refresh-cw"></i></div>
+          <div><div class="ma-kpi__lb">개선 필요</div><div class="ma-kpi__vl">62<span class="u">점</span></div><div class="ma-kpi__sub warn">데이터 마일</div></div>
+        </div>
+        <div class="ma-kpi">
+          <div class="ma-kpi__ico" style="background:#FCEAE8;color:#E0483D"><i data-lucide="triangle-alert"></i></div>
+          <div><div class="ma-kpi__lb">주의 지표</div><div class="ma-kpi__vl">3<span class="u">건</span></div><div class="ma-kpi__sub err">즉시 점검 필요</div></div>
+        </div>
+      </div>
+
+      <!-- 상단 2컬럼: 레이더 차트 + 핵심 지표 -->
+      <div class="ma-top">
+        <!-- 4대 마일 종합 성과 (레이더) -->
+        <div class="ma-card">
+          <div class="ma-card__hd"><span class="ma-card__t">4대 마일 종합 성과</span></div>
+          <div class="ma-card__chart"><canvas id="chartRadar"></canvas></div>
+        </div>
+
+        <!-- 마일별 핵심 지표 -->
+        <div class="ma-card">
+          <div class="ma-card__hd"><span class="ma-card__t">마일별 핵심 지표</span></div>
+          <div class="mile-kpi-list" id="mileKpiList">
+            <div class="mile-kpi-item" data-mile="energy">
+              <div class="mile-kpi-item__ico"><img src="../assets/img/mile-energy.svg" style="width:38px;height:38px;display:block;" alt=""></div>
+              <div>
+                <div class="mile-kpi-item__name">에너지 마일 <span class="pill pill--ok" style="font-size:11px;height:22px;padding:0 8px">정상</span></div>
+                <div class="mile-kpi-item__vals">
+                  <span class="mile-kpi-item__v">누적 발전량 <strong>543.4 MWh</strong></span>
+                  <span class="mile-kpi-item__v">에너지 사용량 <strong>323.8 MWh</strong></span>
+                  <span class="mile-kpi-item__v">상게 거래량 <strong>38소</strong></span>
+                </div>
+              </div>
+            </div>
+            <div class="mile-kpi-item" data-mile="mobility">
+              <div class="mile-kpi-item__ico"><img src="../assets/img/mile-mobility.svg" style="width:38px;height:38px;display:block;" alt=""></div>
+              <div>
+                <div class="mile-kpi-item__name">모빌리티 마일 <span class="pill pill--ok" style="font-size:11px;height:22px;padding:0 8px">정상</span></div>
+                <div class="mile-kpi-item__vals">
+                  <span class="mile-kpi-item__v">DRT 운영 <strong>15대</strong></span>
+                  <span class="mile-kpi-item__v">EV 전환 <strong>17대</strong></span>
+                  <span class="mile-kpi-item__v">친환경 이동거리 <strong>4.3km</strong></span>
+                </div>
+              </div>
+            </div>
+            <div class="mile-kpi-item" data-mile="safety">
+              <div class="mile-kpi-item__ico"><img src="../assets/img/mile-safety.svg" style="width:38px;height:38px;display:block;" alt=""></div>
+              <div>
+                <div class="mile-kpi-item__name">세이프티 마일 <span class="pill pill--warn" style="font-size:11px;height:22px;padding:0 8px">주의</span></div>
+                <div class="mile-kpi-item__vals">
+                  <span class="mile-kpi-item__v">미세먼지 지수 <strong>56</strong></span>
+                  <span class="mile-kpi-item__v">수위 센서 정상률 <strong>94.1%</strong></span>
+                  <span class="mile-kpi-item__v">위험 예측 <strong>22건</strong></span>
+                </div>
+              </div>
+            </div>
+            <div class="mile-kpi-item" data-mile="data">
+              <div class="mile-kpi-item__ico"><img src="../assets/img/mile-data.svg" style="width:38px;height:38px;display:block;" alt=""></div>
+              <div>
+                <div class="mile-kpi-item__name">데이터 마일 <span class="pill pill--err" style="font-size:11px;height:22px;padding:0 8px">검증필요</span></div>
+                <div class="mile-kpi-item__vals">
+                  <span class="mile-kpi-item__v">연계 데이터 <strong>72건</strong></span>
+                  <span class="mile-kpi-item__v">API 정상률 <strong>91.7%</strong></span>
+                  <span class="mile-kpi-item__v">MRV 데이터 <strong>28건</strong></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 마일별 지표 변화 추이 -->
+      <div class="ma-chart-card">
+        <div class="ma-chart-hd">
+          <span class="ma-chart-t">마일별 지표 변화 추이</span>
+          <span style="font:400 13px/1 var(--font-sans);color:var(--fg-4)">(점)</span>
+        </div>
+        <div class="ma-chart-legend">
+          <span><i style="background:#0C8AE5"></i>에너지 마일</span>
+          <span><i style="background:#1AAA5E"></i>모빌리티 마일</span>
+          <span><i style="background:#ED8B16"></i>세이프티 마일</span>
+          <span><i style="background:#6E74D6"></i>데이터 마일</span>
+        </div>
+        <div class="ma-chart-body"><canvas id="chartTrend"></canvas></div>
+      </div>
+
+      <!-- 마일별 핵심 지표 현황 테이블 -->
+      <div class="ma-table-card">
+        <div class="ma-table-hd">
+          <h2>마일별 핵심 지표 현황</h2>
+          <div class="ma-table-hd__actions">
+            <button class="btn btn--line" id="btnExportSummary" type="button" style="height:34px;padding:0 14px;font-size:13px;display:inline-flex;align-items:center;gap:5px;">
+              <i data-lucide="download" style="width:13px;height:13px"></i>CSV 내보내기
+            </button>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th class="l">마일</th>
+              <th class="l">핵심 지표</th>
+              <th>현재값</th>
+              <th>전월 대비</th>
+              <th style="min-width:160px">목표 대비</th>
+              <th>상태</th>
+              <th>상세</th>
+            </tr>
+          </thead>
+          <tbody id="summaryTableBody"></tbody>
+        </table>
+      </div>
+    </div><!-- /pane-summary -->
+
+    <!-- ══════════════ 탭2: 마일별 운영실적 ══════════════ -->
+    <div class="ma-pane" id="pane-perf">
+
+      <!-- 필터 행 -->
+      <div class="ma-filter">
+        <div class="ma-filter__group">
+          <span class="ma-filter__lb">기간</span>
+          <select class="ma-select" id="perfPeriod">
+            <option value="2026-05">2026년 5월</option>
+            <option value="2026-04">2026년 4월</option>
+            <option value="2026-03">2026년 3월</option>
+            <option value="2026-02">2026년 2월</option>
+          </select>
+        </div>
+        <div class="ma-filter__group">
+          <span class="ma-filter__lb">마일</span>
+          <select class="ma-select" id="perfMile">
+            <option value="all">전체 마일</option>
+            <option value="energy">에너지 마일</option>
+            <option value="mobility">모빌리티 마일</option>
+            <option value="safety">세이프티 마일</option>
+            <option value="data">데이터 마일</option>
+          </select>
+        </div>
+        <div class="ma-filter__group">
+          <span class="ma-filter__lb">권역</span>
+          <select class="ma-select" id="perfRegion">
+            <option value="all">광명시 전체</option>
+            <option value="cheolsan">철산권역</option>
+            <option value="haan">하안권역</option>
+            <option value="soha">소하권역</option>
+          </select>
+        </div>
+        <div class="ma-filter__group">
+          <span class="ma-filter__lb">지표</span>
+          <select class="ma-select" id="perfIndex">
+            <option value="all">전체 지표</option>
+            <option value="score">점수</option>
+            <option value="rate">달성률</option>
+          </select>
+        </div>
+        <div class="ma-filter__sep"></div>
+        <div class="ma-filter__actions">
+          <button class="btn btn--pri" id="btnPerfSearch" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="search" style="width:14px;height:14px"></i>조회</button>
+          <button class="btn btn--line" id="btnPerfReset" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="refresh-cw" style="width:13px;height:13px"></i>초기화</button>
+          <button class="btn btn--line" id="btnPerfExport" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="download" style="width:13px;height:13px"></i>CSV</button>
+        </div>
+      </div>
+
+      <!-- 3컬럼: 목표 대비 | 선택 마일 상세 | 주요 변화 -->
+      <div class="ma-perf">
+
+        <!-- 마일별 목표 대비 운영 실적 -->
+        <div class="ma-card">
+          <div class="ma-card__hd" style="margin-bottom:12px">
+            <span class="ma-card__t">마일별 목표 대비 운영 실적</span>
+            <i data-lucide="info" style="width:14px;height:14px;color:var(--fg-4)" title="목표 대비 = (운영 실적 / 목표) × 100"></i>
+          </div>
+          <div class="perf-list" id="perfList">
+            <!-- JS 렌더 -->
+          </div>
+          <p style="margin-top:12px;font:400 12px/1.4 var(--font-sans);color:var(--fg-4)">* 목표 대비 = (운영 실적 / 목표) × 100</p>
+        </div>
+
+        <!-- 선택 마일 운영 실적 -->
+        <div class="ma-card">
+          <div class="ma-card__hd" style="margin-bottom:8px"><span class="ma-card__t">선택 마일 운영 실적</span></div>
+          <div id="selMileDetail">
+            <!-- JS 렌더 -->
+          </div>
+          <button class="btn btn--line" id="btnSelDetail" type="button" style="width:100%;justify-content:center;margin-top:12px;height:40px;">
+            상세 보기 →
+          </button>
+        </div>
+
+        <!-- 주요 운영 변화 -->
+        <div class="ma-card">
+          <div class="ma-card__hd" style="margin-bottom:12px">
+            <span class="ma-card__t">주요 운영 변화</span>
+            <span style="font:400 12px/1 var(--font-sans);color:var(--fg-4)">최근 12개월</span>
+          </div>
+          <div class="change-list" id="changeList">
+            <!-- JS 렌더 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 기간별 운영 실적 추이 -->
+      <div class="ma-chart-card">
+        <div class="ma-chart-hd">
+          <span class="ma-chart-t">기간별 운영 실적 추이</span>
+          <select class="period-sel" id="periodUnit">
+            <option value="month">월별</option>
+            <option value="quarter">분기별</option>
+            <option value="week">주별</option>
+          </select>
+        </div>
+        <div class="ma-chart-legend">
+          <span><i style="background:#0C8AE5"></i>에너지 마일</span>
+          <span><i style="background:#1AAA5E"></i>모빌리티 마일</span>
+          <span><i style="background:#ED8B16"></i>세이프티 마일</span>
+          <span><i style="background:#6E74D6"></i>데이터 마일</span>
+        </div>
+        <div class="ma-chart-body"><canvas id="chartPerfTrend"></canvas></div>
+      </div>
+
+      <!-- 마일별 운영 실적 목록 테이블 -->
+      <div class="ma-table-card">
+        <div class="ma-table-hd">
+          <h2>마일별 운영 실적 목록</h2>
+          <div class="ma-table-hd__actions">
+            <button class="btn btn--line" id="btnExportPerf" type="button" style="height:34px;padding:0 14px;font-size:13px;display:inline-flex;align-items:center;gap:5px;">
+              <i data-lucide="download" style="width:13px;height:13px"></i>CSV 내보내기
+            </button>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th class="l">마일</th>
+              <th class="l">핵심 지표</th>
+              <th>운영 실적</th>
+              <th>목표</th>
+              <th style="min-width:140px">목표 대비</th>
+              <th>전월 대비</th>
+              <th>상태</th>
+              <th>최근 업데이트</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="perfTableBody"></tbody>
+        </table>
+      </div>
+    </div><!-- /pane-perf -->
+
+  </main>
+</div>
+
+<!-- ══ 드로어: 마일 상세 ══ -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="마일 상세">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k" id="dwKind"><img id="dwKindIco" src="../assets/img/mile-energy.svg" style="width:18px;height:18px;display:inline-block;vertical-align:middle;border-radius:50%;margin-right:5px;" alt="">마일 상세</div>
+      <h3 id="dwTitle">—</h3>
+    </div>
+    <button class="dw__x" id="dwClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="dw__info-banner">
+      <i data-lucide="info"></i>
+      <p id="dwDesc"></p>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="layers" class="gp-ico"></i>지표 기본 정보</h4>
+      <dl class="dl" id="dwBaseDl"></dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="trending-up" class="gp-ico"></i>운영 현황</h4>
+      <dl class="dl" id="dwPerfDl"></dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="history" class="gp-ico"></i>최근 6개월 추이</h4>
+      <div class="dw__mini-chart"><canvas id="dwChart"></canvas></div>
+    </div>
+    <div class="dw__sec" id="dwDongSec">
+      <h4><i data-lucide="map-pin" class="gp-ico"></i>행정동별 현황</h4>
+      <div id="dwDongList"></div>
+    </div>
+  </div>
+  <div class="dw__ft">
+    <button class="btn btn--ghost" id="dwBtnExport" type="button"><i data-lucide="download" class="gp-ico"></i>데이터 내보내기</button>
+    <button class="btn btn--pri" id="dwBtnDrilldown" type="button"><i data-lucide="zoom-in" class="gp-ico"></i>상세 분석</button>
+  </div>
+</aside>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'carbon.mile-analysis',
+  header: {
+    title: '마일 지표 분석',
+    desc:  '4대 마일(에너지·모빌리티·세이프티·데이터) 성과를 한눈에 비교하고 변화 추이를 확인합니다.',
+    actions: '<span style="font:400 13px/1 var(--font-sans);color:var(--fg-3);display:flex;align-items:center;gap:6px;"><i data-lucide="clock-3" style="width:13px;height:13px"></i>마지막 갱신 : 2026-06-19 10:15:45</span>'
+            +'<button class="btn btn--line" id="btnRefresh" type="button" style="height:32px;padding:0 12px;font-size:13px;display:inline-flex;align-items:center;gap:5px;"><i data-lucide="refresh-cw" style="width:12px;height:12px"></i>새로고침</button>',
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-mile-analysis.js"></script>
+</body>
+</html>

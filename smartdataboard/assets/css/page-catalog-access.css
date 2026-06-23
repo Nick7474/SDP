@@ -96,12 +96,85 @@
 
 .api-filter-actions { display: flex; gap: 8px; margin-left: auto; flex-shrink: 0; }
 
-/* ─── Tab 2: 2열 레이아웃 (권한부여 폼 + 목록) ─── */
-.ac-layout {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 20px;
-  align-items: start;
+/* ─── Tab 2: 인증키 관리 수평 필터 바 ─── */
+.key-filter {
+  background: var(--surface-card);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-1);
+  padding: 18px 24px;
+  margin-bottom: 20px;
+}
+
+.key-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.key-filter-row + .key-filter-row {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-2);
+}
+
+.key-filter-lbl {
+  font: 600 13px/1 var(--font-sans);
+  color: var(--fg-3);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.key-filter-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border-1);
+  flex-shrink: 0;
+  margin: 0 6px;
+}
+
+.key-chip-group { display: flex; gap: 5px; flex-wrap: wrap; }
+.key-chip {
+  height: 30px;
+  padding: 0 13px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-pill);
+  background: #fff;
+  font: 600 13px/1 var(--font-sans);
+  color: var(--fg-3);
+  cursor: pointer;
+  transition: background var(--dur-fast), color var(--dur-fast), border-color var(--dur-fast);
+  white-space: nowrap;
+}
+.key-chip:hover { background: var(--bg-subtle); color: var(--fg-1); }
+.key-chip.on { background: var(--gp-primary); border-color: var(--gp-primary); color: #fff; }
+
+.key-filter-actions { display: flex; gap: 8px; margin-left: auto; flex-shrink: 0; }
+
+/* ─── 패널 공통 헤더 (tabApi / tabKey 테이블 타이틀) ─── */
+.ac-panel-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-2);
+}
+
+.ac-panel-hd__left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 700 15px/1 var(--font-sans);
+  color: var(--fg-1);
+}
+.ac-panel-hd__left svg { width: 17px; height: 17px; color: var(--gp-primary); }
+
+.ac-panel-count {
+  font: 500 13px/1 var(--font-sans);
+  color: var(--fg-3);
+  padding-left: 8px;
+  border-left: 1px solid var(--border-1);
 }
 
 /* ─── 검색 박스 ─── */
@@ -523,13 +596,13 @@
 
 /* 페이지네이션 재활용 (page-catalog-dataset.css 없이) */
 .ds-pagination {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 14px 0;
+  padding: 14px 20px;
   border-top: 1px solid var(--border-2);
 }
+.ds-pg-btns { display: flex; gap: 4px; }
 .ds-pg-btn {
   min-width: 32px;height: 32px;
   padding: 0 8px;
@@ -554,7 +627,7 @@
   color: var(--fg-1);
 }
 .ds-pg-btn:disabled { opacity:.4;cursor:default }
-.ds-pg-info { font: 400 13px/1 var(--font-sans); color: var(--fg-3); margin-right: 8px }
+.ds-pg-info { font: 600 13px/1 var(--font-sans); color: var(--fg-2); }
 
 /* ─── D-Day 배지 ─── */
 .dday-badge {
@@ -674,4 +747,64 @@
   font: 400 11px/1.4 var(--font-sans);
   color: var(--status-danger);
   word-break: keep-all;
+}
+
+/* ─── keyDrawer 푸터 (3행 구조) ─── */
+.kd-ft {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-2);
+  background: #fff;
+  flex-shrink: 0;
+}
+.kd-ft__mgmt {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.kd-btn-mgmt {
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font: 600 13px/1 var(--font-sans);
+  font-family: var(--font-sans);
+  color: var(--gp-primary);
+}
+.kd-btn-danger {
+  color: var(--status-danger);
+  border-color: var(--status-danger-soft);
+}
+.kd-btn-danger:hover { background: var(--status-danger-soft); }
+.kd-ft__decision {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+.kd-btn-dec {
+  height: 42px;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 14px/1 var(--font-sans);
+  font-family: var(--font-sans);
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: opacity var(--dur-fast);
+}
+.kd-btn-dec:hover { opacity: .88; }
+.kd-btn-dec--ok   { background: var(--status-success); }
+.kd-btn-dec--ng   { background: var(--status-danger); }
+.kd-btn-dec--hold { background: var(--status-warning); }
+.kd-btn-close {
+  width: 100%;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }

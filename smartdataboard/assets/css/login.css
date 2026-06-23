@@ -55,7 +55,7 @@
 .lg-text-block{display:flex;flex-direction:column;gap:14px;}  /* Figma gap:14px */
 
 .lg-title{
-  margin:0;
+  margin:-20px 0 0;
   font:600 50px/normal "S-Core Dream",sans-serif;  /* Figma 50px S-Core Dream 6 Bold */
   white-space:nowrap;word-break:keep-all;
 }
@@ -64,7 +64,7 @@
 .lg-t-navy{color:#044e9e;}
 
 .lg-desc{
-  margin:0;
+  margin:0px 0 0;
   font:400 18px/28px "Pretendard GOV",sans-serif;  /* Figma 18px/28px */
   color:#464c53;
   word-break:keep-all;
@@ -222,6 +222,16 @@
 .lg-links a{color:#9da3ac;text-decoration:none;transition:color .13s;}
 .lg-links a:hover{color:#464c53;}
 .lg-link-sep{color:#d8dce2;}
+
+/* 테스트 계정 힌트 */
+.lg-test-hint{
+  display:flex;align-items:center;gap:8px;
+  margin-top:18px;padding:11px 16px;
+  background:#F5F8FC;border:1px solid #E4E9F1;border-radius:10px;
+  font:400 13px/1.4 "Pretendard GOV",sans-serif;color:#5A6878;
+}
+.lg-test-hint i{width:15px;height:15px;flex:none;color:#0C8AE5;}
+.lg-test-hint b{font-weight:700;color:#16243B;}
 
 /* ===== 반응형 ===== */
 @media(max-width:1680px){

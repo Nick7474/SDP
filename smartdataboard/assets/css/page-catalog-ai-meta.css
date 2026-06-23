@@ -89,8 +89,9 @@
   background: var(--surface-card);
   border: 1px solid var(--border-1);
   border-radius: var(--radius-lg);
-  box-shadow: var(--elev-1);
+  box-shadow: var(--elev-2);
   overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .am-table-hd {
@@ -174,51 +175,85 @@
 .am-spec-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  width: 300px;
 }
-.am-spec-lbl { font: 600 12px/1 var(--font-sans); color: var(--fg-3); }
+.am-spec-lbl { font: 600 14px/1.5 var(--font-sans); color: var(--fg-1); }
 .am-spec-select {
-  height: 40px;
+  height: 48px;
   padding: 0 12px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid #e6e8ea;
   border-radius: var(--radius-sm);
-  font: 400 14px/1 var(--font-sans);
+  font: 400 14px/1.5 var(--font-sans);
   color: var(--fg-1);
-  min-width: 220px;
-  background: #fff;
+  width: 100%;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237C8896' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+  appearance: none;
   cursor: pointer;
 }
 
 .am-spec-file {
   display: flex;
   align-items: center;
-  gap: 10px;
-  height: 40px;
+  gap: 6px;
+  height: 48px;
   padding: 0 14px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid #e6e8ea;
   border-radius: var(--radius-sm);
-  background: var(--bg-subtle);
-  min-width: 240px;
+  background: #eef2f7;
+  width: 100%;
+  box-sizing: border-box;
 }
-.am-spec-file__ico { color: var(--status-success); display: flex; align-items: center; }
-.am-spec-file__ico svg { width: 18px; height: 18px; }
-.am-spec-file__name { font: 500 13px/1 var(--font-sans); color: var(--fg-1); flex: 1; }
+.am-spec-file__ico { color: var(--status-success); display: flex; align-items: center; flex: none; }
+.am-spec-file__ico svg { width: 20px; height: 20px; }
+.am-spec-file__name { font: 400 14px/1.5 var(--font-sans); color: var(--fg-1); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.am-spec-upload-btn {
+  flex: none;
+  height: 32px;
+  padding: 0 12px;
+  width: 80px;
+  border: 1px solid #cdd1d5;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font: 600 12px/1.5 var(--font-sans);
+  color: var(--fg-1);
+  cursor: pointer;
+  white-space: nowrap;
+}
 
 .am-spec-stat { display: flex; gap: 20px; }
 .am-spec-stat-item { display: flex; flex-direction: column; gap: 4px; }
 .am-spec-stat-lbl { font: 500 11px/1 var(--font-sans); color: var(--fg-4); }
-.am-spec-stat-val { font: 800 20px/1 var(--font-sans); color: var(--fg-1); }
+.am-spec-stat-val { font: 600 24px/1.5 var(--font-sans); color: var(--fg-1); }
 .am-spec-stat-val--pri { color: var(--gp-primary); }
-.am-spec-stat-val--ok  { color: var(--status-success); }
+.am-spec-stat-val--ok  { color: var(--gp-primary); }
 
-.am-spec-start-btn { height: 44px; padding: 0 28px; margin-left: auto; }
+.am-spec-start-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 155px;
+  height: 46px;
+  flex: none;
+  margin-left: auto;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--gp-primary);
+  color: #fff;
+  font: 700 14px/1.5 var(--font-sans);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.am-spec-start-btn:hover { background: var(--gp-primary-strong); }
+.am-spec-start-btn .gp-ico { width: 16px; height: 16px; }
 
 /* 분석 레이아웃 */
 .am-spec-layout {
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 20px;
-  align-items: start;
+  align-items: stretch;
 }
 
 /* 단계 리스트 */
@@ -251,13 +286,34 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 0 18px;
+  padding: 4px 0 36px;
 }
 .am-step__lbl { font: 500 14px/1 var(--font-sans); color: var(--fg-1); }
 .am-step__status { font: 700 12px/1 var(--font-sans); }
 .am-step__status--done { color: var(--status-success); }
 .am-step__status--warn { color: var(--status-warning); }
 .am-step__status--wait { color: var(--fg-4); }
+
+/* 인포 배너 — 첨부 디자인 */
+.dw__info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--gp-primary-tint);
+}
+.dw__info-banner .gp-ico {
+  width: 18px; height: 18px;
+  color: var(--gp-primary);
+  flex: none;
+  margin-top: 1px;
+}
+.dw__info-banner p {
+  margin: 0;
+  font: 400 13px/1.6 var(--font-sans);
+  color: var(--fg-2);
+}
 
 .am-spec-counts {
   display: flex;
@@ -337,7 +393,7 @@
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 20px;
-  align-items: start;
+  align-items: stretch;
 }
 
 /* AI 단계 패널 */
@@ -421,6 +477,14 @@
   font: 500 13px/1.4 var(--font-sans);
   color: var(--fg-1);
   outline: none;
+}
+.am-ai-rec-val {
+  padding: 8px 12px;
+  border: 1px solid var(--status-success);
+  border-radius: var(--radius-sm);
+  background: var(--status-success-soft);
+  font: 500 13px/1.5 var(--font-sans);
+  color: var(--status-success);
 }
 
 /* AI 추천 근거 */
@@ -715,3 +779,199 @@
 .am-add-modal__x svg { width: 16px; height: 16px; }
 .am-add-modal__ft { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
 .am-add-modal__ft .btn { height: 42px; padding: 0 20px; }
+
+/* ══════════════════════════════════════════
+   탭 2 — 정의서 분석 설정 카드 (개선)
+══════════════════════════════════════════ */
+.am-spec-card {
+  background: var(--surface-card);
+  border: 1px solid rgba(205,209,213,.5);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 16px rgba(0,0,0,.10);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.am-spec-card__hd {
+  padding: 24px 29px 0;
+}
+.am-spec-card__title { margin: 0; font: 700 20px/1.5 var(--font-sans); color: var(--fg-1); }
+
+/* 단일 가로 행 */
+.am-spec-card__row {
+  display: flex;
+  align-items: center;
+  gap: 116px;
+  padding: 0 29px;
+  min-height: 130px;
+}
+/* 통계 그룹 */
+.am-spec-stats {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+/* 수직 구분선 */
+.am-spec-vdiv {
+  width: 1px;
+  height: 32px;
+  background: #d9d9d9;
+  flex: none;
+}
+/* 통계 열 */
+.am-spec-stat-col {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 80px;
+}
+
+/* 탭 2 — 결과 패널 헤더 (ac-panel-hd 대체) */
+.am-panel-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-2);
+}
+.am-panel-hd__left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 700 15px/1 var(--font-sans);
+  color: var(--fg-1);
+}
+.am-panel-hd__left svg { width: 17px; height: 17px; color: var(--gp-primary); }
+.am-panel-hd__meta { font: 500 13px/1 var(--font-sans); color: var(--fg-3); }
+
+/* ══════════════════════════════════════════
+   탭 3 — AI 메타데이터 추천 헤더 카드 (개선)
+══════════════════════════════════════════ */
+/* AI 기반 메타데이터 추천 — 요약 행 카드 */
+.am-ai-summary {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  background: var(--surface-card);
+  border: 1px solid rgba(205,209,213,.5);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 16px rgba(0,0,0,.10);
+  margin-bottom: 20px;
+  padding: 0 37px;
+  min-height: 130px;
+  box-sizing: border-box;
+}
+.am-ai-summary__col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+  flex: none;
+}
+.am-ai-summary__sep {
+  width: 1px;
+  height: 32px;
+  background: #d9d9d9;
+  flex: none;
+}
+.am-ai-summary__lbl {
+  font: 400 14px/1.5 var(--font-sans);
+  color: #464c53;
+  white-space: nowrap;
+}
+.am-ai-summary__val {
+  font: 600 16px/1.5 var(--font-sans);
+  color: #1e2124;
+  white-space: nowrap;
+}
+.am-ai-summary__val--warn { color: #ec8913; }
+.am-ai-summary__acc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  padding: 0 16px;
+  width: fit-content;
+  border: 1px solid var(--status-success);
+  border-radius: var(--radius-pill);
+  font: 600 16px/1.5 var(--font-sans);
+  color: var(--status-success);
+}
+
+/* 탭 3 — AI 추천 결과 패널 헤더 */
+.am-ai-rec-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(12,138,229,.07) 0%, rgba(4,78,158,.04) 100%);
+  border-bottom: 1px solid var(--border-primary);
+  margin-bottom: 0;
+}
+.am-ai-rec-hd__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 700 15px/1 var(--font-sans);
+  color: var(--fg-1);
+}
+.am-ai-rec-hd__title svg { width: 17px; height: 17px; color: var(--gp-point); }
+.am-ai-rec-hd__actions { display: flex; gap: 8px; }
+
+/* 탭 3 — AI 추천 테이블 셀 스타일 */
+.am-ai-tbl thead th:nth-child(3) {
+  background: linear-gradient(135deg, rgba(26,170,94,.07) 0%, rgba(26,170,94,.04) 100%);
+  color: var(--status-success);
+}
+.am-ai-tbl tbody td:nth-child(3) {
+  background: rgba(26,170,94,.03);
+}
+
+/* 탭 3 — AI 단계 패널 추가 개선 */
+.am-ai-steps-panel .am-ai-step--done .am-ai-step__lbl {
+  color: var(--fg-2);
+}
+.am-ai-step__sub {
+  font: 400 11px/1.4 var(--font-sans);
+  color: var(--fg-4);
+  margin-top: 3px;
+}
+.am-ai-step__body { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+
+/* 탭 3 — AI 추천 근거 개선 */
+.am-ai-reason {
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  border-top: 1px solid var(--border-2);
+}
+
+/* ── 탭 2 — 정의서 항목 드로어 매핑 후보 ── */
+.sd-candidate {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 2px solid var(--border-1);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  user-select: none;
+  transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+.sd-candidate:hover { border-color: var(--border-primary); background: var(--gp-primary-tint); }
+.sd-candidate.on    { border-color: var(--gp-primary);     background: var(--gp-primary-tint); }
+.sd-candidate input[type="radio"] {
+  accent-color: var(--gp-primary);
+  width: 16px; height: 16px;
+  flex: none; cursor: pointer;
+}
+.sd-candidate__name { font: 600 14px/1.3 var(--font-sans); color: var(--fg-1); flex: 1; }
+.sd-candidate__conf { display: flex; align-items: center; gap: 6px; flex: none; }
+.sd-candidate__conf-bar {
+  width: 56px; height: 5px;
+  background: var(--border-2); border-radius: 3px; overflow: hidden;
+}
+.sd-candidate__conf-fill { height: 100%; border-radius: 3px; }
+.sd-candidate__conf-val  { font: 700 12px/1 var(--font-sans); min-width: 32px; text-align: right; }
+
+/* 탭 3 — 필수 항목 강조 (★ 항목 행) */
+.am-ai-tbl tbody td:first-child { font-size: 13px; }

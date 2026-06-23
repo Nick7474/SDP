@@ -1,0 +1,296 @@
+/* =====================================================================
+   광명 스마트데이터보드 · 연계 모니터링 (page-specific)
+   공통: page-shared.css 참조
+   ===================================================================== */
+
+/* ===================== 필터 카드 ===================== */
+.panel--filter{padding:20px 24px;}
+
+/* 전체 래퍼: 좌컬럼 + 우컬럼 + 검색 */
+.filter-wrap{
+  display:flex;align-items:center;gap:32px;}
+
+/* 필터 컬럼 (2행씩) */
+.flt-col{
+  display:flex;flex-direction:column;gap:14px;
+  flex:1;}
+
+/* 각 행: 레이블 + 칩 그룹 */
+.flt-row{display:flex;align-items:center;gap:14px;}
+
+.flt-lbl{
+  font:600 13px/1.5 var(--font-sans);
+  color:#1e2124;
+  white-space:nowrap;
+  flex:none;
+  min-width:52px;}  /* 레이블 너비 고정으로 칩 정렬 */
+
+/* ===================== 칩 (피그마 스펙) ===================== */
+.chip-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.chip{
+  height:24px;padding:0 10px;white-space:nowrap;
+  border:1px solid #d6e0eb;border-radius:20px;
+  background:#fff;color:#464c53;
+  font:500 12px/1 var(--font-sans);cursor:pointer;
+  transition:background .13s,color .13s,border-color .13s;}
+.chip:hover{border-color:var(--gp-point);color:var(--gp-point);}
+.chip.on{
+  background:var(--gp-point);  /* #0C8AE5 — 피그마 point_eco */
+  color:#fff;border-color:var(--gp-point);
+  font-weight:700;}
+.chip:focus-visible{outline:2px solid var(--gp-point);outline-offset:2px;}
+
+/* ===================== 검색 + 버튼 영역 ===================== */
+.flt-search{
+  margin-left:auto;flex:none;
+  display:flex;flex-direction:row;align-items:center;gap:7px;}
+
+.search-box{position:relative;}
+.search-box input{
+  width:330px;height:34px;
+  padding:0 30px 0 10px;
+  border:1px solid #b1b8be;border-radius:6px;
+  background:#fff;color:var(--fg-2);
+  font:500 12px/1 var(--font-sans);
+  box-sizing:border-box;}
+.search-box input:focus{
+  outline:2px solid var(--gp-point);outline-offset:2px;
+  border-color:var(--gp-point);}
+.search-box input::placeholder{color:#8a949e;}
+
+.search-ico-btn{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  width:18px;height:18px;
+  border:none;background:none;padding:0;
+  color:#8a949e;cursor:pointer;
+  display:grid;place-items:center;}
+.search-ico-btn:hover{color:var(--gp-point);}
+.search-ico-btn svg{width:14px;height:14px;}
+
+/* 필터 전용 버튼 (피그마: 80×34px, 6px radius) */
+.search-acts{display:contents;}
+.flt-btn{
+  width:80px;height:34px;border-radius:6px;padding:0;
+  display:inline-flex;align-items:center;justify-content:center;gap:4px;
+  cursor:pointer;transition:.13s;white-space:nowrap;}
+.flt-btn svg{width:14px;height:14px;flex:none;}
+
+.flt-btn--pri{
+  background:var(--gp-primary);color:#fff;border:none;
+  font:700 14px/1 var(--font-sans);}
+.flt-btn--pri svg{width:16px;height:16px;}
+.flt-btn--pri:hover{background:var(--gp-primary-strong);}
+
+.flt-btn--line{
+  background:#fff;border:1px solid #d6e0eb;
+  color:#464c53;font:500 12px/1 var(--font-sans);}
+.flt-btn--line:hover{border-color:var(--gp-point);color:var(--gp-point);}
+
+/* ===================== 연계 상태 목록 테이블 ===================== */
+#linkTable{table-layout:fixed;}
+#linkTable th:nth-child(1) {width:56px;}
+#linkTable th:nth-child(2) {width:148px;text-align:left;}
+#linkTable th:nth-child(3) {width:116px;text-align:left;}
+#linkTable th:nth-child(4) {width:162px;text-align:left;}
+#linkTable th:nth-child(5) {width:88px;}
+#linkTable th:nth-child(6) {width:72px;}
+#linkTable th:nth-child(7) {width:88px;}
+#linkTable th:nth-child(8) {width:62px;}
+#linkTable th:nth-child(9) {width:70px;}
+#linkTable th:nth-child(10){width:82px;}
+#linkTable th:nth-child(11){width:72px;}
+#linkTable th:nth-child(12){width:60px;}
+#linkTable th:nth-child(13){width:68px;}
+#linkTable td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#linkTable th:last-child,
+#linkTable td:last-child{
+  padding-left:8px;
+  padding-right:8px;
+  overflow:visible;
+  text-overflow:clip;
+}
+
+/* 빈 상태: 아이콘과 안내 문구 정렬 */
+#linkTable .link-empty__content{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+#linkTable .link-empty__content i{
+  position:static;
+  top:auto;
+  margin:0;
+  flex:none;
+}
+
+/* 관리 상세 버튼 주변 장식 제거 */
+#linkTable .link-view-btn::before,
+#linkTable .link-view-btn::after{
+  content:none !important;
+  display:none !important;
+}
+
+/* Endpoint 경로 */
+.ep-path{font:500 12px/1 monospace,var(--font-sans);color:#4D6080;}
+
+/* Endpoint 드로어 dd */
+.ep-dd{
+  font-family:monospace,var(--font-sans) !important;
+  font-size:12px !important;font-weight:500 !important;
+  word-break:break-all;white-space:normal;
+  color:#5A6878 !important;}
+
+/* 관리 아이콘 버튼 */
+.manage-btn{
+  width:32px;height:32px;border-radius:8px;
+  border:1px solid #D8E2EF;background:#fff;
+  color:#7A8699;cursor:pointer;
+  display:grid;place-items:center;
+  transition:.13s;}
+.manage-btn:hover{background:var(--gp-primary);color:#fff;border-color:var(--gp-primary);}
+.manage-btn svg{width:15px;height:15px;}
+
+/* 연계 구분 배지 */
+.div-tag{
+  display:inline-block;padding:3px 8px;
+  border-radius:5px;font:600 12px/1.4 var(--font-sans);}
+.div-tag--in {background:#EEF3FA;color:#4D6080;}
+.div-tag--out{background:#E3F2FD;color:#0A74C2;}
+.div-tag--pub{background:#E4F6EC;color:#128C4A;}
+.div-tag--pri{background:#ECEDFB;color:#5759B2;}
+
+/* ===================== 드로어 — info 배너 ===================== */
+.dw__info-banner{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:13px 16px;border-radius:10px;margin-bottom:16px;
+  background:#E3F2FD;}
+.dw__info-banner .gp-ico{flex:none;width:18px;height:18px;color:var(--gp-point);margin-top:1px;}
+.dw__info-banner p{margin:0;font:400 13px/1.55 var(--font-sans);color:#36445A;}
+
+/* 드로어 푸터 — 3행 레이아웃 */
+#drawer .dw__ft{
+  display:flex;flex-direction:column;gap:10px;
+  grid-template-columns:unset;}
+.dw__ft-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.dw__ft-row--full{grid-template-columns:1fr;}
+#drawer .dw__ft .btn{
+  height:42px;justify-content:center;width:100%;font-size:13px;}
+
+/* ── 응답 임계값 입력 ── */
+.flt-threshold {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  padding: 0 0 0 12px;
+  border-left: 1px solid var(--border-1);
+  margin-left: 4px;
+}
+.threshold-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.threshold-input {
+  width: 64px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xs);
+  font: 500 13px/1 var(--font-sans);
+  color: var(--fg-1);
+  outline: none;
+  text-align: center;
+}
+.threshold-input:focus { border-color: var(--gp-point) }
+.threshold-unit {
+  font: 400 12px/1 var(--font-sans);
+  color: var(--fg-3);
+  white-space: nowrap;
+}
+
+/* ── 응답 시간 초과 강조 ── */
+.hm__bar--threshold,
+.restime-warn {
+  color: var(--status-danger) !important;
+  font-weight: 700 !important;
+}
+
+/* ── 조치 상태 배지 ── */
+.fix-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  font: 600 11px/1 var(--font-sans);
+  white-space: nowrap;
+}
+.fix-badge--none { background: var(--status-danger-soft);   color: var(--status-danger) }
+.fix-badge--prog { background: var(--status-warning-soft);  color: var(--status-warning) }
+.fix-badge--done { background: var(--status-success-soft);  color: var(--status-success) }
+.fix-badge--na   { background: var(--bg-sunken);            color: var(--fg-4) }
+
+/* ── 알림 토글 ── */
+.lk-toggle {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.lk-toggle input { position: absolute; opacity: 0; width: 0; height: 0 }
+.lk-toggle__track {
+  width: 40px; height: 22px;
+  border-radius: 11px;
+  background: var(--fg-disabled);
+  transition: background .2s;
+  position: relative;
+}
+.lk-toggle input:checked ~ .lk-toggle__track { background: var(--gp-point) }
+.lk-toggle__thumb {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.18);
+  transition: left .2s;
+}
+.lk-toggle input:checked ~ .lk-toggle__track .lk-toggle__thumb { left: 21px }
+
+/* ── 장애 상세 모달 ── */
+.lk-modal-scrim {
+  position: fixed; inset: 0;
+  background: rgba(15,30,55,.4);
+  z-index: 200;
+}
+.lk-modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 560px; max-width: 92vw;
+  background: #fff;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--elev-3);
+  z-index: 210;
+  display: flex;
+  flex-direction: column;
+  max-height: 88vh;
+}
+.lk-modal__hd {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid var(--border-1);
+}
+.lk-modal__hd h3 { font: 700 18px/1.3 var(--font-sans); color: var(--fg-1); margin: 0 }
+.lk-modal__bd { padding: 20px 24px; overflow-y: auto; flex: 1 }
+.lk-modal__ft {
+  display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+  padding: 14px 24px;
+  border-top: 1px solid var(--border-1);
+}
+
+/* 컬럼 너비 조정 (조치상태 추가로 13열) */
+#linkTable th:nth-child(12){width:72px;}
+#linkTable th:nth-child(13){width:68px;}

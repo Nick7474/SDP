@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상태 모니터링 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-status.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div id="gmsb-topbar"></div>
+
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- KPI ROW (standard style) -->
+    <div class="kpis">
+
+      <div class="kpi">
+        <span class="kpi__ic kpi__ic--blue"><i data-lucide="monitor-dot"></i></span>
+        <div>
+          <div class="kpi__lb">모니터링 대상</div>
+          <div class="kpi__vl">1<span class="u">개</span></div>
+          <div class="kpi__sub">광명 스마트데이터보드</div>
+        </div>
+      </div>
+
+      <div class="kpi">
+        <span class="kpi__ic kpi__ic--green"><i data-lucide="circle-check"></i></span>
+        <div>
+          <div class="kpi__lb">서비스 상태</div>
+          <div class="kpi__vl kpi__vl--ok">정상</div>
+          <div class="kpi__sub">모든 서비스 정상 운영 중</div>
+        </div>
+      </div>
+
+      <div class="kpi">
+        <span class="kpi__ic kpi__ic--green"><i data-lucide="activity"></i></span>
+        <div>
+          <div class="kpi__lb">가용률</div>
+          <div class="kpi__vl">99.98<span class="u">%</span></div>
+          <div class="kpi__sub">정상 범위</div>
+        </div>
+      </div>
+
+      <div class="kpi">
+        <span class="kpi__ic kpi__ic--amber"><i data-lucide="bell"></i></span>
+        <div>
+          <div class="kpi__lb">금일 알림</div>
+          <div class="kpi__vl">2<span class="u">건</span></div>
+          <div class="kpi__sub">
+            <span class="st-sub-warn">경고 2</span>
+            <span class="st-sub-div">|</span>
+            <span class="st-sub-err">오류 0</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MAIN 3열: 서비스 | 리소스 | 성능 차트 -->
+    <div class="st-main">
+
+      <!-- 1. 서비스 상태 (narrow) -->
+      <section class="panel st-svc-panel">
+        <div class="panel__hd">
+          <h2 class="panel__t">서비스 상태</h2>
+        </div>
+        <div id="svcList"></div>
+      </section>
+
+      <!-- 2. 리소스 현황 -->
+      <section class="panel st-res-panel">
+        <div class="panel__hd">
+          <h2 class="panel__t">리소스 현황</h2>
+        </div>
+        <div id="resList"></div>
+      </section>
+
+      <!-- 3. 성능 지표 추이 (tabbed line chart) -->
+      <section class="panel st-chart-panel">
+        <div class="panel__hd panel__hd--row">
+          <h2 class="panel__t">성능 지표 추이</h2>
+          <div class="st-tabs" role="tablist" aria-label="성능 지표 선택">
+            <button class="st-tab on" data-metric="cpu"   type="button" role="tab" aria-selected="true">CPU 사용률</button>
+            <button class="st-tab"    data-metric="mem"   type="button" role="tab">메모리 사용률</button>
+            <button class="st-tab"    data-metric="resp"  type="button" role="tab">응답 시간</button>
+            <button class="st-tab"    data-metric="avail" type="button" role="tab">가용성</button>
+          </div>
+        </div>
+        <div class="st-chart-meta" id="chartMeta"></div>
+        <div class="st-chart-wrap">
+          <canvas id="lineChart"></canvas>
+        </div>
+        <div class="st-chart-xlabels" id="chartXLabels"></div>
+      </section>
+
+    </div>
+
+    <!-- BOTTOM 2열: 이벤트 요약 | 알림 목록 -->
+    <div class="st-bottom">
+
+      <!-- 이벤트 요약 -->
+      <section class="panel st-evt-panel">
+        <div class="panel__hd">
+          <h2 class="panel__t">이벤트 요약</h2>
+        </div>
+        <div class="st-evt-summary">
+          <div class="st-evt-total">
+            <span class="st-evt-total__n">2</span>
+            <span class="st-evt-total__lb">금일 전체</span>
+          </div>
+          <div class="st-evt-tags">
+            <div class="st-evt-tag st-evt-tag--info">
+              <span class="st-evt-tag__n">0</span>
+              <span class="st-evt-tag__lb">정보</span>
+            </div>
+            <div class="st-evt-tag st-evt-tag--warn">
+              <span class="st-evt-tag__n">2</span>
+              <span class="st-evt-tag__lb">경고</span>
+            </div>
+            <div class="st-evt-tag st-evt-tag--err">
+              <span class="st-evt-tag__n">0</span>
+              <span class="st-evt-tag__lb">오류</span>
+            </div>
+          </div>
+        </div>
+        <div class="st-bar-wrap">
+          <canvas id="barChart"></canvas>
+        </div>
+        <div class="st-bar-legend">
+          <div class="st-bar-legend__item">
+            <i class="st-bar-legend__ic" style="background:#ED8B16"></i>경고
+          </div>
+          <div class="st-bar-legend__item">
+            <i class="st-bar-legend__ic" style="background:#EEF1F6"></i>이벤트 없음
+          </div>
+        </div>
+      </section>
+
+      <!-- 알림 목록 -->
+      <section class="panel st-alert-panel">
+        <div class="panel__hd panel__hd--row">
+          <h2 class="panel__t">알림 목록</h2>
+          <div class="panel__actions" style="display:flex;gap:8px;align-items:center">
+            <button class="st-tab" id="groupToggleBtn" type="button" title="유형별 그룹 보기"><i data-lucide="layers" style="width:13px;height:13px;margin-right:5px;vertical-align:-2px;"></i>그룹 보기</button>
+            <button class="st-tab" id="markAllBtn" type="button"><i data-lucide="check" style="width:13px;height:13px;margin-right:5px;vertical-align:-2px;"></i>전체 확인</button>
+          </div>
+        </div>
+
+        <!-- 이벤트 타임라인 바 -->
+        <div class="st-timeline" id="alertTimeline"></div>
+
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>발생 시각</th>
+              <th>유형</th>
+              <th class="l">내용</th>
+              <th>서비스</th>
+              <th>상태</th>
+              <th>상세</th>
+            </tr>
+          </thead>
+          <tbody id="alertBody"></tbody>
+        </table>
+        <div class="st-pg" id="pagination"></div>
+      </section>
+
+    </div>
+
+  </main>
+</div>
+
+<!-- DRAWER -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="알림 상세">
+  <div class="dw__hd">
+    <div class="ti"><h3>알림 상세</h3></div>
+    <button class="dw__x" id="dwClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="dw__info-banner">
+      <i data-lucide="info" class="gp-ico"></i>
+      <p>선택한 알림의 발생 원인, 영향 범위, 처리 상태를 확인합니다.</p>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="bell" class="gp-ico"></i>알림 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>발생 시각</dt><dd id="f_time">—</dd></div>
+        <div class="dl__r"><dt>유형</dt><dd id="f_type">—</dd></div>
+        <div class="dl__r"><dt>내용</dt><dd id="f_content">—</dd></div>
+        <div class="dl__r"><dt>서비스</dt><dd id="f_service">—</dd></div>
+        <div class="dl__r"><dt>우선순위</dt><dd id="f_priority">—</dd></div>
+        <div class="dl__r"><dt>상태</dt><dd id="f_status">—</dd></div>
+      </dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="activity" class="gp-ico"></i>상세 내용</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>영향 범위</dt><dd id="f_impact">—</dd></div>
+        <div class="dl__r"><dt>권장 조치</dt><dd id="f_action">—</dd></div>
+        <div class="dl__r"><dt>담당자</dt><dd id="f_owner">—</dd></div>
+        <div class="dl__r"><dt>조치 메모</dt><dd id="f_memo" style="color:var(--fg-3);font-style:italic">없음</dd></div>
+      </dl>
+    </div>
+    <div class="dw__sec" id="dwMemoSec">
+      <h4><i data-lucide="pencil" class="gp-ico"></i>조치 완료 메모</h4>
+      <textarea id="dwMemoInput" class="st-memo-input" rows="3" placeholder="조치 내용을 입력하세요 (선택)"></textarea>
+    </div>
+  </div>
+  <div class="dw__ft" style="display:flex;flex-direction:column;gap:8px;padding:14px 20px">
+    <button class="btn btn--pri" type="button" id="dwMarkBtn" style="width:100%">
+      <i data-lucide="check" class="gp-ico"></i>조치 완료 처리
+    </button>
+    <button class="btn btn--line" type="button" id="dwCloseFooter" style="width:100%">닫기</button>
+  </div>
+</aside>
+
+<!-- TOOLTIP (공통) -->
+<div class="st-tooltip" id="stTooltip">
+  <div class="st-tooltip__time" id="ttTime"></div>
+  <div class="st-tooltip__row">
+    <span class="st-tooltip__dot" id="ttDot"></span>
+    <span class="st-tooltip__val" id="ttVal"></span>
+  </div>
+</div>
+
+<script>
+window.GMSB_ALERT_COUNT = 2;
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'op.status-monitoring',
+  header: {
+    title: '상태 모니터링',
+    desc:  '광명 스마트데이터보드의 서비스·리소스 상태와 알림 현황을 실시간으로 확인합니다.',
+    actions: '<span class="ph__upd">마지막 갱신 : <b id="updTime">2026-06-17 09:30:00</b></span><button class="btn btn--line" id="refreshBtn"><i data-lucide="refresh-cw" class="gp-ico"></i>새로고침</button>'
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-status.js"></script>
+</body>
+</html>

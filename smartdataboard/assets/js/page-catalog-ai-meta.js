@@ -4,6 +4,253 @@
 (function () {
   'use strict';
 
+  /* ── 탭 2 데이터 ── */
+  var SPEC_ITEMS = [
+    { no:1,  name:'발전소ID',        eng:'plant_id',           dtype:'VARCHAR(20)', req:true,  sample:'GM-SOLAR-001',  desc:'발전소 고유 식별자',          mapped:'매핑완료', rec:'발전소 식별코드' },
+    { no:2,  name:'발전일시',        eng:'gen_datetime',       dtype:'DATETIME',    req:true,  sample:'2026-06-01 00:00', desc:'발전량 집계 기준 일시',    mapped:'매핑완료', rec:'발전 일시' },
+    { no:3,  name:'발전량_MWh',      eng:'generation_mwh',     dtype:'DECIMAL(10,3)',req:true, sample:'12.450',        desc:'시간대별 발전량(MWh)',         mapped:'매핑완료', rec:'발전량(MWh)' },
+    { no:4,  name:'설비용량_kW',     eng:'capacity_kw',        dtype:'DECIMAL(10,2)',req:true, sample:'500.00',        desc:'설비 최대 발전 용량',          mapped:'매핑완료', rec:'설비용량(kW)' },
+    { no:5,  name:'이용률_pct',      eng:'utilization_rate',   dtype:'DECIMAL(5,2)', req:false, sample:'82.50',       desc:'설비 이용률(%)',               mapped:'확인필요', rec:'이용률(%)' },
+    { no:6,  name:'일사량_Wm2',      eng:'irradiance_wm2',     dtype:'DECIMAL(8,2)', req:false, sample:'945.20',      desc:'수평면 일사량(W/m²)',          mapped:'매핑완료', rec:'수평면 일사량' },
+    { no:7,  name:'패널온도_C',      eng:'panel_temp_c',       dtype:'DECIMAL(5,2)', req:false, sample:'52.30',       desc:'태양광 패널 표면 온도(℃)',     mapped:'매핑완료', rec:'패널 표면온도' },
+    { no:8,  name:'인버터ID',        eng:'inverter_id',        dtype:'VARCHAR(20)', req:true,  sample:'INV-001',       desc:'인버터 장비 식별자',          mapped:'매핑완료', rec:'인버터 식별코드' },
+    { no:9,  name:'인버터상태',      eng:'inverter_status',    dtype:'VARCHAR(10)', req:true,  sample:'정상',          desc:'인버터 동작 상태',            mapped:'매핑완료', rec:'인버터 동작상태' },
+    { no:10, name:'계통연계전압_V',  eng:'grid_voltage_v',     dtype:'DECIMAL(7,2)', req:false, sample:'380.50',      desc:'계통 연계 전압(V)',            mapped:'확인필요', rec:'계통 연계전압' },
+    { no:11, name:'출력전류_A',      eng:'output_current_a',   dtype:'DECIMAL(7,3)', req:false, sample:'19.250',      desc:'출력 전류(A)',                 mapped:'매핑완료', rec:'출력 전류' },
+    { no:12, name:'탄소감축량_tCO2', eng:'carbon_reduction',   dtype:'DECIMAL(10,4)',req:false, sample:'5.8620',      desc:'발전으로 상쇄된 탄소 환산량', mapped:'매핑완료', rec:'탄소 감축량' },
+    { no:13, name:'누적발전량_MWh',  eng:'cumul_gen_mwh',      dtype:'DECIMAL(12,3)',req:false, sample:'1250.830',    desc:'누적 발전 총량(MWh)',          mapped:'매핑완료', rec:'누적 발전량' },
+    { no:14, name:'일평균발전량',    eng:'daily_avg_gen',      dtype:'DECIMAL(10,3)',req:false, sample:'8.760',       desc:'일 평균 발전량(MWh)',          mapped:'확인필요', rec:'일평균 발전량' },
+    { no:15, name:'권역명',          eng:'zone_name',          dtype:'VARCHAR(50)', req:true,  sample:'철산역권',      desc:'행정 권역 구분명',            mapped:'매핑완료', rec:'행정권역명' },
+    { no:16, name:'위도',            eng:'latitude',           dtype:'DECIMAL(10,6)',req:true,  sample:'37.476123',   desc:'발전소 위치 위도 좌표',        mapped:'매핑완료', rec:'위도 좌표' },
+    { no:17, name:'경도',            eng:'longitude',          dtype:'DECIMAL(10,6)',req:true,  sample:'126.863452',  desc:'발전소 위치 경도 좌표',        mapped:'매핑완료', rec:'경도 좌표' },
+    { no:18, name:'비고',            eng:'remark',             dtype:'VARCHAR(200)', req:false, sample:'정기 점검',   desc:'기타 비고 사항',               mapped:'미매핑',   rec:'비고' }
+  ];
+
+  var AI_REC_ITEMS = [
+    { field:'데이터셋명',   current:'광명시 태양광 발전 집계',                 rec:'광명시 태양광 발전 집계 데이터',               apply:true  },
+    { field:'주제 영역',    current:'에너지',                                   rec:'에너지 > 신재생에너지',                        apply:true  },
+    { field:'데이터 설명',  current:'광명시 태양광 발전 현황을 집계한 데이터.', rec:'광명시 관내 태양광 발전 설비의 시간대별 발전량, 이용률, 탄소 감축량을 집계한 운영 데이터입니다.', apply:false },
+    { field:'키워드',       current:'태양광, 발전량',                           rec:'태양광, 발전량, 신재생에너지, 탄소중립, MWh',   apply:true  },
+    { field:'갱신 주기',    current:'일별',                                     rec:'시간별',                                        apply:false },
+    { field:'제공 형식',    current:'CSV',                                      rec:'CSV, API',                                      apply:true  },
+    { field:'공개 범위',    current:'내부',                                     rec:'제한공개',                                      apply:false },
+    { field:'담당 부서',    current:'기후환경과',                               rec:'기후환경과 신재생에너지팀',                     apply:true  }
+  ];
+
+  /* ── 탭 2: 정의서 분석 ── */
+  var specPage = 1;
+  var SPEC_PER = 10;
+
+  function renderSpecTable(data) {
+    var tbody = document.getElementById('specTbody');
+    if (!tbody) return;
+    var start = (specPage - 1) * SPEC_PER;
+    var slice = data.slice(start, start + SPEC_PER);
+    var mappedCls = { '매핑완료':'am-step__status--done', '확인필요':'am-step__status--warn', '미매핑':'' };
+    tbody.innerHTML = slice.map(function (r) {
+      var cls = mappedCls[r.mapped] || '';
+      return [
+        '<tr data-spec-no="' + r.no + '" style="cursor:pointer">',
+          '<td style="color:var(--fg-4);font-size:12px">' + r.no + '</td>',
+          '<td class="l" style="font-weight:700;color:var(--fg-1)">' + r.name + '</td>',
+          '<td class="l" style="font-size:12px;color:var(--fg-3);font-family:monospace">' + r.eng + '</td>',
+          '<td style="font-size:12px;font-family:monospace">' + r.dtype + '</td>',
+          '<td>' + (r.req ? '<span style="color:var(--status-danger);font-weight:700">필수</span>' : '<span style="color:var(--fg-4)">선택</span>') + '</td>',
+          '<td class="l" style="font-size:12px;color:var(--fg-3);font-family:monospace">' + r.sample + '</td>',
+          '<td class="l" style="font-size:12px;color:var(--fg-2)">' + r.desc + '</td>',
+          '<td><span class="am-step__status ' + cls + '">' + r.mapped + '</span></td>',
+          '<td class="l" style="font-size:12px;color:var(--gp-point)">' + r.rec + '</td>',
+          '<td style="white-space:nowrap">',
+            '<button class="tbtn tbtn--sm spec-row-detail" data-spec-no="' + r.no + '" type="button">상세</button>',
+          '</td>',
+        '</tr>'
+      ].join('');
+    }).join('');
+    if (!slice.length) tbody.innerHTML = '<tr class="tbl__empty"><td colspan="10"><i data-lucide="inbox"></i>항목이 없습니다.</td></tr>';
+    tbody.querySelectorAll('tr[data-spec-no]').forEach(function (tr) {
+      tr.addEventListener('click', function (e) {
+        if (e.target.closest('.spec-row-detail')) return;
+        openSpecDrawer(parseInt(tr.dataset.specNo, 10));
+      });
+      var btn = tr.querySelector('.spec-row-detail');
+      if (btn) btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        openSpecDrawer(parseInt(tr.dataset.specNo, 10));
+      });
+    });
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function renderSpecPagination(total) {
+    var el = document.getElementById('specPagination');
+    if (!el) return;
+    var pages = Math.max(1, Math.ceil(total / SPEC_PER));
+    el.innerHTML = [
+      '<span class="ds-pg-info">전체 ' + total + '건</span>',
+      '<div class="ds-pg-btns">',
+        pgBtn('&laquo;'), pgBtn('&lsaquo;'),
+        pgBtn('1', true), (pages > 1 ? pgBtn('2') : ''),
+        pgBtn('&rsaquo;'), pgBtn('&raquo;'),
+      '</div>',
+      '<div></div>'
+    ].join('');
+  }
+
+  function initSpecStartBtn() {
+    var btn = document.getElementById('specStartBtn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      showToast('정의서 분석을 시작합니다…');
+    });
+  }
+
+  function initSpecActions() {
+    var saveBtn = document.getElementById('specSaveBtn');
+    var gotoBtn = document.getElementById('specGotoAiBtn');
+    if (saveBtn) saveBtn.addEventListener('click', function () {
+      var steps = document.querySelectorAll('#tabSpec .am-step');
+      if (steps.length >= 5) {
+        var lastStep = steps[4];
+        var dot = lastStep.querySelector('.am-step__dot');
+        var status = lastStep.querySelector('.am-step__status');
+        if (dot) { dot.className = 'am-step__dot'; dot.innerHTML = '<i data-lucide="check" style="width:14px;height:14px"></i>'; }
+        if (status) { status.className = 'am-step__status am-step__status--done'; status.textContent = '완료'; }
+        if (window.lucide) lucide.createIcons();
+      }
+      showToast('분석 결과가 저장되었습니다. AI 메타데이터 추천을 진행하세요.');
+    });
+    if (gotoBtn) gotoBtn.addEventListener('click', function () {
+      document.querySelectorAll('.page-tab').forEach(function (b) { b.classList.remove('on'); });
+      var tab3Btn = document.querySelector('.page-tab[data-tab="airec"]');
+      if (tab3Btn) tab3Btn.classList.add('on');
+      var keys = Object.keys(TAB_MAP);
+      for (var k = 0; k < keys.length; k++) {
+        var el = document.getElementById(TAB_MAP[keys[k]]);
+        if (el) el.style.display = 'none';
+      }
+      var tab3 = document.getElementById(TAB_MAP.airec);
+      if (tab3) tab3.style.display = '';
+      if (window.lucide) lucide.createIcons();
+      window.scrollTo(0, 0);
+    });
+  }
+
+  /* ── 탭 3: AI 메타데이터 추천 ── */
+  var REQUIRED_AI_FIELDS = ['데이터셋명', '주제 영역', '데이터 설명', '키워드'];
+
+  function renderAiRecTable(data) {
+    var tbody = document.getElementById('aiRecTbody');
+    if (!tbody) return;
+    tbody.innerHTML = data.map(function (r, i) {
+      var isReq = REQUIRED_AI_FIELDS.indexOf(r.field) >= 0;
+      var appliedStyle = r.apply
+        ? 'background:var(--status-success-soft);border-color:var(--status-success);color:var(--status-success)'
+        : '';
+      return [
+        '<tr data-ai-idx="' + i + '">',
+          '<td class="l" style="font-weight:600;color:var(--fg-2);font-size:13px">',
+            (isReq ? '<span style="color:var(--status-danger);margin-right:2px" title="필수">*</span>' : ''),
+            r.field,
+          '</td>',
+          '<td class="l" style="padding:6px 8px">',
+            '<input type="text" class="am-ai-input" data-ai-curr="' + i + '"',
+            ' value="' + r.current.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') + '"',
+            ' style="width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-sm);',
+            'padding:6px 8px;font:400 13px/1.4 var(--font-sans);color:var(--fg-2);outline:none;',
+            'background:var(--surface-inset);transition:background .2s;box-sizing:border-box">',
+          '</td>',
+          '<td class="l" style="padding:8px 14px">',
+            '<div class="am-ai-rec-val">', r.rec, '</div>',
+          '</td>',
+          '<td style="text-align:center;min-width:70px">',
+            '<button class="tbtn tbtn--sm am-ai-apply-btn" type="button" data-ai-idx="' + i + '"',
+            (appliedStyle ? ' style="' + appliedStyle + '"' : ''),
+            '>',
+              (r.apply ? '적용됨' : '적용'),
+            '</button>',
+          '</td>',
+        '</tr>'
+      ].join('');
+    }).join('');
+    if (window.lucide) lucide.createIcons();
+    initAiApplyBtns();
+    checkSaveValidity();
+  }
+
+  function initAiApplyBtns() {
+    document.querySelectorAll('.am-ai-apply-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var idx = parseInt(this.dataset.aiIdx, 10);
+        var r = AI_REC_ITEMS[idx];
+        if (!r) return;
+        var input = document.querySelector('.am-ai-input[data-ai-curr="' + idx + '"]');
+        if (input) {
+          input.value = r.rec;
+          input.style.background = 'var(--gp-point-soft)';
+          var inp = input;
+          setTimeout(function () { inp.style.background = 'var(--surface-inset)'; }, 600);
+        }
+        r.apply = true;
+        this.textContent = '적용됨';
+        this.style.cssText = 'background:var(--status-success-soft);border-color:var(--status-success);color:var(--status-success)';
+        checkSaveValidity();
+      });
+    });
+  }
+
+  function checkSaveValidity() {
+    var btn = document.getElementById('aiSaveBtn');
+    if (!btn) return;
+    var valid = true;
+    for (var i = 0; i < REQUIRED_AI_FIELDS.length; i++) {
+      var fidx = -1;
+      for (var j = 0; j < AI_REC_ITEMS.length; j++) {
+        if (AI_REC_ITEMS[j].field === REQUIRED_AI_FIELDS[i]) { fidx = j; break; }
+      }
+      if (fidx < 0) continue;
+      var input = document.querySelector('.am-ai-input[data-ai-curr="' + fidx + '"]');
+      if (!input || !input.value.trim()) { valid = false; break; }
+    }
+    btn.disabled = !valid;
+    btn.style.opacity = valid ? '1' : '0.5';
+    btn.title = valid ? '' : '필수 항목(*)을 모두 입력 또는 적용해야 저장할 수 있습니다.';
+  }
+
+  function initAiReason() {
+    var toggle = document.getElementById('aiReasonToggle');
+    var body   = document.getElementById('aiReasonBody');
+    if (!toggle || !body) return;
+    toggle.addEventListener('click', function () {
+      var open = body.style.display !== 'none';
+      body.style.display = open ? 'none' : '';
+      var ico = toggle.querySelector('i[data-lucide]');
+      if (ico) {
+        ico.setAttribute('data-lucide', open ? 'chevron-down' : 'chevron-up');
+        if (window.lucide) lucide.createIcons();
+      }
+    });
+  }
+
+  function initAiSave() {
+    var btn = document.getElementById('aiSaveBtn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      if (this.disabled) return;
+      var applied = 0;
+      for (var i = 0; i < AI_REC_ITEMS.length; i++) {
+        if (AI_REC_ITEMS[i].apply) applied++;
+      }
+      showToast('AI 추천 메타데이터가 저장되었습니다. (' + applied + '건 적용)');
+    });
+    var reBtn = document.getElementById('aiReAnalyzeBtn');
+    if (reBtn) reBtn.addEventListener('click', function () {
+      AI_REC_ITEMS.forEach(function (r) { r.apply = false; });
+      renderAiRecTable(AI_REC_ITEMS);
+      showToast('메타데이터 재분석을 요청했습니다.');
+    });
+  }
+
+  /* ── 표준어 목록 ── */
   var TERMS = [
     { id:1, term:'태양광 발전량',  eng:'Solar Power Generation',          field:'에너지',   syn:'태양광발전, 솔라발전',      datasets:18, linked:'태양광발전량 및 탄소 배출량, 신재생에너지 현황 외 17개', status:'active', regDate:'2026.01.14', lastUsed:'2026.06.18', aiConf:0.97, desc:'태양광 발전 설비에서 생산한 전력의 총량.' },
     { id:2, term:'친환경DRT 운행', eng:'Eco DRT Operation',               field:'모빌리티', syn:'수요응답버스, 친환경버스',   datasets:9,  linked:'친환경DRT 운행 현황 데이터 외 8개',                   status:'active', regDate:'2026.01.22', lastUsed:'2026.06.16', aiConf:0.91, desc:'수요응답형 친환경 대중교통 운행 정보.' },
@@ -57,15 +304,39 @@
     initBatchActions();
     initHistModal();
     initAddModal();
+    renderSpecTable(SPEC_ITEMS);
+    renderSpecPagination(SPEC_ITEMS.length);
+    initSpecStartBtn();
+    initSpecActions();
+    initSpecDrawer();
+    renderAiRecTable(AI_REC_ITEMS);
+    initAiReason();
+    initAiSave();
     if (window.lucide) lucide.createIcons();
   }
 
+  var TAB_MAP = { term: 'tabTerm', spec: 'tabSpec', airec: 'tabAiRec' };
+  var TAB_META = {
+    term:  { label: '표준용어 관리',        desc: 'AI 데이터 카탈로그의 표준어를 관리하고 동의어·금칙어를 설정합니다.' },
+    spec:  { label: '인터페이스 정의서 분석', desc: '인터페이스 정의서를 분석하여 데이터 항목, 타입, 필수 여부, 표준어 매핑 상태를 확인합니다.' },
+    airec: { label: 'AI 기반 메타데이터 추천', desc: 'AI가 데이터셋을 분석하여 표준 메타데이터 항목과 값을 자동 추천합니다.' }
+  };
+
   /* ── 탭 ── */
   function initTabs() {
+    if (window.gmsbSetTab) gmsbSetTab(TAB_META.term.label, TAB_META.term.desc);
     document.querySelectorAll('.page-tab').forEach(function (btn) {
       btn.addEventListener('click', function () {
         document.querySelectorAll('.page-tab').forEach(function (b) { b.classList.remove('on'); });
         this.classList.add('on');
+        var key = this.dataset.tab;
+        Object.values(TAB_MAP).forEach(function (panelId) {
+          var el = document.getElementById(panelId);
+          if (el) el.style.display = 'none';
+        });
+        var active = document.getElementById(TAB_MAP[key]);
+        if (active) active.style.display = '';
+        if (TAB_META[key] && window.gmsbSetTab) gmsbSetTab(TAB_META[key].label, TAB_META[key].desc);
         if (window.lucide) lucide.createIcons();
       });
     });
@@ -250,12 +521,13 @@
     var el = document.getElementById('termPagination');
     if (!el) return;
     el.innerHTML = [
-      '<span class="ds-pg-info">총 ' + (total || 0) + '건</span>',
+      '<span class="ds-pg-info">전체 ' + (total || 0) + '건</span>',
       '<div class="ds-pg-btns">',
         pgBtn('&laquo;'), pgBtn('&lsaquo;'),
         pgBtn('1', true), pgBtn('2'),
         pgBtn('&rsaquo;'), pgBtn('&raquo;'),
-      '</div>'
+      '</div>',
+      '<div></div>'
     ].join('');
   }
 
@@ -388,9 +660,16 @@
 
   function closeDrawer(drawer) {
     if (drawer) drawer.classList.remove('on');
-    var scrim = document.getElementById('scrim');
-    var histOv = document.getElementById('histOverlay');
-    if (scrim && (!histOv || !histOv.classList.contains('on'))) scrim.classList.remove('on');
+    var scrim   = document.getElementById('scrim');
+    var histOv  = document.getElementById('histOverlay');
+    var termD   = document.getElementById('termDrawer');
+    var specD   = document.getElementById('specDrawer');
+    if (scrim) {
+      var anyOpen = (histOv && histOv.classList.contains('on'))
+                 || (termD  && termD  !== drawer && termD.classList.contains('on'))
+                 || (specD  && specD  !== drawer && specD.classList.contains('on'));
+      if (!anyOpen) scrim.classList.remove('on');
+    }
   }
 
   /* ── 변경이력 모달 ── */
@@ -477,6 +756,131 @@
 
   function closeAddModal() {
     document.getElementById('addOverlay').classList.remove('on');
+  }
+
+  /* ── 탭 2: 정의서 항목 드로어 ── */
+  var SPEC_CANDS = {
+    5:  [{ name:'이용률(%)',            conf:72 }, { name:'설비 이용률',        conf:61 }, { name:'발전 이용률',       conf:48 }],
+    10: [{ name:'계통 연계전압',         conf:71 }, { name:'연계 전압(V)',       conf:59 }, { name:'계통전압',          conf:44 }],
+    14: [{ name:'일평균 발전량',         conf:69 }, { name:'일 평균 발전량(MWh)',conf:65 }, { name:'발전량 일평균',     conf:41 }],
+    18: []
+  };
+
+  var selectedSpecItem = null;
+
+  function getSpecCandidates(item) {
+    if (SPEC_CANDS[item.no] !== undefined) return SPEC_CANDS[item.no];
+    return [
+      { name: item.rec,                conf: 95 },
+      { name: item.rec + ' (유사어)',  conf: 82 },
+      { name: item.name + ' 표준어',  conf: 67 }
+    ];
+  }
+
+  function openSpecDrawer(no) {
+    var item = null;
+    for (var i = 0; i < SPEC_ITEMS.length; i++) {
+      if (SPEC_ITEMS[i].no === no) { item = SPEC_ITEMS[i]; break; }
+    }
+    if (!item) return;
+    selectedSpecItem = item;
+
+    set('sd_no', '#' + item.no + ' 항목');
+    set('sd_name', item.name);
+    set('sd_eng', item.eng);
+    set('sd_dtype', item.dtype);
+    set('sd_sample', item.sample);
+    set('sd_desc', item.desc);
+
+    var reqEl = document.getElementById('sd_req');
+    if (reqEl) reqEl.innerHTML = item.req
+      ? '<span style="color:var(--status-danger);font-weight:700">필수</span>'
+      : '<span style="color:var(--fg-4)">선택</span>';
+
+    var badgeEl = document.getElementById('sd_mappedBadge');
+    if (badgeEl) {
+      var bCls = { '매핑완료':'badge--ok', '확인필요':'badge--warn', '미매핑':'badge--danger' }[item.mapped] || '';
+      badgeEl.innerHTML = '<span class="badge ' + bCls + '">' + item.mapped + '</span>';
+    }
+
+    var candsEl = document.getElementById('sd_candidates');
+    if (candsEl) {
+      var cands = getSpecCandidates(item);
+      if (!cands.length) {
+        candsEl.innerHTML = '<div style="text-align:center;padding:16px;color:var(--fg-4);font-size:13px">추천 표준용어가 없습니다. 아래 직접 입력하세요.</div>';
+      } else {
+        candsEl.innerHTML = cands.map(function (c, idx) {
+          var confColor = c.conf >= 85 ? 'var(--status-success)' : c.conf >= 65 ? 'var(--status-warning)' : 'var(--status-danger)';
+          var isFirst   = (idx === 0 && item.mapped === '매핑완료');
+          return [
+            '<label class="sd-candidate' + (isFirst ? ' on' : '') + '">',
+              '<input type="radio" name="sdCand" value="' + c.name + '"' + (isFirst ? ' checked' : '') + '>',
+              '<span class="sd-candidate__name">' + c.name + '</span>',
+              '<span class="sd-candidate__conf">',
+                '<span class="sd-candidate__conf-bar">',
+                  '<span class="sd-candidate__conf-fill" style="width:' + c.conf + '%;background:' + confColor + '"></span>',
+                '</span>',
+                '<span class="sd-candidate__conf-val" style="color:' + confColor + '">' + c.conf + '%</span>',
+              '</span>',
+            '</label>'
+          ].join('');
+        }).join('');
+        candsEl.querySelectorAll('.sd-candidate').forEach(function (label) {
+          label.addEventListener('click', function () {
+            candsEl.querySelectorAll('.sd-candidate').forEach(function (l) { l.classList.remove('on'); });
+            this.classList.add('on');
+            var manualInput = document.getElementById('sd_manualInput');
+            if (manualInput) manualInput.value = '';
+          });
+        });
+      }
+    }
+
+    var manualInput = document.getElementById('sd_manualInput');
+    if (manualInput) manualInput.value = '';
+
+    var drawer = document.getElementById('specDrawer');
+    var scrim  = document.getElementById('scrim');
+    if (drawer) { drawer.classList.add('on'); drawer.removeAttribute('aria-hidden'); }
+    if (scrim)  scrim.classList.add('on');
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function initSpecDrawer() {
+    var closeX    = document.getElementById('sdClose');
+    var cancelBtn = document.getElementById('sdCancelBtn');
+    var confirmBtn= document.getElementById('sdConfirmBtn');
+
+    function closeSpecDrawer() {
+      closeDrawer(document.getElementById('specDrawer'));
+    }
+
+    if (closeX)    closeX.addEventListener('click', closeSpecDrawer);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeSpecDrawer);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        var d = document.getElementById('specDrawer');
+        if (d && d.classList.contains('on')) closeSpecDrawer();
+      }
+    });
+
+    if (confirmBtn) confirmBtn.addEventListener('click', function () {
+      if (!selectedSpecItem) return;
+      var selected = '';
+      var checked  = document.querySelector('input[name="sdCand"]:checked');
+      if (checked) selected = checked.value;
+      var manualInput = document.getElementById('sd_manualInput');
+      if (manualInput && manualInput.value.trim()) selected = manualInput.value.trim();
+      if (!selected) { showToast('표준용어를 선택하거나 직접 입력하세요.'); return; }
+
+      selectedSpecItem.rec    = selected;
+      selectedSpecItem.mapped = '매핑완료';
+      renderSpecTable(SPEC_ITEMS);
+      renderSpecPagination(SPEC_ITEMS.length);
+      closeSpecDrawer();
+      showToast('"' + selectedSpecItem.name + '" 항목의 표준용어 매핑이 확정되었습니다.');
+    });
   }
 
   /* ── 유틸 ── */

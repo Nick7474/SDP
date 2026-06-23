@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4종 마일별 데이터 지도 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/gis-shared.css">
+<link rel="stylesheet" href="../assets/css/page-mile-map.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div id="gmsb-topbar"></div>
+
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- GIS 영역: 좌측 필터 + 우측 지도 -->
+    <div class="gis-wrap">
+
+      <!-- 좌측 필터 패널 -->
+      <aside class="gis-filter">
+        <div class="gis-filter__title">레이어 &amp; 데이터 선택</div>
+        <div class="gis-filter__search">
+          <div class="gis-search gis-search--right">
+            <input type="search" id="gisSearchInput" placeholder="주소, 시설명, 데이터명 검색" autocomplete="off" aria-label="검색">
+            <i data-lucide="search"></i>
+            <div class="search-dropdown" id="searchDropdown"></div>
+          </div>
+        </div>
+        <div class="gis-filter__body">
+
+          <!-- 1. 마일 유형 선택 -->
+          <div class="gis-filter__sec">
+            <p class="gis-filter__sec-hd">마일 유형 선택</p>
+            <div class="mile-radio-list">
+              <label class="mile-radio-item" data-mile="energy">
+                <span class="mile-radio-ico">
+                  <img src="../assets/img/mile-energy.svg" alt="" width="34" height="34">
+                </span>
+                <span class="mile-radio-lb">에너지 마일</span>
+                <input type="radio" name="mileType" value="energy" checked>
+              </label>
+              <label class="mile-radio-item" data-mile="mobility">
+                <span class="mile-radio-ico">
+                  <img src="../assets/img/mile-mobility.svg" alt="" width="34" height="34">
+                </span>
+                <span class="mile-radio-lb">모빌리티 마일</span>
+                <input type="radio" name="mileType" value="mobility">
+              </label>
+              <label class="mile-radio-item" data-mile="safety">
+                <span class="mile-radio-ico">
+                  <img src="../assets/img/mile-safety.svg" alt="" width="34" height="34">
+                </span>
+                <span class="mile-radio-lb">세이프티 마일</span>
+                <input type="radio" name="mileType" value="safety">
+              </label>
+              <label class="mile-radio-item" data-mile="data">
+                <span class="mile-radio-ico">
+                  <img src="../assets/img/mile-data.svg" alt="" width="34" height="34">
+                </span>
+                <span class="mile-radio-lb">데이터 마일</span>
+                <input type="radio" name="mileType" value="data">
+              </label>
+            </div>
+          </div>
+
+          <!-- 2. 공간 (마일) 레이어 -->
+          <div class="gis-filter__sec">
+            <p class="gis-filter__sec-hd">공간 (마일) 레이어</p>
+            <div class="layer-list" id="spatialLayerList"></div>
+          </div>
+
+          <!-- 3. 관련 데이터 레이어 -->
+          <div class="gis-filter__sec">
+            <p class="gis-filter__sec-hd">관련 데이터 레이어</p>
+            <div class="layer-list" id="relatedLayerList"></div>
+          </div>
+
+        </div>
+      </aside>
+
+      <!-- 우측 지도 -->
+      <div class="gis-map-area">
+        <div id="gisMap"></div>
+        <div class="draw-hint" id="drawHint">지도를 클릭해 영역을 그리세요 · 더블클릭으로 완료 · ESC 취소</div>
+
+        <!-- 우측 통합 컨트롤 패널 -->
+        <div class="map-ctrl-panel">
+          <div class="map-ctrl-group">
+            <button class="map-ctrl-btn" id="btnZoomIn" type="button" aria-label="확대">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            </button>
+            <button class="map-ctrl-btn" id="btnZoomOut" type="button" aria-label="축소">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+            </button>
+          </div>
+          <div class="map-ctrl-group">
+            <button class="map-tool-btn2" id="btnFitAll" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V5a2 2 0 0 1 2-2h4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M21 15v4a2 2 0 0 1-2 2h-4"/><path d="M9 21H5a2 2 0 0 1-2-2v-4"/></svg>
+              <span>전체보기</span>
+            </button>
+            <button class="map-tool-btn2" id="btnCenter" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+              <span>중심이동</span>
+            </button>
+            <button class="map-tool-btn2" id="btnDrawArea" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 19 8 17 18 7 18 5 8"/></svg>
+              <span>영역선택</span>
+            </button>
+            <button class="map-tool-btn2" id="btnClearSel" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+              <span>선택해제</span>
+            </button>
+            <button class="map-tool-btn2" id="btnViewReset" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              <span>뷰 초기화</span>
+            </button>
+            <button class="map-tool-btn2" id="btnExport" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>내보내기</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 범례 (좌하단) -->
+        <div class="map-legend">
+          <p class="map-legend__title">시설 상태</p>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:var(--status-success);"></span>
+            <span>정상</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:var(--status-warning);"></span>
+            <span>주의</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:var(--status-danger);"></span>
+            <span>위험</span>
+          </div>
+          <div class="legend-divider"></div>
+          <div class="legend-item">
+            <span class="legend-ring"></span>
+            <span>레이어 지점</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 마일별 상세 데이터 -->
+    <div class="mile-detail">
+
+      <!-- 탭 + 날짜/지역 통합 툴바 -->
+      <div class="mile-toolbar">
+        <div class="mile-tabs" role="tablist">
+          <button class="mile-tab on" data-mile="energy" role="tab" aria-selected="true" type="button">에너지 마일</button>
+          <button class="mile-tab" data-mile="mobility" role="tab" aria-selected="false" type="button">모빌리티 마일</button>
+          <button class="mile-tab" data-mile="safety" role="tab" aria-selected="false" type="button">세이프티 마일</button>
+          <button class="mile-tab" data-mile="data" role="tab" aria-selected="false" type="button">데이터 마일</button>
+        </div>
+        <div class="mile-controls">
+          <div class="mc-group">
+            <span class="mc-label">기간 선택</span>
+            <div class="mc-date-range" id="dateRangeTrigger">
+              <div class="mc-date-part">
+                <i data-lucide="calendar" style="width:13px;height:13px;color:var(--fg-4);flex:none;"></i>
+                <span id="dateFromDisplay">2026-01-01</span>
+              </div>
+              <span class="mc-date-sep">—</span>
+              <div class="mc-date-part">
+                <i data-lucide="calendar" style="width:13px;height:13px;color:var(--fg-4);flex:none;"></i>
+                <span id="dateToDisplay">2026-05-31</span>
+              </div>
+              <!-- 캘린더 드롭다운 -->
+              <div class="date-picker-dropdown" id="datePickerDropdown">
+                <div class="cal-header">
+                  <button class="cal-nav-btn" id="calPrev" type="button" aria-label="이전 달">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                  </button>
+                  <span class="cal-month-label" id="calLabelLeft"></span>
+                  <button class="cal-nav-btn" id="calNext" type="button" aria-label="다음 달">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  </button>
+                </div>
+                <div class="cal-body">
+                  <div class="cal-grid" id="calLeft"></div>
+                </div>
+                <div class="cal-footer">
+                  <span class="cal-selected-range" id="calSelectedRange">날짜를 선택하세요</span>
+                  <div class="cal-actions">
+                    <button class="btn btn--line" id="calCancel" type="button">취소</button>
+                    <button class="btn btn--pri" id="calApply" type="button">적용</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mc-group">
+            <span class="mc-label">지역 선택</span>
+            <select class="mc-select" id="regionSelect">
+              <option value="all">전체</option>
+              <option value="cheolsan">철산권</option>
+              <option value="haan">하안권</option>
+              <option value="soha">소하권</option>
+              <option value="iljik">일직권</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 에너지 마일 패인 -->
+      <div class="mile-pane on" id="pane-energy">
+        <div class="mile-kpi-strip">
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#FFF3E0;--ico-color:#FF8C00"><i data-lucide="sun"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">총 발전량</div><div class="mile-kpi__vl">350<span class="u">MWh</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#FFF9C4;--ico-color:#C8A800"><i data-lucide="zap"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">오늘 발전량</div><div class="mile-kpi__vl">116.2<span class="u">MWh</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E3F2FD;--ico-color:#0C8AE5"><i data-lucide="bar-chart-2"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">누적발전량</div><div class="mile-kpi__vl">1,268<span class="u">MWh</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E4F6EC;--ico-color:#1AAA5E"><i data-lucide="leaf"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">탄소저감량</div><div class="mile-kpi__vl">156.1<span class="u">tCO₂</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E3F2FD;--ico-color:#0C8AE5"><i data-lucide="shield"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">운영상태</div><div class="mile-kpi__vl" style="color:var(--status-success);">정상</div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E5EDF8;--ico-color:#044E9E"><i data-lucide="trending-up"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">전월 대비</div><div class="mile-kpi__vl" style="color:var(--gp-primary);">+12.3<span class="u">%</span></div></div>
+          </div>
+        </div>
+        <div class="mile-charts">
+          <div class="mile-chart-card">
+            <div class="mile-chart-card__hd"><p class="mile-chart-card__title">월별 발전량 추이</p><span class="mile-chart-card__sub">2026.01 ~ 2026.05</span></div>
+            <div class="chart-canvas-wrap"><canvas id="energyLineChart"></canvas></div>
+            <div class="chart-xlabels" id="energyLineXLabels"></div>
+          </div>
+          <div class="mile-chart-card">
+            <div class="mile-chart-card__hd"><p class="mile-chart-card__title">발전소별 생산량 비교</p><span class="mile-chart-card__sub">2026.05 기준</span></div>
+            <div class="chart-canvas-wrap"><canvas id="energyBarChart"></canvas></div>
+          </div>
+          <div class="mile-chart-card">
+            <div class="mile-chart-card__hd"><p class="mile-chart-card__title">발전 유형 비율</p><span class="mile-chart-card__sub">2026.05 기준</span></div>
+            <div class="donut-wrap">
+              <div class="donut-canvas-wrap"><canvas id="energyDonutChart"></canvas></div>
+              <div class="donut-legend" id="energyDonutLegend"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 모빌리티 마일 패인 -->
+      <div class="mile-pane" id="pane-mobility">
+        <div class="mile-kpi-strip">
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E4F6EC;--ico-color:#1AAA5E"><i data-lucide="bus"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">총 운행량</div><div class="mile-kpi__vl">12,480<span class="u">회</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E3F2FD;--ico-color:#0C8AE5"><i data-lucide="users"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">이용자 수</div><div class="mile-kpi__vl">6,800<span class="u">명</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#FDF1DF;--ico-color:#ED8B16"><i data-lucide="clock"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">평균 배차시간</div><div class="mile-kpi__vl">6.7<span class="u">분</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E3F2FD;--ico-color:#0C8AE5"><i data-lucide="map-pin"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">운행 커버리지</div><div class="mile-kpi__vl">92<span class="u">%</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E3F2FD;--ico-color:#0C8AE5"><i data-lucide="shield"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">운영상태</div><div class="mile-kpi__vl" style="color:var(--status-success);">정상</div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E5EDF8;--ico-color:#044E9E"><i data-lucide="trending-up"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">전월 대비</div><div class="mile-kpi__vl" style="color:var(--gp-primary);">+9.7<span class="u">%</span></div></div>
+          </div>
+        </div>
+        <div class="mile-charts">
+          <div class="mile-chart-card">
+            <div class="mile-chart-card__hd"><p class="mile-chart-card__title">월별 모빌리티 이용 추이</p><span class="mile-chart-card__sub">2026.01 ~ 2026.05</span></div>
+            <div class="chart-canvas-wrap"><canvas id="mobilityLineChart"></canvas></div>
+            <div class="chart-xlabels" id="mobilityLineXLabels"></div>
+          </div>
+          <div class="mile-chart-card">
+            <div class="mile-chart-card__hd"><p class="mile-chart-card__title">서비스별 이용량 비교</p><span class="mile-chart-card__sub">2026.05 기준</span></div>
+            <div class="chart-canvas-wrap"><canvas id="mobilityBarChart"></canvas></div>
+          </div>
+          <div class="mile-chart-card">
+            <div class="mile-chart-card__hd"><p class="mile-chart-card__title">이동 수단 비율</p><span class="mile-chart-card__sub">2026.05 기준</span></div>
+            <div class="donut-wrap">
+              <div class="donut-canvas-wrap"><canvas id="mobilityDonutChart"></canvas></div>
+              <div class="donut-legend" id="mobilityDonutLegend"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 세이프티 마일 패인 -->
+      <div class="mile-pane" id="pane-safety">
+        <div class="mile-kpi-strip">
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#FCEAE8;--ico-color:#E0483D"><i data-lucide="bell"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">총 감지건수</div><div class="mile-kpi__vl">27,480<span class="u">건</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E3F2FD;--ico-color:#0C8AE5"><i data-lucide="bell-ring"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">긴급 대응 건수</div><div class="mile-kpi__vl">15<span class="u">건</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#FDF1DF;--ico-color:#ED8B16"><i data-lucide="clock"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">평균 대응시간</div><div class="mile-kpi__vl">6.7<span class="u">분</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E3F2FD;--ico-color:#0C8AE5"><i data-lucide="map-pin"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">모니터링 개소</div><div class="mile-kpi__vl">299<span class="u">개소</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E3F2FD;--ico-color:#0C8AE5"><i data-lucide="shield"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">운영상태</div><div class="mile-kpi__vl" style="color:var(--status-success);">정상</div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E5EDF8;--ico-color:#044E9E"><i data-lucide="trending-up"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">전월 대비</div><div class="mile-kpi__vl" style="color:var(--gp-primary);">+8.4<span class="u">%</span></div></div>
+          </div>
+        </div>
+        <div class="mile-charts">
+          <div class="mile-chart-card">
+            <div class="mile-chart-card__hd"><p class="mile-chart-card__title">월별 안전 이벤트 추이</p><span class="mile-chart-card__sub">2026.01 ~ 2026.05</span></div>
+            <div class="chart-canvas-wrap"><canvas id="safetyLineChart"></canvas></div>
+            <div class="chart-xlabels" id="safetyLineXLabels"></div>
+          </div>
+          <div class="mile-chart-card">
+            <div class="mile-chart-card__hd"><p class="mile-chart-card__title">시설 유형별 감지 비교</p><span class="mile-chart-card__sub">2026.05 기준</span></div>
+            <div class="chart-canvas-wrap"><canvas id="safetyBarChart"></canvas></div>
+          </div>
+          <div class="mile-chart-card">
+            <div class="mile-chart-card__hd"><p class="mile-chart-card__title">이벤트 유형 비율</p><span class="mile-chart-card__sub">2026.05 기준</span></div>
+            <div class="donut-wrap">
+              <div class="donut-canvas-wrap"><canvas id="safetyDonutChart"></canvas></div>
+              <div class="donut-legend" id="safetyDonutLegend"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 데이터 마일 패인 -->
+      <div class="mile-pane" id="pane-data">
+        <div class="mile-kpi-strip">
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#ECEDFB;--ico-color:#6E74D6"><i data-lucide="database"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">월 수집 건수</div><div class="mile-kpi__vl">987,658<span class="u">건</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E5EDF8;--ico-color:#044E9E"><i data-lucide="link"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">연계 시스템 수</div><div class="mile-kpi__vl">12<span class="u">개</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#FDF1DF;--ico-color:#ED8B16"><i data-lucide="code-2"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">금일 API 호출</div><div class="mile-kpi__vl">44,963<span class="u">건</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E3F2FD;--ico-color:#0C8AE5"><i data-lucide="layers"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">데이터 적재율</div><div class="mile-kpi__vl">98.7<span class="u">%</span></div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E3F2FD;--ico-color:#0C8AE5"><i data-lucide="shield"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">운영상태</div><div class="mile-kpi__vl" style="color:var(--status-success);">정상</div></div>
+          </div>
+          <div class="mile-kpi-item">
+            <div class="mile-kpi-ico" style="--ico-bg:#E5EDF8;--ico-color:#044E9E"><i data-lucide="trending-up"></i></div>
+            <div class="mile-kpi__info"><div class="mile-kpi__lb">전월 대비</div><div class="mile-kpi__vl" style="color:var(--gp-primary);">+5.2<span class="u">%</span></div></div>
+          </div>
+        </div>
+        <div class="mile-charts">
+          <div class="mile-chart-card">
+            <div class="mile-chart-card__hd"><p class="mile-chart-card__title">월별 데이터 수집 추이</p><span class="mile-chart-card__sub">2026.01 ~ 2026.05</span></div>
+            <div class="chart-canvas-wrap"><canvas id="dataLineChart"></canvas></div>
+            <div class="chart-xlabels" id="dataLineXLabels"></div>
+          </div>
+          <div class="mile-chart-card">
+            <div class="mile-chart-card__hd"><p class="mile-chart-card__title">카테고리별 수집량 비교</p><span class="mile-chart-card__sub">2026.05 기준</span></div>
+            <div class="chart-canvas-wrap"><canvas id="dataBarChart"></canvas></div>
+          </div>
+          <div class="mile-chart-card">
+            <div class="mile-chart-card__hd"><p class="mile-chart-card__title">데이터 유형 비율</p><span class="mile-chart-card__sub">2026.05 기준</span></div>
+            <div class="donut-wrap">
+              <div class="donut-canvas-wrap"><canvas id="dataDonutChart"></canvas></div>
+              <div class="donut-legend" id="dataDonutLegend"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 차트 호버 툴팁 -->
+    <div class="chart-tooltip" id="chartTooltip">
+      <div class="chart-tooltip__label" id="ttLabel"></div>
+      <div class="chart-tooltip__value" id="ttValue"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- 핀 클릭 팝업 모달 -->
+<div class="map-popup" id="mapPopup" role="dialog" aria-modal="true" aria-label="시설 상세">
+  <div class="map-popup__scrim" id="popupScrim"></div>
+  <div class="map-popup__box">
+    <div class="map-popup__hd">
+      <div class="map-popup__hd-left">
+        <div class="map-popup__mile-badge" id="popupBadge"></div>
+        <div>
+          <p class="map-popup__title" id="popupTitle">시설명</p>
+          <p class="map-popup__type" id="popupType">유형</p>
+        </div>
+      </div>
+      <button class="map-popup__close" id="popupClose" type="button" aria-label="닫기">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="map-popup__bd">
+      <div class="map-popup__dl">
+        <div class="map-popup__row">
+          <span class="map-popup__dt">위치</span>
+          <span class="map-popup__dd" id="popupAddr">—</span>
+        </div>
+        <div class="map-popup__row">
+          <span class="map-popup__dt">오늘 발전량</span>
+          <span class="map-popup__dd" id="popupToday">—</span>
+        </div>
+        <div class="map-popup__row">
+          <span class="map-popup__dt">누적</span>
+          <span class="map-popup__dd" id="popupAccum">—</span>
+        </div>
+        <div class="map-popup__row">
+          <span class="map-popup__dt">마지막 수집</span>
+          <span class="map-popup__dd" id="popupLastSync">—</span>
+        </div>
+        <div class="map-popup__row">
+          <span class="map-popup__dt">상태</span>
+          <span class="map-popup__dd" id="popupStatus">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 영역 선택 결과 모달 -->
+<div class="area-modal" id="areaModal">
+  <div class="area-modal__scrim" id="areaModalScrim"></div>
+  <div class="area-modal__box">
+    <div class="area-modal__hd">
+      <span class="area-modal__title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 19 8 17 18 7 18 5 8"/></svg>
+        선택 영역 데이터 요약
+      </span>
+      <button class="area-modal__close" id="areaModalClose" type="button" aria-label="닫기">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="area-modal__bd" id="areaModalBd"></div>
+    <div class="area-modal__ft">
+      <button class="btn btn--line" id="areaModalCancel" type="button">닫기</button>
+      <button class="btn btn--pri" id="areaModalDetail" type="button">
+        상세보기
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px"><path d="m5 9 7 7 7-7"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 광명시 경계 SVG 경로 인라인 저장 (fetch 없이 접근) -->
+<svg id="gmBoundarySvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 391 561"
+     style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
+  <path d="M224,74l3,3h3l3-2,1-6,4-2,4-7-1-6-6-1-3,2-2-2,2-2-1-10-6,1-1,1-8,1-1,2,1,1-4,1-1-7,1-1-1-1v-4l-2-2,2-1,1-4-1,1-2-4-6-5h-2l-6,5v2l3,3-1,2-2,1-2-1,1,2-7,7-2,2-9,1-10,12-3-2-1,2-8-2-1,1h-7l2,2-2,2,2,6h5l1-4,2-1,1,4,2,2-5,5-2-1-2,2h-3l-3,2-5,7h-7l2,2-2,2v2l2,1,1,3-1,1-4-1-1,2h-7l-9-2-4,1-4,5-2,11v11l-2,2-6-1v1l2,2-2,1v2l2,1-2,3h0l-1,1-12,2-4-4h-8l-12,4-1-1,1-5-5-7-4-2h-3l-1,4-2-1,2,11-2,13,3,12,3,4v11l-1,1-2,6-2-2h-4l-2,8-2,2h-3l-3,2-1-1-9,13v5l-4,9v2l2,2,3-2h6l2,2,1,8h2l12-7,5-7,3,1,2,4,8,7h4l2-2,1,1-2,3v3l-5,6,8,3,1,1-2,6v8l2,2-4,3h-6l-2-3h-4l-7.7,13,.7,1,2,1-1,4,6,1-1-1,2-1-1-2,2-2,1,4,2,1,4-1,4,1,1-1,6,6-8,5-5,6-1,6,1,1-1,1,2,2h2l3,4-3,1-3-2-5-9-1,4,4,6,7,4v8l-2,2v2l4,4-2,3,1,11,2,2,7,1,6,9v4l-3,2-2,6,1,10,4,2,3,5v5l-2,3v9l8,7v3l3,1,6,8-4,9,1,1v8l5,8-2,9,1,1v10l2,3v2l1,1v6l4,6h3l1,1h1l1,1h1l4,2,3,4,10,8,1,7,5,5-1,3,3,8,2,1,1,3,9,5,2,1,12,2,7,3,7-2,15,1,10-3h13l5,2h12l1,1,4-1,1-14,2-4-6-5-1-4-4-3-4-1-3,2h-8l-4-1-2-2,1-3-1-1,2-3-1-13,3-5,3,5,2,1,1-1h7l1,1,1-1,2,1,2,5,4,3,6,5,5-1,3-3v-2l6-5h10l1-1v-1l2-2,4-1,10,5h2l2-1,4-3,1-2v-20l2-2-1-6,2-4-2-3h0l-1-4,9-7,8,1,4-3v-11l4-5v-4l7-5-1-6,2-2-1-7-2-1-6,1-1-1,1-9,8-7,5,1,4-6v-5l1-1,2-2-1-4,4-4-2-3,1-15-4-4,1-3h4l-1-4,1-2-4-4-4-13,1-4-1-2-3-1v-2l-4-4h-3l-4-3,1-1-1-7,1-1,3,2,1-4-4-8-3-12-2-4-4-1-6,4-2-1-1,1-6-3v-2l1-4-.3.3-.7.7-2-1v-5l-6-5-2,1-5-5-1-7,3-6-6-5,4-4,9,1,2-1v-3l-6-10-4-1-4,2h-5l-6-7-1-3,3-2h3l2-3v-5l-4-3,1-3-1-2v-4l-4-1-4,2-1-1-1-7-7-9-1-4-8-10-14-34-2-2-1-6-4-4v-5l3-4-7-5,2-3,2,1"/>
+</svg>
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'gis.mile-map',
+  header: {
+    title: '4종 마일별 데이터 지도',
+    desc:  '에너지·모빌리티·세이프티·데이터 4종 마일의 공간 분포와 현황 데이터를 지도 위에서 확인합니다.',
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a6adc7984a1e98b757e7666da6ab377b"></script>
+<script src="../assets/js/page-mile-map.js"></script>
+</body>
+</html>

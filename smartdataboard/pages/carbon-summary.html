@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>탄소중립 종합 현황 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-carbon-summary.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="gmsb-topbar"></div>
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- ══ 상단: 목표 달성 + 정책 지표 ══ -->
+    <div class="cs-top">
+
+      <!-- A: 2026 탄소중립 목표 달성 현황 -->
+      <div class="goal-card">
+        <div class="goal-card__hd">
+          <span class="goal-card__title">2026 탄소중립 목표 달성 현황</span>
+          <div class="goal-card__meta"><i data-lucide="clock-3" style="width:13px;height:13px"></i>갱신일: <span id="goalCardUpdate">2026-06-19</span></div>
+        </div>
+        <div class="goal-card__body">
+          <!-- 링 차트 -->
+          <div class="ring-wrap">
+            <svg viewBox="0 0 156 156">
+              <circle cx="78" cy="78" r="60" fill="none" stroke="var(--bg-sunken)" stroke-width="14"/>
+              <circle id="ringArc" cx="78" cy="78" r="60" fill="none" stroke="var(--gp-point)" stroke-width="14"
+                stroke-linecap="round" stroke-dasharray="0 376.99"
+                style="transition:stroke-dasharray 1.1s cubic-bezier(.16,1,.3,1)"/>
+            </svg>
+            <div class="ring-label">
+              <span class="ring-label__pct" id="ringPct">0%</span>
+              <span class="ring-label__sub">목표 대비<br>달성률</span>
+            </div>
+          </div>
+          <!-- 인라인 KPI 4개 -->
+          <div class="goal-kpis">
+            <div class="goal-kpi">
+              <div class="goal-kpi__hd">
+                <div class="goal-kpi__ico" style="color:#0C8AE5"><i data-lucide="cloud-rain"></i></div>
+                <div class="goal-kpi__lb">현재 감축량</div>
+              </div>
+              <div class="goal-kpi__vl">1,245.8<span class="u">tCO₂eq</span></div>
+              <div class="goal-kpi__badge"><i data-lucide="trending-up"></i>전년 대비 +8.3%</div>
+            </div>
+            <div class="goal-kpi">
+              <div class="goal-kpi__hd">
+                <div class="goal-kpi__ico" style="color:#044E9E"><i data-lucide="target"></i></div>
+                <div class="goal-kpi__lb">연간 목표</div>
+              </div>
+              <div class="goal-kpi__vl">1,820.0<span class="u">tCO₂eq</span></div>
+            </div>
+            <div class="goal-kpi">
+              <div class="goal-kpi__hd">
+                <div class="goal-kpi__ico" style="color:#ED8B16"><i data-lucide="flag"></i></div>
+                <div class="goal-kpi__lb">잔여 감축량</div>
+              </div>
+              <div class="goal-kpi__vl">574.2<span class="u">tCO₂eq</span></div>
+            </div>
+            <div class="goal-kpi">
+              <div class="goal-kpi__hd">
+                <div class="goal-kpi__ico" style="color:#1AAA5E"><i data-lucide="shield-check"></i></div>
+                <div class="goal-kpi__lb">진행 상태</div>
+              </div>
+              <div class="goal-kpi__status">
+                <svg width="8" height="8"><circle cx="4" cy="4" r="4" fill="#1AAA5E"/></svg>정상
+              </div>
+              <span class="goal-kpi__status-sub">순조롭게 진행 중</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B: 정책 지표 요약 -->
+      <div class="policy-card">
+        <div class="policy-card__hd">정책 지표 요약</div>
+        <div class="policy-item">
+          <div class="policy-item__ico" style="color:#0C8AE5"><i data-lucide="sun"></i></div>
+          <span class="policy-item__lb">신재생에너지 비중</span>
+          <div class="policy-item__right">
+            <div class="policy-item__vl">18.6<span class="u">%</span></div>
+            <div class="policy-item__trend">▲ +2.8p</div>
+          </div>
+        </div>
+        <div class="policy-item">
+          <div class="policy-item__ico" style="color:#1AAA5E"><i data-lucide="car"></i></div>
+          <span class="policy-item__lb">전기차 보급 대수</span>
+          <div class="policy-item__right">
+            <div class="policy-item__vl">2,350<span class="u">대</span></div>
+            <div class="policy-item__trend">▲ +420대</div>
+          </div>
+        </div>
+        <div class="policy-item">
+          <div class="policy-item__ico" style="color:#044E9E"><i data-lucide="building-2"></i></div>
+          <span class="policy-item__lb">공공시설 에너지 절감률</span>
+          <div class="policy-item__right">
+            <div class="policy-item__vl">16.2<span class="u">%</span></div>
+            <div class="policy-item__trend">▲ +1.8p</div>
+          </div>
+        </div>
+        <div class="policy-item">
+          <div class="policy-item__ico" style="color:#1AAA5E"><i data-lucide="trees"></i></div>
+          <span class="policy-item__lb">탄소흡수량</span>
+          <div class="policy-item__right">
+            <div class="policy-item__vl">30.5<span class="u">전tCO₂eq</span></div>
+            <div class="policy-item__trend">▲ +2.4</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ 중간: 연도별 추이 + 월별 달성률 ══ -->
+    <div class="cs-mid">
+      <!-- C: 연도별 온실가스 감축 실적 추이 -->
+      <div class="cs-card">
+        <div class="cs-card__hd">
+          <span class="cs-card__t">연도별 온실가스 감축 실적 추이</span>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font:500 12px/1 var(--font-sans);color:var(--fg-3)">비교</span>
+            <select id="yearlyCompare" class="cs-project-select">
+              <option value="">—</option>
+              <option value="bau">BAU 기준선</option>
+              <option value="2024">2024년 실적</option>
+            </select>
+          </div>
+        </div>
+        <div class="cs-card__axis-row">
+          <span class="cs-card__sub">(tCO₂eq)</span>
+          <div class="cs-chart-legend" id="yearlyLegend">
+            <span><i style="background:#0C8AE5"></i>감축 실적</span>
+            <span><i class="dashed" style="color:#6E74D6"></i>연간 목표</span>
+          </div>
+        </div>
+        <div class="cs-card__chart"><canvas id="chartYearly"></canvas></div>
+      </div>
+
+      <!-- D: 월별 목표 대비 달성률 -->
+      <div class="cs-card">
+        <div class="cs-card__hd">
+          <span class="cs-card__t">월별 목표 대비 달성률</span>
+        </div>
+        <div class="cs-card__axis-row">
+          <span class="cs-card__sub">(%)</span>
+          <div class="cs-chart-legend">
+            <span><i style="background:#0C8AE5"></i>2026 달성률</span>
+            <span><i class="dashed" style="color:#AEB7C2"></i>목표 달성률</span>
+          </div>
+        </div>
+        <div class="cs-card__chart"><canvas id="chartMonthly"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ══ 배출권 할당·거래 현황 ══ -->
+    <div class="cs-credit-row">
+      <div class="cs-credit-card" id="btnCreditOpen" role="button" tabindex="0">
+        <div class="cs-credit-card__hd">
+          <span class="cs-credit-card__t">배출권 할당·거래 현황</span>
+          <span class="cs-credit-badge">2026년 1차 이행연도</span>
+          <div class="cs-credit-arrow"><i data-lucide="chevron-right"></i>자세히 보기</div>
+        </div>
+        <div class="cs-credit-stats">
+          <div class="cs-credit-stat">
+            <div class="cs-credit-stat__lb">할당 배출량</div>
+            <div class="cs-credit-stat__vl">182,000<span class="u">tCO₂e</span></div>
+          </div>
+          <div class="cs-credit-divider"></div>
+          <div class="cs-credit-stat">
+            <div class="cs-credit-stat__lb">실제 배출량</div>
+            <div class="cs-credit-stat__vl">128,450<span class="u">tCO₂e</span></div>
+          </div>
+          <div class="cs-credit-divider"></div>
+          <div class="cs-credit-stat">
+            <div class="cs-credit-stat__lb">잉여 배출권</div>
+            <div class="cs-credit-stat__vl">+53,550<span class="u">tCO₂e</span></div>
+          </div>
+          <div class="cs-credit-divider"></div>
+          <div class="cs-credit-stat">
+            <div class="cs-credit-stat__lb">현재 시세</div>
+            <div class="cs-credit-stat__vl">8,420<span class="u">원/tCO₂e</span></div>
+          </div>
+          <div class="cs-credit-divider"></div>
+          <div class="cs-credit-stat">
+            <div class="cs-credit-stat__lb">추정 자산가치</div>
+            <div class="cs-credit-stat__vl">45.1<span class="u">억원</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ 하단 3컬럼: 도넛 | 주의 지표 | 주요 성과 ══ -->
+    <div class="cs-bot">
+      <!-- E: 부문별 감축 기여도 -->
+      <div class="cs-card">
+        <div class="cs-card__hd"><span class="cs-card__t">부문별 감축 기여도</span></div>
+        <div class="donut-inner">
+          <div class="donut-canvas-box">
+            <canvas id="chartDonut"></canvas>
+            <div class="donut-center-ico">
+              <img src="../assets/img/00_IC_CO2.svg" width="34" height="34" alt="">
+            </div>
+          </div>
+          <div class="cs-legend" id="donutLegend"></div>
+        </div>
+      </div>
+
+      <!-- F: 주의 필요 지표 -->
+      <div class="cs-card">
+        <div class="cs-card__hd"><span class="cs-card__t">주의 필요 지표</span></div>
+        <div class="issue-list">
+          <div class="issue-item" data-issue="배출 증가 지역">
+            <div class="issue-item__ico" style="color:var(--status-danger)"><i data-lucide="map-pin"></i></div>
+            <div class="issue-item__body">
+              <div class="issue-item__t">배출 증가 지역</div>
+              <div class="issue-item__d">소하동, 일직동</div>
+            </div>
+            <span class="pill pill--err">주의</span>
+          </div>
+          <div class="issue-item" data-issue="태양광 발전량">
+            <div class="issue-item__ico" style="color:var(--status-warning)"><i data-lucide="sun"></i></div>
+            <div class="issue-item__body">
+              <div class="issue-item__t">태양광 발전량</div>
+              <div class="issue-item__d">목표 대비 84%</div>
+            </div>
+            <span class="pill pill--warn">주의</span>
+          </div>
+          <div class="issue-item" data-issue="공공시설 에너지 사용">
+            <div class="issue-item__ico" style="color:var(--status-pending)"><i data-lucide="building-2"></i></div>
+            <div class="issue-item__body">
+              <div class="issue-item__t">공공시설 에너지 사용</div>
+              <div class="issue-item__d">전년 대비 +2.1%</div>
+            </div>
+            <span class="pill pill--wait">관심</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- G: 주요 성과 -->
+      <div class="cs-card">
+        <div class="cs-card__hd"><span class="cs-card__t">주요 성과</span></div>
+        <div class="issue-list">
+          <div class="issue-item">
+            <div class="issue-item__ico" style="color:var(--status-info)"><i data-lucide="car"></i></div>
+            <div class="issue-item__body">
+              <div class="issue-item__t">전기차 보급 확대</div>
+              <div class="issue-item__d">전년 대비 +420대 증가</div>
+            </div>
+            <span class="pill pill--ok">성과</span>
+          </div>
+          <div class="issue-item">
+            <div class="issue-item__ico" style="color:var(--status-success)"><i data-lucide="sun"></i></div>
+            <div class="issue-item__body">
+              <div class="issue-item__t">신재생에너지 확대</div>
+              <div class="issue-item__d">비중 전년 대비 +2.8p</div>
+            </div>
+            <span class="pill pill--ok">성과</span>
+          </div>
+          <div class="issue-item">
+            <div class="issue-item__ico" style="color:var(--status-success)"><i data-lucide="building-2"></i></div>
+            <div class="issue-item__body">
+              <div class="issue-item__t">공공시설 절감 성과</div>
+              <div class="issue-item__d">에너지 절감률 16.2% 달성</div>
+            </div>
+            <span class="pill pill--ok">성과</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ 감축 프로젝트 현황 ══ -->
+    <div class="cs-projects-wrap">
+      <div class="cs-table-hd">
+        <h2>감축 프로젝트 현황</h2>
+        <div class="cs-table-hd__actions">
+          <select id="projectYear" class="cs-project-select">
+            <option value="2025">2025년</option>
+            <option value="2026" selected>2026년</option>
+          </select>
+          <button class="btn btn--line" id="btnProjectExport" type="button" style="height:32px;padding:0 12px;font-size:13px;display:inline-flex;align-items:center;gap:5px">
+            <i data-lucide="download" style="width:13px;height:13px"></i>CSV
+          </button>
+        </div>
+      </div>
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th class="l">프로젝트명</th>
+            <th>분야</th>
+            <th>상태</th>
+            <th style="min-width:160px">진행률</th>
+            <th>예상 감축량(tCO₂e)</th>
+            <th>담당부서</th>
+            <th>상세</th>
+          </tr>
+        </thead>
+        <tbody id="projectTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- ══ 핵심 관리 지표 테이블 ══ -->
+    <div class="cs-table-wrap">
+      <div class="cs-table-hd">
+        <h2>핵심 관리 지표</h2>
+        <div class="cs-table-hd__actions">
+          <button class="btn btn--line" id="btnExport" type="button" style="height:34px;padding:0 14px;font-size:13px;display:inline-flex;align-items:center;gap:5px;">
+            <i data-lucide="download" style="width:13px;height:13px"></i>CSV 내보내기
+          </button>
+        </div>
+      </div>
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th class="l" style="min-width:160px">지표명</th>
+            <th>단위</th>
+            <th>2025 실적</th>
+            <th>2026 목표</th>
+            <th style="min-width:180px">목표 대비 달성률</th>
+            <th>전년 대비</th>
+            <th>상태</th>
+          </tr>
+        </thead>
+        <tbody id="kpiTableBody"></tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+<!-- 배출권 상세 모달 -->
+<div class="cs-credit-overlay" id="creditOverlay">
+  <div class="cs-credit-overlay__bg" id="creditOverlayBg"></div>
+  <div class="cs-credit-modal">
+    <div class="cs-credit-modal__hd">
+      <h3>배출권 할당·거래 상세</h3>
+      <button class="cs-credit-modal__x" id="creditModalClose" type="button" aria-label="닫기"><i data-lucide="x"></i></button>
+    </div>
+    <div class="cs-credit-modal__kpis">
+      <div class="cs-credit-modal__kpi">
+        <div class="cs-credit-modal__kpi-lb">할당 배출량</div>
+        <div class="cs-credit-modal__kpi-vl" style="color:var(--gp-primary)">182,000 <small style="font-weight:400;font-size:12px">tCO₂e</small></div>
+      </div>
+      <div class="cs-credit-modal__kpi">
+        <div class="cs-credit-modal__kpi-lb">실제 배출량</div>
+        <div class="cs-credit-modal__kpi-vl" style="color:var(--status-info)">128,450 <small style="font-weight:400;font-size:12px">tCO₂e</small></div>
+      </div>
+      <div class="cs-credit-modal__kpi">
+        <div class="cs-credit-modal__kpi-lb">잉여 배출권</div>
+        <div class="cs-credit-modal__kpi-vl" style="color:var(--status-success)">+53,550 <small style="font-weight:400;font-size:12px">tCO₂e</small></div>
+      </div>
+      <div class="cs-credit-modal__kpi">
+        <div class="cs-credit-modal__kpi-lb">추정 자산가치</div>
+        <div class="cs-credit-modal__kpi-vl">45.1<small style="font-weight:400;font-size:12px"> 억원</small></div>
+      </div>
+    </div>
+    <div class="cs-credit-modal__sec">배출권 거래 이력</div>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>거래일자</th>
+          <th>거래유형</th>
+          <th>수량(tCO₂e)</th>
+          <th>단가(원)</th>
+          <th>거래금액(원)</th>
+          <th>거래상대</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>2026-06-10</td><td><span class="pill pill--ok">매도</span></td><td class="num">5,000</td><td class="num">8,420</td><td class="num">42,100,000</td><td>한국환경공단</td></tr>
+        <tr><td>2026-05-22</td><td><span class="pill pill--ok">매도</span></td><td class="num">8,000</td><td class="num">8,380</td><td class="num">67,040,000</td><td>에너지공사</td></tr>
+        <tr><td>2026-04-15</td><td><span class="pill pill--info">구매</span></td><td class="num">2,000</td><td class="num">8,250</td><td class="num">16,500,000</td><td>환경부</td></tr>
+        <tr><td>2026-03-08</td><td><span class="pill pill--ok">매도</span></td><td class="num">10,000</td><td class="num">8,150</td><td class="num">81,500,000</td><td>한국환경공단</td></tr>
+      </tbody>
+    </table>
+    <div style="display:flex;justify-content:flex-end;margin-top:16px">
+      <button class="btn btn--line" id="creditModalExport" type="button" style="height:34px;padding:0 14px;font-size:13px;display:inline-flex;align-items:center;gap:5px">
+        <i data-lucide="download" style="width:13px;height:13px"></i>거래이력 CSV
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 드로어: 지표 상세 ══ -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="지표 상세">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k"><i data-lucide="bar-chart-2" class="gp-ico" style="width:15px;height:15px"></i>지표 상세</div>
+      <h3 id="dwTitle">—</h3>
+    </div>
+    <button class="dw__x" id="dwClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="dw__info-banner">
+      <i data-lucide="info"></i>
+      <p id="dwDesc"></p>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="info" class="gp-ico"></i>기본 정보</h4>
+      <dl class="dl" id="dwBaseDl"></dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="trending-up" class="gp-ico"></i>달성 현황</h4>
+      <dl class="dl" id="dwProgressDl"></dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="history" class="gp-ico"></i>연도별 추이</h4>
+      <div class="dw__mini-chart"><canvas id="dwChart"></canvas></div>
+    </div>
+  </div>
+  <div class="dw__ft">
+    <button class="btn btn--ghost" id="dwBtnReport" type="button"><i data-lucide="file-text" class="gp-ico"></i>보고서 생성</button>
+    <button class="btn btn--pri" id="dwBtnShare" type="button"><i data-lucide="share-2" class="gp-ico"></i>데이터 공유</button>
+  </div>
+</aside>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'carbon.carbon-dash',
+  header: {
+    title: '탄소중립 종합 현황',
+    desc:  '광명시의 탄소중립 목표 달성 현황과 주요 지표를 한눈에 확인할 수 있는 대시보드입니다.',
+    actions: '<span style="font:400 13px/1 var(--font-sans);color:var(--fg-3);display:flex;align-items:center;gap:6px"><i data-lucide="clock-3" style="width:13px;height:13px"></i>마지막 갱신 : <span id="lastUpdate">2026-06-19 10:15:45</span></span>'
+            +'<button class="btn btn--line" id="btnRefresh" type="button" style="height:32px;padding:0 12px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="refresh-cw" style="width:12px;height:12px"></i>새로고침</button>',
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-carbon-summary.js"></script>
+</body>
+</html>

@@ -24,6 +24,10 @@
     <!-- 탭 바 -->
     <div class="page-tab-bar">
       <button class="page-tab on" data-tab="term" type="button">표준용어 관리</button>
+      <div class="page-tab-divider"></div>
+      <button class="page-tab" data-tab="spec" type="button">인터페이스 정의서 분석</button>
+      <div class="page-tab-divider"></div>
+      <button class="page-tab" data-tab="airec" type="button">AI 기반 메타데이터 추천</button>
     </div>
 
     <!-- ══════════════════════════════
@@ -60,6 +64,18 @@
             <div class="kpi__lb">검토 필요</div>
             <div class="kpi__vl">8<span class="u">건</span></div>
           </div>
+        </div>
+      </div>
+
+      <!-- 기관표준용어 연동 현황 -->
+      <div class="dw__info-banner" style="border-radius:var(--radius-md);margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <i data-lucide="link" class="gp-ico"></i>
+          <span><strong style="color:var(--gp-primary)">광명시 기관표준용어</strong> 9,211건 연동 중 — 마지막 동기화: 2026-06-22 09:00</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font:var(--type-label-s);font-family:var(--font-sans)">
+          <span style="color:var(--status-success)">● 연동 정상</span>
+          <button class="btn btn--line" type="button" style="height:30px;padding:0 12px;font-size:12px" id="termSyncBtn"><i data-lucide="refresh-cw" style="width:12px;height:12px"></i>동기화</button>
         </div>
       </div>
 
@@ -111,9 +127,7 @@
       <div class="am-table-card">
         <div class="am-table-hd">
           <div class="am-table-hd__left">
-            <i data-lucide="book-open"></i>
             <span>표준어 목록</span>
-            <span class="am-table-hd__count" id="termCount">전체 10건</span>
           </div>
           <div class="am-table-hd__actions">
             <button class="btn btn--line" id="btnTermBatchApprove" type="button" style="display:none">
@@ -159,6 +173,286 @@
 
     </div><!-- /tabTerm -->
 
+    <!-- ══════════════════════════════
+         탭 2: 인터페이스 정의서 분석
+    ══════════════════════════════ -->
+    <div id="tabSpec" class="am-tab-panel" style="display:none">
+
+      <!-- 설정 카드 -->
+      <div class="am-spec-card">
+        <div class="am-spec-card__row">
+          <div class="am-spec-field">
+            <span class="am-spec-lbl">데이터 셋 설정</span>
+            <select class="am-spec-select" id="specDataset">
+              <option>광명시 태양광 발전 집계 데이터</option>
+              <option>친환경DRT 운행 현황 데이터</option>
+              <option>대기측정소별 실시간 측정정보</option>
+              <option>AIoT 침수홍수 예측 데이터</option>
+            </select>
+          </div>
+          <div class="am-spec-field">
+            <span class="am-spec-lbl">정의서 파일</span>
+            <div class="am-spec-file">
+              <span class="am-spec-file__ico"><i data-lucide="file-spreadsheet"></i></span>
+              <span class="am-spec-file__name">interface_spec_v1.xlsx</span>
+              <button class="am-spec-upload-btn" type="button">업로드 변경</button>
+            </div>
+          </div>
+          <div class="am-spec-stats">
+            <div class="am-spec-stat-col">
+              <span class="am-spec-lbl">파일 형식</span>
+              <span class="am-spec-stat-val am-spec-stat-val--pri">XLSX</span>
+            </div>
+            <div class="am-spec-vdiv"></div>
+            <div class="am-spec-stat-col">
+              <span class="am-spec-lbl">항목 수</span>
+              <span class="am-spec-stat-val am-spec-stat-val--pri">18개</span>
+            </div>
+            <div class="am-spec-vdiv"></div>
+            <div class="am-spec-stat-col">
+              <span class="am-spec-lbl">분석상태</span>
+              <span class="am-spec-stat-val am-spec-stat-val--pri">완료</span>
+            </div>
+          </div>
+          <button class="am-spec-start-btn" type="button" id="specStartBtn">
+            <i data-lucide="play" class="gp-ico"></i>정의서 분석 시작
+          </button>
+        </div>
+      </div>
+
+      <!-- 분석 레이아웃 -->
+      <div class="am-spec-layout">
+
+        <!-- 좌: 진행 단계 -->
+        <div class="panel am-spec-steps">
+          <div class="am-spec-config__hd" style="margin-bottom:16px">
+            <h3>분석 진행 상태</h3>
+          </div>
+          <div class="am-steps">
+            <div class="am-step">
+              <div class="am-step__dot"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+              <div class="am-step__line"></div>
+              <div class="am-step__body"><span class="am-step__lbl">파일 업로드</span><span class="am-step__status am-step__status--done">완료</span></div>
+            </div>
+            <div class="am-step">
+              <div class="am-step__dot"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+              <div class="am-step__line"></div>
+              <div class="am-step__body"><span class="am-step__lbl">정의서 파싱</span><span class="am-step__status am-step__status--done">완료</span></div>
+            </div>
+            <div class="am-step">
+              <div class="am-step__dot"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+              <div class="am-step__line"></div>
+              <div class="am-step__body"><span class="am-step__lbl">항목 구조 추출</span><span class="am-step__status am-step__status--done">완료</span></div>
+            </div>
+            <div class="am-step">
+              <div class="am-step__dot am-step__dot--warn"><i data-lucide="alert-triangle" style="width:13px;height:13px"></i></div>
+              <div class="am-step__line"></div>
+              <div class="am-step__body"><span class="am-step__lbl">표준용어 매핑</span><span class="am-step__status am-step__status--warn">확인 필요</span></div>
+            </div>
+            <div class="am-step">
+              <div class="am-step__dot am-step__dot--wait"></div>
+              <div class="am-step__body" style="padding-bottom:4px"><span class="am-step__lbl">결과 저장</span><span class="am-step__status am-step__status--wait">대기</span></div>
+            </div>
+          </div>
+          <div class="am-spec-counts" style="margin-top:20px">
+            <div class="am-spec-count">
+              <span class="am-spec-count__n" style="color:var(--gp-primary)">18</span>
+              <span class="am-spec-count__lbl">추출 항목</span>
+            </div>
+            <div class="am-spec-count">
+              <span class="am-spec-count__n" style="color:var(--status-danger)">12</span>
+              <span class="am-spec-count__lbl">필수 항목</span>
+            </div>
+            <div class="am-spec-count">
+              <span class="am-spec-count__n" style="color:var(--status-warning)">3</span>
+              <span class="am-spec-count__lbl">확인 필요</span>
+            </div>
+          </div>
+          <div class="dw__info-banner" style="margin-top:16px;border-radius:var(--radius-sm)">
+            <i data-lucide="info" class="gp-ico"></i>
+            <p>매핑이 불확실한 항목은 직접 검색하여 표준용어를 지정하세요.</p>
+          </div>
+        </div>
+
+        <!-- 우: 분석 결과 테이블 -->
+        <div class="panel" style="padding:0;overflow:hidden">
+          <div class="am-panel-hd">
+            <div class="am-panel-hd__left"><span>정의서 분석 결과</span></div>
+          </div>
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="width:36px">#</th>
+                <th class="l">항목명</th>
+                <th class="l">영문명</th>
+                <th>데이터 타입</th>
+                <th>필수 여부</th>
+                <th class="l">샘플값</th>
+                <th class="l">설명</th>
+                <th>표준용어 매핑</th>
+                <th class="l">추천 표준어</th>
+                <th>관리</th>
+              </tr>
+            </thead>
+            <tbody id="specTbody"></tbody>
+          </table>
+          <div class="ds-pagination" id="specPagination"></div>
+        </div>
+
+      </div><!-- /am-spec-layout -->
+
+      <!-- 결과 저장 · 다음 단계 이동 -->
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+        <button class="btn btn--line" type="button" id="specSaveBtn" style="display:inline-flex;align-items:center;gap:6px">
+          <i data-lucide="save" style="width:14px;height:14px"></i>결과 저장
+        </button>
+        <button class="btn btn--pri" type="button" id="specGotoAiBtn" style="display:inline-flex;align-items:center;gap:6px">
+          AI 메타데이터 추천으로 이동<i data-lucide="arrow-right" style="width:14px;height:14px;margin-left:2px"></i>
+        </button>
+      </div>
+
+    </div><!-- /tabSpec -->
+
+    <!-- ══════════════════════════════
+         탭 3: AI 기반 메타데이터 추천
+    ══════════════════════════════ -->
+    <div id="tabAiRec" class="am-tab-panel" style="display:none">
+
+      <!-- 요약 행 카드 -->
+      <div class="am-ai-summary">
+        <div class="am-ai-summary__col">
+          <span class="am-ai-summary__lbl">실행 ID</span>
+          <span class="am-ai-summary__val">wf-20260604-025</span>
+        </div>
+        <div class="am-ai-summary__sep"></div>
+        <div class="am-ai-summary__col">
+          <span class="am-ai-summary__lbl">상태</span>
+          <span class="am-ai-summary__val am-ai-summary__val--warn">검토대기</span>
+        </div>
+        <div class="am-ai-summary__sep"></div>
+        <div class="am-ai-summary__col">
+          <span class="am-ai-summary__lbl">데이터셋명</span>
+          <span class="am-ai-summary__val">광명시 태양광 발전 집계 데이터</span>
+        </div>
+        <div class="am-ai-summary__sep"></div>
+        <div class="am-ai-summary__col">
+          <span class="am-ai-summary__lbl">업로드 파일</span>
+          <span class="am-ai-summary__val">interface_spec_v1.xlsx</span>
+        </div>
+        <div class="am-ai-summary__sep"></div>
+        <div class="am-ai-summary__col">
+          <span class="am-ai-summary__lbl">분석 항목</span>
+          <span class="am-ai-summary__val">18개</span>
+        </div>
+        <div class="am-ai-summary__sep"></div>
+        <div class="am-ai-summary__col">
+          <span class="am-ai-summary__lbl">추천 정확도</span>
+          <span class="am-ai-summary__acc">95%</span>
+        </div>
+      </div>
+
+      <!-- AI 레이아웃 -->
+      <div class="am-ai-layout">
+
+        <!-- 좌: 추천 단계 -->
+        <div class="panel am-ai-steps-panel">
+          <div class="am-spec-config__hd" style="margin-bottom:20px">
+            <h3>AI 추천 진행 단계</h3>
+          </div>
+          <div class="am-ai-steps">
+            <div class="am-ai-step am-ai-step--done">
+              <div class="am-ai-step__head">
+                <div class="am-ai-step__num am-ai-step__num--done"><i data-lucide="check" style="width:15px;height:15px"></i></div>
+                <div class="am-ai-step__body">
+                  <div class="am-ai-step__lbl">정의서 분석 완료</div>
+                  <div class="am-ai-step__sub">18항목 추출 · 3항목 확인필요</div>
+                </div>
+              </div>
+              <div class="am-ai-step__line"></div>
+            </div>
+            <div class="am-ai-step am-ai-step--done">
+              <div class="am-ai-step__head">
+                <div class="am-ai-step__num am-ai-step__num--done"><i data-lucide="check" style="width:15px;height:15px"></i></div>
+                <div class="am-ai-step__body">
+                  <div class="am-ai-step__lbl">표준용어 매칭 완료</div>
+                  <div class="am-ai-step__sub">9,211건 중 매칭률 94%</div>
+                </div>
+              </div>
+              <div class="am-ai-step__line"></div>
+            </div>
+            <div class="am-ai-step am-ai-step--done">
+              <div class="am-ai-step__head">
+                <div class="am-ai-step__num am-ai-step__num--done"><i data-lucide="check" style="width:15px;height:15px"></i></div>
+                <div class="am-ai-step__body">
+                  <div class="am-ai-step__lbl">메타데이터 추천 완료</div>
+                  <div class="am-ai-step__sub">DCAT-AP 12개 항목 추천</div>
+                </div>
+              </div>
+              <div class="am-ai-step__line"></div>
+            </div>
+            <div class="am-ai-step am-ai-step--active">
+              <div class="am-ai-step__head">
+                <div class="am-ai-step__num am-ai-step__num--active">4</div>
+                <div class="am-ai-step__body">
+                  <div class="am-ai-step__lbl">사용자 검토 진행중</div>
+                  <div class="am-ai-step__sub" style="color:rgba(4,78,158,.6)">추천값 검토 후 적용하세요</div>
+                </div>
+              </div>
+              <div class="am-ai-step__line"></div>
+            </div>
+            <div class="am-ai-step am-ai-step--wait">
+              <div class="am-ai-step__head">
+                <div class="am-ai-step__num am-ai-step__num--wait">5</div>
+                <div class="am-ai-step__body">
+                  <div class="am-ai-step__lbl">카탈로그 등록 대기</div>
+                  <div class="am-ai-step__sub">저장 후 자동 등록</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dw__info-banner" style="margin-top:20px">
+            <i data-lucide="info" class="gp-ico"></i>
+            <p>* 표시 항목은 DCAT-AP 필수 필드입니다. 반드시 적용 후 저장하세요.</p>
+          </div>
+        </div>
+
+        <!-- 우: AI 추천 메타데이터 폼 -->
+        <div class="panel" style="padding:0;overflow:hidden">
+          <div class="am-ai-rec-hd">
+            <div class="am-ai-rec-hd__title">
+              <i data-lucide="sparkles"></i>
+              AI 추천 메타데이터
+              <span class="am-ai-badge"><i data-lucide="sparkles" style="width:9px;height:9px"></i>AI</span>
+            </div>
+            <div class="am-ai-rec-hd__actions">
+              <button class="btn btn--line" type="button" id="aiReAnalyzeBtn" style="height:36px"><i data-lucide="refresh-cw" class="gp-ico"></i>다시분석</button>
+              <button class="btn btn--pri" type="button" id="aiSaveBtn" style="height:36px"><i data-lucide="check-circle" class="gp-ico"></i>저장</button>
+            </div>
+          </div>
+          <table class="tbl am-ai-tbl">
+            <thead>
+              <tr>
+                <th class="l" style="width:120px">항목</th>
+                <th class="l">현재 입력값</th>
+                <th class="l">AI 추천값 <span class="am-ai-badge"><i data-lucide="sparkles" style="width:9px;height:9px"></i>AI</span></th>
+                <th style="width:60px">적용</th>
+              </tr>
+            </thead>
+            <tbody id="aiRecTbody"></tbody>
+          </table>
+          <div class="am-ai-reason">
+            <button class="am-ai-reason__toggle" id="aiReasonToggle" type="button">
+              <i data-lucide="chevron-down"></i>AI 추천 근거 보기
+            </button>
+            <div class="am-ai-reason__body" id="aiReasonBody" style="display:none">
+              <p>항목명에 '발전'과 '량' 키워드가 포함되어 있으며, 데이터 설명에 '발전량(MWh)'가 명시되어 있어 <strong>발전량(MWh)</strong>으로 매핑되었습니다. 주제 영역, 키워드는 유사 데이터셋 패턴 기반 추천입니다.</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /am-ai-layout -->
+
+    </div><!-- /tabAiRec -->
 
   </main>
 </div>
@@ -255,6 +549,47 @@
   </div>
 </aside>
 
+<!-- 정의서 항목 상세 드로어 -->
+<aside class="drawer" id="specDrawer" aria-hidden="true" aria-label="항목 상세 및 표준용어 매핑">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k" id="sd_no">항목 정보</div>
+      <h3 id="sd_name">—</h3>
+    </div>
+    <button class="dw__x" id="sdClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="dw__sec">
+      <h4><i data-lucide="file-text" class="gp-ico"></i>항목 기본 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>영문명</dt><dd id="sd_eng" style="font-family:monospace;font-size:12px;text-align:right">—</dd></div>
+        <div class="dl__r"><dt>데이터 타입</dt><dd id="sd_dtype" style="font-family:monospace;font-size:12px;text-align:right">—</dd></div>
+        <div class="dl__r"><dt>필수 여부</dt><dd id="sd_req">—</dd></div>
+        <div class="dl__r"><dt>샘플값</dt><dd id="sd_sample" style="font-family:monospace;font-size:12px;text-align:right">—</dd></div>
+        <div class="dl__r" style="flex-direction:column;gap:4px">
+          <dt>설명</dt>
+          <dd id="sd_desc" style="font:400 13px/1.55 var(--font-sans);color:var(--fg-2);text-align:left;margin-top:4px">—</dd>
+        </div>
+      </dl>
+    </div>
+    <div class="dw__sec">
+      <h4 style="display:flex;align-items:center;justify-content:space-between">
+        <span><i data-lucide="git-merge" class="gp-ico"></i>표준용어 매핑</span>
+        <span id="sd_mappedBadge"></span>
+      </h4>
+      <div id="sd_candidates" style="display:flex;flex-direction:column;gap:8px;margin-top:12px"></div>
+      <div style="margin-top:16px">
+        <label style="font:600 12px/1 var(--font-sans);color:var(--fg-3);margin-bottom:6px;display:block">직접 입력</label>
+        <input type="text" id="sd_manualInput" class="am-form-input" placeholder="표준용어를 직접 입력하세요" style="width:100%;box-sizing:border-box">
+      </div>
+    </div>
+  </div>
+  <div class="dw__ft">
+    <button class="btn btn--line" id="sdCancelBtn" type="button">취소</button>
+    <button class="btn btn--pri" id="sdConfirmBtn" type="button"><i data-lucide="check-circle" class="gp-ico"></i>매핑 확정</button>
+  </div>
+</aside>
+
 <!-- 변경이력 모달 -->
 <div class="am-hist-overlay" id="histOverlay">
   <div class="am-hist-overlay__bg" id="histBg"></div>
@@ -312,7 +647,7 @@ window.GMSB_PAGE = {
   active: 'catalog.ai-meta',
   header: {
     title: 'AI 메타데이터 추천',
-    desc: '표준용어와 동의어를 관리하고 데이터셋과의 연결 상태를 확인합니다.',
+    desc: '표준용어 관리, 인터페이스 정의서 분석, AI 기반 메타데이터 추천 기능을 통해 데이터 표준화를 지원합니다.',
     actions: '<span class="ph__upd">마지막 갱신 : <b>2026-06-19 10:15:45</b></span><button class="btn btn--line" id="refreshBtn"><i data-lucide="refresh-cw" class="gp-ico"></i>새로고침</button>'
   }
 };

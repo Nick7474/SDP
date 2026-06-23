@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>탄소·에너지 지표 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-carbon-kpi.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="gmsb-topbar"></div>
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- 탭 바 -->
+    <div class="page-tab-bar">
+      <button class="page-tab on" data-tab="emission" type="button">탄소배출·저감 현황</button>
+      <div class="page-tab-divider"></div>
+      <button class="page-tab" data-tab="energy" type="button">에너지 현황</button>
+    </div>
+
+    <!-- ══════════════ 탭1: 탄소배출·저감 현황 ══════════════ -->
+    <div class="ck-pane on" id="pane-emission">
+
+      <!-- 필터 -->
+      <div class="ck-filter">
+        <div class="ck-filter__group">
+          <span class="ck-filter__lb">기간</span>
+          <div class="period-toggle" id="emPeriodToggle">
+            <button class="period-btn on" data-period="month" type="button">월간</button>
+            <button class="period-btn" data-period="quarter" type="button">분기</button>
+            <button class="period-btn" data-period="year" type="button">연간</button>
+          </div>
+          <input type="month" id="emMonthPicker" value="2025-12" class="ck-select" style="min-width:140px">
+          <select class="ck-select" id="emYearSelect" style="min-width:90px;display:none">
+            <option value="2022">2022년</option>
+            <option value="2023">2023년</option>
+            <option value="2024">2024년</option>
+            <option value="2025" selected>2025년</option>
+            <option value="2026">2026년</option>
+          </select>
+        </div>
+        <div class="ck-filter__group">
+          <span class="ck-filter__lb">지역</span>
+          <select class="ck-select" id="emRegion">
+            <option value="all">광명시 전체</option>
+            <option value="cheolsan">철산권역</option>
+            <option value="haan">하안권역</option>
+            <option value="soha">소하권역</option>
+            <option value="iljik">일직권역</option>
+          </select>
+        </div>
+        <div class="ck-filter__group">
+          <span class="ck-filter__lb">에너지원</span>
+          <select class="ck-select" id="emEnergyType">
+            <option value="all">전체</option>
+            <option value="elec">전력</option>
+            <option value="gas">도시가스</option>
+            <option value="heat">열에너지</option>
+            <option value="oil">유류</option>
+          </select>
+        </div>
+        <div class="ck-filter__group">
+          <span class="ck-filter__lb">비교 기준</span>
+          <select class="ck-select" id="emCompare">
+            <option value="last_year">전년 동일 기간</option>
+            <option value="last_month">전월</option>
+            <option value="goal">연간 목표</option>
+          </select>
+        </div>
+        <div class="ck-filter__sep"></div>
+        <div class="ck-filter__actions">
+          <button class="btn btn--pri" id="btnEmSearch" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="search" style="width:14px;height:14px"></i>조회</button>
+          <button class="btn btn--line" id="btnEmReset" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="refresh-cw" style="width:13px;height:13px"></i>초기화</button>
+          <button class="btn btn--line" id="btnEmExport" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="download" style="width:13px;height:13px"></i>보고서 다운로드</button>
+        </div>
+      </div>
+
+      <!-- KPI 4개 -->
+      <div class="ck-kpis">
+        <div class="ck-kpi ck-kpi--link" data-kpi="광명시 전체" data-tab="em" role="button" tabindex="0">
+          <div class="ck-kpi__ico" style="background:#E3F2FD;color:#0C8AE5"><i data-lucide="zap"></i></div>
+          <div>
+            <div class="ck-kpi__lb">총 에너지 사용량</div>
+            <div class="ck-kpi__vl">312,450<span class="u">MWh</span></div>
+            <div class="ck-kpi__trend up">▲ 전월 대비 +6.8%</div>
+          </div>
+        </div>
+        <div class="ck-kpi ck-kpi--link" data-kpi="광명시 전체" data-tab="em" role="button" tabindex="0">
+          <div class="ck-kpi__ico" style="background:#E4F6EC;color:#1AAA5E"><i data-lucide="leaf"></i></div>
+          <div>
+            <div class="ck-kpi__lb">총 탄소저감량</div>
+            <div class="ck-kpi__vl">21,756<span class="u">tCO₂eq</span></div>
+            <div class="ck-kpi__trend up">▲ 전월 대비 +8.4%</div>
+          </div>
+        </div>
+        <div class="ck-kpi ck-kpi--link" data-kpi="광명시 전체" data-tab="em" role="button" tabindex="0">
+          <!-- 게이지 아이콘 -->
+          <div class="gauge-wrap" id="emGaugeWrap">
+            <svg viewBox="0 0 52 52">
+              <circle cx="26" cy="26" r="20" fill="none" stroke="var(--bg-sunken)" stroke-width="6"/>
+              <circle id="emGaugeArc" cx="26" cy="26" r="20" fill="none" stroke="#0C8AE5" stroke-width="6"
+                stroke-linecap="round" stroke-dasharray="0 125.66"
+                style="transition:stroke-dasharray 1s cubic-bezier(.16,1,.3,1)"/>
+            </svg>
+            <div class="gauge-pct" id="emGaugePct">0%</div>
+          </div>
+          <div>
+            <div class="ck-kpi__lb">탄소저감 이행률</div>
+            <div class="ck-kpi__vl" id="emGoalPctVl">72.4<span class="u">%</span></div>
+            <div class="ck-kpi__trend warn">목표(연간) <span id="emGoalTargetLbl">30,000</span> tCO₂e</div>
+          </div>
+          <button class="ck-kpi__edit-btn" id="btnEmGoalEdit" type="button" title="목표치 수정" aria-label="탄소저감 목표 수정"><i data-lucide="pencil"></i></button>
+        </div>
+        <div class="ck-kpi ck-kpi--link" data-kpi="하안3동" data-tab="em" role="button" tabindex="0">
+          <div class="ck-kpi__ico" style="background:var(--status-danger-soft);color:var(--status-danger)"><i data-lucide="map-pin-alert-inside"></i></div>
+          <div>
+            <div class="ck-kpi__lb">배출 증가 지역</div>
+            <div class="ck-kpi__vl" style="color:var(--status-danger)">2<span class="u" style="color:var(--status-danger)">개 지역</span></div>
+            <div class="ck-kpi__trend down">전월 대비 +1개</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 차트 2컬럼: 시계열 | 신재생 비중 -->
+      <div class="ck-charts2">
+        <div class="ck-card">
+          <div class="ck-card__hd"><span class="ck-card__t">에너지 사용 시계열 추이</span></div>
+          <p class="ck-card__sub">에너지 사용량(MWh) / 전월 대비 증감률(%)</p>
+          <div class="ck-card__chart"><canvas id="chartEmTimeSeries"></canvas></div>
+        </div>
+        <div class="ck-card">
+          <div class="ck-card__hd"><span class="ck-card__t">신재생에너지 비중 추이</span></div>
+          <p class="ck-card__sub">신재생 비중(%)</p>
+          <div class="ck-card__chart"><canvas id="chartEmRenew"></canvas></div>
+        </div>
+      </div>
+
+      <!-- 차트 3컬럼: 도넛 | 지역별 수평 막대 | 주요 요인 -->
+      <div class="ck-charts3">
+        <div class="ck-card">
+          <div class="ck-card__hd"><span class="ck-card__t">에너지원별 사용 구성</span></div>
+          <div class="ck-donut">
+            <div class="ck-donut-box"><canvas id="chartEmDonut"></canvas></div>
+            <div class="ck-legend" id="emDonutLegend"></div>
+          </div>
+        </div>
+        <div class="ck-card">
+          <div class="ck-card__hd">
+            <span class="ck-card__t">지역별 에너지 사용량</span>
+            <span style="font:400 12px/1 var(--font-sans);color:var(--fg-4)">(MWh)</span>
+          </div>
+          <div class="hbar-list" id="emRegionBars"></div>
+        </div>
+        <div class="ck-card">
+          <div class="ck-card__hd"><span class="ck-card__t">에너지 사용 주요 요인</span></div>
+          <div class="factor-list" id="emFactorList"></div>
+        </div>
+      </div>
+
+      <!-- 지역별 에너지 사용 지표 테이블 -->
+      <div class="ck-table-card">
+        <div class="ck-table-hd">
+          <h2>지역별 에너지 사용 지표</h2>
+          <div class="ck-table-hd__actions">
+            <button class="btn btn--line" id="btnEmTableExport" type="button" style="height:34px;padding:0 14px;font-size:13px;display:inline-flex;align-items:center;gap:5px;">
+              <i data-lucide="download" style="width:13px;height:13px"></i>CSV 내보내기
+            </button>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th class="l">지역</th>
+              <th>총 에너지 사용량(MWh)</th>
+              <th>태양광 발전량(MWh)</th>
+              <th>신재생 비중(%)</th>
+              <th>전월 대비</th>
+              <th>상태</th>
+              <th>상세</th>
+            </tr>
+          </thead>
+          <tbody id="emTableBody"></tbody>
+        </table>
+      </div>
+    </div><!-- /pane-emission -->
+
+    <!-- ══════════════ 탭2: 에너지 현황 ══════════════ -->
+    <div class="ck-pane" id="pane-energy">
+
+      <!-- 필터 -->
+      <div class="ck-filter">
+        <div class="ck-filter__group">
+          <span class="ck-filter__lb">기간</span>
+          <div class="period-toggle" id="enPeriodToggle">
+            <button class="period-btn on" data-period="month" type="button">월간</button>
+            <button class="period-btn" data-period="quarter" type="button">분기</button>
+            <button class="period-btn" data-period="year" type="button">연간</button>
+          </div>
+          <input type="month" id="enMonthPicker" value="2025-12" class="ck-select" style="min-width:140px">
+          <select class="ck-select" id="enYearSelect" style="min-width:90px;display:none">
+            <option value="2022">2022년</option>
+            <option value="2023">2023년</option>
+            <option value="2024">2024년</option>
+            <option value="2025" selected>2025년</option>
+            <option value="2026">2026년</option>
+          </select>
+        </div>
+        <div class="ck-filter__group">
+          <span class="ck-filter__lb">지역</span>
+          <select class="ck-select" id="enRegion">
+            <option value="all">광명시 전체</option>
+            <option value="cheolsan">철산권역</option>
+            <option value="haan">하안권역</option>
+            <option value="soha">소하권역</option>
+            <option value="iljik">일직권역</option>
+          </select>
+        </div>
+        <div class="ck-filter__group">
+          <span class="ck-filter__lb">저감 분야</span>
+          <select class="ck-select" id="enSector">
+            <option value="all">전체</option>
+            <option value="industry">산업</option>
+            <option value="transport">수송</option>
+            <option value="building">건물</option>
+            <option value="waste">폐기물</option>
+          </select>
+        </div>
+        <div class="ck-filter__group">
+          <span class="ck-filter__lb">비교 기준</span>
+          <select class="ck-select" id="enCompare">
+            <option value="last_year">전년 동월</option>
+            <option value="last_month">전월</option>
+            <option value="goal">연간 목표</option>
+          </select>
+        </div>
+        <div class="ck-filter__sep"></div>
+        <div class="ck-filter__actions">
+          <button class="btn btn--pri" id="btnEnSearch" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="search" style="width:14px;height:14px"></i>조회</button>
+          <button class="btn btn--line" id="btnEnReset" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="refresh-cw" style="width:13px;height:13px"></i>초기화</button>
+          <button class="btn btn--line" id="btnEnExport" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="download" style="width:13px;height:13px"></i>보고서 다운로드</button>
+        </div>
+      </div>
+
+      <!-- KPI 4개 -->
+      <div class="ck-kpis">
+        <div class="ck-kpi ck-kpi--link" data-kpi="광명시 전체" data-tab="en" role="button" tabindex="0">
+          <div class="ck-kpi__ico" style="background:var(--status-danger-soft);color:var(--status-danger)"><i data-lucide="factory"></i></div>
+          <div>
+            <div class="ck-kpi__lb">총 탄소배출량</div>
+            <div class="ck-kpi__vl">128,450<span class="u">tCO₂e</span></div>
+            <div class="ck-kpi__trend down">▼ 전월 대비 -4.6% / 전년 동월 -8.8%</div>
+          </div>
+        </div>
+        <div class="ck-kpi ck-kpi--link" data-kpi="광명시 전체" data-tab="en" role="button" tabindex="0">
+          <div class="ck-kpi__ico" style="background:#E4F6EC;color:#1AAA5E"><i data-lucide="leaf"></i></div>
+          <div>
+            <div class="ck-kpi__lb">총 탄소저감량</div>
+            <div class="ck-kpi__vl">28,760<span class="u">tCO₂e</span></div>
+            <div class="ck-kpi__trend up">▲ 전월 대비 +6.2% / 전년 동월 +12.3%</div>
+          </div>
+        </div>
+        <div class="ck-kpi ck-kpi--link" data-kpi="광명시 전체" data-tab="en" role="button" tabindex="0">
+          <!-- 게이지 -->
+          <div class="gauge-wrap">
+            <svg viewBox="0 0 52 52">
+              <circle cx="26" cy="26" r="20" fill="none" stroke="var(--bg-sunken)" stroke-width="6"/>
+              <circle id="enGaugeArc" cx="26" cy="26" r="20" fill="none" stroke="#1AAA5E" stroke-width="6"
+                stroke-linecap="round" stroke-dasharray="0 125.66"
+                style="transition:stroke-dasharray 1s cubic-bezier(.16,1,.3,1)"/>
+            </svg>
+            <div class="gauge-pct" id="enGaugePct">0%</div>
+          </div>
+          <div>
+            <div class="ck-kpi__lb">탄소저감 이행률</div>
+            <div class="ck-kpi__vl">77<span class="u">%</span></div>
+            <div class="ck-kpi__trend up">목표(연간) 37,400 tCO₂e</div>
+          </div>
+        </div>
+        <div class="ck-kpi ck-kpi--link" data-kpi="하안3동" data-tab="en" role="button" tabindex="0">
+          <div class="ck-kpi__ico" style="background:var(--status-warning-soft);color:var(--status-warning)"><i data-lucide="map-pin"></i></div>
+          <div>
+            <div class="ck-kpi__lb">배출 증가 지역</div>
+            <div class="ck-kpi__vl" style="color:var(--status-warning)">하안3동</div>
+            <div class="ck-kpi__trend down">전월 대비 +1,280 tCO₂e (+12.4%)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 차트 2컬럼: 배출 총량 | 저감 실적 -->
+      <div class="ck-charts2">
+        <div class="ck-card">
+          <div class="ck-card__hd"><span class="ck-card__t">탄소배출 총량 추이</span></div>
+          <p class="ck-card__sub">(tCO₂e) / 전월 대비 증감률(%)</p>
+          <div class="ck-card__chart"><canvas id="chartEnEmission"></canvas></div>
+        </div>
+        <div class="ck-card">
+          <div class="ck-card__hd"><span class="ck-card__t">탄소저감 실적 추이</span></div>
+          <p class="ck-card__sub">(tCO₂e) / 누적 목표</p>
+          <div class="ck-card__chart"><canvas id="chartEnReduction"></canvas></div>
+        </div>
+      </div>
+
+      <!-- 차트 3컬럼: 도넛 | 지역 분포 | 변동 요인 -->
+      <div class="ck-charts3">
+        <div class="ck-card">
+          <div class="ck-card__hd"><span class="ck-card__t">부문별 배출 현황</span></div>
+          <div class="ck-donut">
+            <div class="ck-donut-box"><canvas id="chartEnDonut"></canvas></div>
+            <div class="ck-legend" id="enDonutLegend"></div>
+          </div>
+        </div>
+        <div class="ck-card">
+          <div class="ck-card__hd">
+            <span class="ck-card__t">지역별 탄소배출 분포</span>
+            <span style="font:400 12px/1 var(--font-sans);color:var(--fg-4)">(tCO₂e)</span>
+          </div>
+          <div class="hbar-list" id="enRegionBars"></div>
+        </div>
+        <div class="ck-card">
+          <div class="ck-card__hd"><span class="ck-card__t">주요 변동 요인</span></div>
+          <div class="factor-list" id="enFactorList"></div>
+        </div>
+      </div>
+
+      <!-- 탄소배출·저감 지표 목록 테이블 -->
+      <div class="ck-table-card">
+        <div class="ck-table-hd">
+          <h2>탄소배출·저감 지표 목록</h2>
+          <div class="ck-table-hd__actions">
+            <button class="btn btn--line" id="btnEnTableExport" type="button" style="height:34px;padding:0 14px;font-size:13px;display:inline-flex;align-items:center;gap:5px;">
+              <i data-lucide="download" style="width:13px;height:13px"></i>CSV 내보내기
+            </button>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th class="l">지역</th>
+              <th>탄소배출량(tCO₂e)</th>
+              <th>전월 대비</th>
+              <th>전년 동월 대비</th>
+              <th>탄소저감량(tCO₂e)</th>
+              <th>저감률(%)</th>
+              <th>상태</th>
+              <th>상세</th>
+            </tr>
+          </thead>
+          <tbody id="enTableBody"></tbody>
+        </table>
+      </div>
+    </div><!-- /pane-energy -->
+
+  </main>
+</div>
+
+<!-- 목표치 수정 모달 -->
+<div class="ck-goal-overlay" id="emGoalOverlay">
+  <div class="ck-goal-overlay__bg" id="emGoalBg"></div>
+  <div class="ck-goal-modal">
+    <div class="ck-goal-modal__hd">
+      <h3>탄소저감 목표치 수정</h3>
+      <button class="ck-goal-modal__x" id="emGoalCloseBtn" type="button" aria-label="닫기"><i data-lucide="x"></i></button>
+    </div>
+    <div class="ck-goal-row">
+      <label class="ck-goal-lbl" for="emGoalInput">연간 저감 목표 (tCO₂e)</label>
+      <input type="number" id="emGoalInput" class="ck-goal-input" value="30000" min="0" step="100" placeholder="목표값 입력">
+      <span class="ck-goal-hint">현재 저감 이행률 산정 기준이 되는 연간 목표값입니다.</span>
+    </div>
+    <div class="ck-goal-row">
+      <label class="ck-goal-lbl" for="emGoalYear">적용 연도</label>
+      <select id="emGoalYear" class="ck-goal-input">
+        <option value="2025" selected>2025년</option>
+        <option value="2026">2026년</option>
+      </select>
+    </div>
+    <div class="ck-goal-modal__ft">
+      <button class="btn btn--line" id="emGoalCancelBtn" type="button">취소</button>
+      <button class="btn btn--pri" id="emGoalSaveBtn" type="button">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 드로어 -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="지역 상세">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k"><i data-lucide="map-pin" class="gp-ico" style="width:15px;height:15px"></i>지역 상세</div>
+      <h3 id="dwTitle">—</h3>
+    </div>
+    <button class="dw__x" id="dwClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="dw__info-banner">
+      <i data-lucide="info"></i>
+      <p id="dwDesc"></p>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="map" class="gp-ico"></i>지역 기본 정보</h4>
+      <dl class="dl" id="dwBaseDl"></dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="bar-chart-2" class="gp-ico"></i>에너지·탄소 현황</h4>
+      <dl class="dl" id="dwStatDl"></dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="history" class="gp-ico"></i>최근 6개월 추이</h4>
+      <div class="dw__mini-chart"><canvas id="dwChart"></canvas></div>
+    </div>
+  </div>
+</aside>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'carbon.carbon-kpi',
+  header: {
+    title: '탄소·에너지 지표',
+    desc:  '기간·지역·분야별 탄소배출량과 저감 성과를 비교 분석합니다.',
+    actions: '<span style="font:400 13px/1 var(--font-sans);color:var(--fg-3);display:flex;align-items:center;gap:6px"><i data-lucide="clock-3" style="width:13px;height:13px"></i>마지막 갱신 : 2026-06-19 10:15:45</span>'
+            +'<button class="btn btn--line" id="btnRefresh" type="button" style="height:32px;padding:0 12px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="refresh-cw" style="width:12px;height:12px"></i>새로고침</button>',
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-carbon-kpi.js"></script>
+</body>
+</html>

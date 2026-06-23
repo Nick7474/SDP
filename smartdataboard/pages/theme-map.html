@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>도시 데이터 주제도 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/gis-shared.css">
+<link rel="stylesheet" href="../assets/css/page-theme-map.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div id="gmsb-topbar"></div>
+
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- GIS 지도 영역 -->
+    <div class="gis-wrap tm-gis-wrap">
+
+      <!-- 좌측 필터 패널 -->
+      <aside class="gis-filter">
+        <p class="gis-filter__title">도시데이터 주제도 선택</p>
+
+        <!-- 검색 -->
+        <div class="gis-filter__search">
+          <div class="gis-search gis-search--right">
+            <input type="search" id="tmSearchInput" placeholder="주제도명 검색" autocomplete="off" aria-label="주제도 검색">
+            <i data-lucide="search"></i>
+            <div class="search-dropdown" id="tmSearchDropdown"></div>
+          </div>
+        </div>
+
+        <!-- 주제도 트리 -->
+        <div class="gis-filter__body">
+          <!-- 즐겨찾기 필터 -->
+          <div class="tm-fav-filter" id="tmFavFilter">
+            <button class="tm-fav-filter__btn" id="tmFavFilterBtn" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              즐겨찾기만 보기
+            </button>
+          </div>
+          <div class="tm-tree" id="tmTree">
+
+            <!-- 인구·생활 -->
+            <div class="tm-cat open" data-cat="pop">
+              <div class="tm-cat__hd" role="button">
+                <div class="tm-cat__icon"><i data-lucide="users"></i></div>
+                <span class="tm-cat__lbl">인구·생활</span>
+                <span class="tm-cat__count">3</span>
+                <svg class="tm-cat__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="tm-cat__bd">
+                <label class="tm-layer-item">
+                  <input type="checkbox" checked data-layer="pop-dong">
+                  <span class="tm-layer-item__dot" style="background:#0C8AE5"></span>
+                  <span class="tm-layer-item__lbl">행정동별 인구 분포</span>
+                  <button class="tm-fav-btn" data-fav="pop-dong" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" checked data-layer="pop-float">
+                  <span class="tm-layer-item__dot" style="background:#1AAA5E"></span>
+                  <span class="tm-layer-item__lbl">유동인구 밀도</span>
+                  <button class="tm-fav-btn" data-fav="pop-float" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="pop-dust">
+                  <span class="tm-layer-item__dot" style="background:#6E74D6"></span>
+                  <span class="tm-layer-item__lbl">미세먼지 분포</span>
+                  <button class="tm-fav-btn" data-fav="pop-dust" type="button" aria-label="즐겨찾기"></button>
+                </label>
+              </div>
+            </div>
+
+            <!-- 교통·이동 -->
+            <div class="tm-cat" data-cat="transport">
+              <div class="tm-cat__hd" role="button">
+                <div class="tm-cat__icon"><i data-lucide="car"></i></div>
+                <span class="tm-cat__lbl">교통·이동</span>
+                <span class="tm-cat__count">5</span>
+                <svg class="tm-cat__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="tm-cat__bd">
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="trans-bus">
+                  <span class="tm-layer-item__dot" style="background:#1AAA5E"></span>
+                  <span class="tm-layer-item__lbl">버스 노선 현황</span>
+                  <button class="tm-fav-btn" data-fav="trans-bus" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="trans-traffic">
+                  <span class="tm-layer-item__dot" style="background:#ED8B16"></span>
+                  <span class="tm-layer-item__lbl">교통량 밀도 분포</span>
+                  <button class="tm-fav-btn" data-fav="trans-traffic" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="trans-ev">
+                  <span class="tm-layer-item__dot" style="background:#0C8AE5"></span>
+                  <span class="tm-layer-item__lbl">전기차 충전소 위치</span>
+                  <span class="tm-layer-item__badge tm-layer-item__badge--new">NEW</span>
+                  <button class="tm-fav-btn" data-fav="trans-ev" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="trans-bike">
+                  <span class="tm-layer-item__dot" style="background:#6E74D6"></span>
+                  <span class="tm-layer-item__lbl">공공자전거 스테이션</span>
+                  <button class="tm-fav-btn" data-fav="trans-bike" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="trans-parking">
+                  <span class="tm-layer-item__dot" style="background:#AEB7C2"></span>
+                  <span class="tm-layer-item__lbl">주차장 현황</span>
+                  <button class="tm-fav-btn" data-fav="trans-parking" type="button" aria-label="즐겨찾기"></button>
+                </label>
+              </div>
+            </div>
+
+            <!-- 환경·기후 -->
+            <div class="tm-cat" data-cat="env">
+              <div class="tm-cat__hd" role="button">
+                <div class="tm-cat__icon"><i data-lucide="cloud"></i></div>
+                <span class="tm-cat__lbl">환경·기후</span>
+                <span class="tm-cat__count">4</span>
+                <svg class="tm-cat__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="tm-cat__bd">
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="env-air">
+                  <span class="tm-layer-item__dot" style="background:#0C8AE5"></span>
+                  <span class="tm-layer-item__lbl">대기질 모니터링</span>
+                  <button class="tm-fav-btn" data-fav="env-air" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="env-heat">
+                  <span class="tm-layer-item__dot" style="background:#E0483D"></span>
+                  <span class="tm-layer-item__lbl">도시열섬 지수</span>
+                  <button class="tm-fav-btn" data-fav="env-heat" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="env-green">
+                  <span class="tm-layer-item__dot" style="background:#1AAA5E"></span>
+                  <span class="tm-layer-item__lbl">녹지 분포 현황</span>
+                  <button class="tm-fav-btn" data-fav="env-green" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="env-water">
+                  <span class="tm-layer-item__dot" style="background:#6E74D6"></span>
+                  <span class="tm-layer-item__lbl">수질 측정 지점</span>
+                  <button class="tm-fav-btn" data-fav="env-water" type="button" aria-label="즐겨찾기"></button>
+                </label>
+              </div>
+            </div>
+
+            <!-- 안전·재난 -->
+            <div class="tm-cat" data-cat="safety">
+              <div class="tm-cat__hd" role="button">
+                <div class="tm-cat__icon"><i data-lucide="shield"></i></div>
+                <span class="tm-cat__lbl">안전·재난</span>
+                <span class="tm-cat__count">3</span>
+                <svg class="tm-cat__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="tm-cat__bd">
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="safe-crime">
+                  <span class="tm-layer-item__dot" style="background:#E0483D"></span>
+                  <span class="tm-layer-item__lbl">범죄 발생 분포</span>
+                  <button class="tm-fav-btn" data-fav="safe-crime" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="safe-cctv">
+                  <span class="tm-layer-item__dot" style="background:#0C8AE5"></span>
+                  <span class="tm-layer-item__lbl">CCTV 설치 현황</span>
+                  <button class="tm-fav-btn" data-fav="safe-cctv" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="safe-flood">
+                  <span class="tm-layer-item__dot" style="background:#6E74D6"></span>
+                  <span class="tm-layer-item__lbl">침수 위험 구역</span>
+                  <button class="tm-fav-btn" data-fav="safe-flood" type="button" aria-label="즐겨찾기"></button>
+                </label>
+              </div>
+            </div>
+
+            <!-- 에너지·건물 -->
+            <div class="tm-cat" data-cat="energy">
+              <div class="tm-cat__hd" role="button">
+                <div class="tm-cat__icon"><i data-lucide="zap"></i></div>
+                <span class="tm-cat__lbl">에너지·건물</span>
+                <span class="tm-cat__count">4</span>
+                <svg class="tm-cat__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="tm-cat__bd">
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="energy-use">
+                  <span class="tm-layer-item__dot" style="background:#FFB114"></span>
+                  <span class="tm-layer-item__lbl">건물 에너지 사용</span>
+                  <button class="tm-fav-btn" data-fav="energy-use" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="energy-solar">
+                  <span class="tm-layer-item__dot" style="background:#1AAA5E"></span>
+                  <span class="tm-layer-item__lbl">태양광 발전 지점</span>
+                  <button class="tm-fav-btn" data-fav="energy-solar" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="energy-age">
+                  <span class="tm-layer-item__dot" style="background:#6E74D6"></span>
+                  <span class="tm-layer-item__lbl">노후건물 분포</span>
+                  <button class="tm-fav-btn" data-fav="energy-age" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="energy-cert">
+                  <span class="tm-layer-item__dot" style="background:#0C8AE5"></span>
+                  <span class="tm-layer-item__lbl">에너지 인증 건물</span>
+                  <button class="tm-fav-btn" data-fav="energy-cert" type="button" aria-label="즐겨찾기"></button>
+                </label>
+              </div>
+            </div>
+
+            <!-- 공공시설 -->
+            <div class="tm-cat" data-cat="public">
+              <div class="tm-cat__hd" role="button">
+                <div class="tm-cat__icon"><i data-lucide="building-2"></i></div>
+                <span class="tm-cat__lbl">공공시설</span>
+                <span class="tm-cat__count">4</span>
+                <svg class="tm-cat__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="tm-cat__bd">
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="pub-school">
+                  <span class="tm-layer-item__dot" style="background:#1AAA5E"></span>
+                  <span class="tm-layer-item__lbl">학교 위치</span>
+                  <button class="tm-fav-btn" data-fav="pub-school" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="pub-hospital">
+                  <span class="tm-layer-item__dot" style="background:#E0483D"></span>
+                  <span class="tm-layer-item__lbl">의료기관 현황</span>
+                  <button class="tm-fav-btn" data-fav="pub-hospital" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="pub-welfare">
+                  <span class="tm-layer-item__dot" style="background:#6E74D6"></span>
+                  <span class="tm-layer-item__lbl">복지시설 분포</span>
+                  <button class="tm-fav-btn" data-fav="pub-welfare" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="pub-park">
+                  <span class="tm-layer-item__dot" style="background:#1AAA5E"></span>
+                  <span class="tm-layer-item__lbl">공원·녹지 현황</span>
+                  <button class="tm-fav-btn" data-fav="pub-park" type="button" aria-label="즐겨찾기"></button>
+                </label>
+              </div>
+            </div>
+
+            <!-- 탄소·그린모드 -->
+            <div class="tm-cat open" data-cat="carbon">
+              <div class="tm-cat__hd" role="button">
+                <div class="tm-cat__icon"><i data-lucide="leaf"></i></div>
+                <span class="tm-cat__lbl">탄소·그린모드</span>
+                <span class="tm-cat__count">2</span>
+                <svg class="tm-cat__arr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div class="tm-cat__bd">
+                <label class="tm-layer-item">
+                  <input type="checkbox" checked data-layer="carbon-est">
+                  <span class="tm-layer-item__dot" style="background:#1AAA5E"></span>
+                  <span class="tm-layer-item__lbl">탄소배출 추정 분포</span>
+                  <button class="tm-fav-btn" data-fav="carbon-est" type="button" aria-label="즐겨찾기"></button>
+                </label>
+                <label class="tm-layer-item">
+                  <input type="checkbox" data-layer="carbon-sink">
+                  <span class="tm-layer-item__dot" style="background:#0C8AE5"></span>
+                  <span class="tm-layer-item__lbl">마일별 흡수원 위치</span>
+                  <button class="tm-fav-btn" data-fav="carbon-sink" type="button" aria-label="즐겨찾기"></button>
+                </label>
+              </div>
+            </div>
+
+          </div><!-- /tm-tree -->
+
+          <!-- 공간 단위 필터 -->
+          <div class="gis-filter__sec">
+            <p class="gis-filter__sec-hd">공간 단위 필터</p>
+            <div class="tm-spatial-btns" id="tmSpatialBtns">
+              <button class="tm-spatial-btn on" data-spatial="dong" type="button">행정동</button>
+              <button class="tm-spatial-btn" data-spatial="500m" type="button">500m</button>
+              <button class="tm-spatial-btn" data-spatial="facility" type="button">시설</button>
+              <button class="tm-spatial-btn" data-spatial="sensor" type="button">센서</button>
+              <button class="tm-spatial-btn" data-spatial="line" type="button">노선</button>
+            </div>
+          </div>
+
+          <!-- 레이어 투명도 -->
+          <div class="gis-filter__sec">
+            <p class="gis-filter__sec-hd">레이어 투명도</p>
+            <div class="tm-opacity-row">
+              <input type="range" class="tm-opacity-track" id="tmOpacitySlider" min="0" max="100" value="70">
+              <span class="tm-opacity-val" id="tmOpacityVal">70%</span>
+            </div>
+          </div>
+
+          <!-- 표시 방식 -->
+          <div class="gis-filter__sec">
+            <p class="gis-filter__sec-hd">표시 방식</p>
+            <div class="gis-radio-list">
+              <label class="gis-radio-item"><input type="radio" name="tmDisplay" value="heatmap" checked>히트맵</label>
+              <label class="gis-radio-item"><input type="radio" name="tmDisplay" value="bubble">버블</label>
+              <label class="gis-radio-item"><input type="radio" name="tmDisplay" value="point">포인트</label>
+              <label class="gis-radio-item"><input type="radio" name="tmDisplay" value="grid">격자 Grid 보기</label>
+            </div>
+          </div>
+
+        </div><!-- /gis-filter__body -->
+      </aside>
+
+      <!-- 우측 지도 -->
+      <div class="gis-map-area" id="tmMapArea">
+        <div id="tmMap"></div>
+
+        <!-- 지도 컨트롤 패널 -->
+        <div class="map-ctrl-panel">
+          <div class="map-ctrl-group">
+            <button class="map-ctrl-btn" id="tmBtnZoomIn" type="button" aria-label="확대">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            </button>
+            <button class="map-ctrl-btn" id="tmBtnZoomOut" type="button" aria-label="축소">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+            </button>
+          </div>
+          <div class="map-ctrl-group">
+            <button class="map-tool-btn2" id="tmBtnFitAll" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V5a2 2 0 0 1 2-2h4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M21 15v4a2 2 0 0 1-2 2h-4"/><path d="M9 21H5a2 2 0 0 1-2-2v-4"/></svg>
+              <span>전체보기</span>
+            </button>
+            <button class="map-tool-btn2" id="tmBtnCenter" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+              <span>현재위치</span>
+            </button>
+            <button class="map-tool-btn2" id="tmBtnExport" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>내보내기</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 오버레이 범례 -->
+        <div class="tm-overlay-legend" id="tmOverlayLegend">
+          <div class="tm-overlay-section">
+            <div class="tm-overlay-section__title">시각화 유형</div>
+            <div class="tm-vis-type">
+              <div class="tm-vis-dot"></div>
+              <span id="tmVisTypeLabel">히트맵</span>
+            </div>
+          </div>
+          <div class="tm-overlay-section">
+            <div class="tm-overlay-section__title">데이터 수준</div>
+            <div class="tm-scale-list">
+              <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#E0483D"></div>매우 높음</div>
+              <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#ED8B16"></div>높음</div>
+              <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#1AAA5E"></div>보통</div>
+              <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#0C8AE5"></div>낮음</div>
+              <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#E5EDF8"></div>매우 낮음</div>
+            </div>
+          </div>
+          <div class="tm-overlay-section">
+            <div class="tm-overlay-section__title">활성 레이어</div>
+            <div class="tm-active-list" id="tmActiveLayers">
+              <div class="tm-active-item"><div class="tm-active-dot" style="background:#0C8AE5"></div>행정동별 인구 분포</div>
+              <div class="tm-active-item"><div class="tm-active-dot" style="background:#1AAA5E"></div>유동인구 밀도</div>
+              <div class="tm-active-item"><div class="tm-active-dot" style="background:#1AAA5E"></div>탄소배출 추정 분포</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 호버 툴팁 -->
+        <div class="tm-hover-tip" id="tmHoverTip">
+          <div class="tm-hover-tip__name" id="tmHoverName"></div>
+          <div class="tm-hover-tip__val"  id="tmHoverVal"></div>
+        </div>
+
+      </div><!-- /gis-map-area -->
+    </div><!-- /gis-wrap -->
+
+  </main>
+</div>
+
+<!-- 주제도 마커 팝업 (centered modal) -->
+<div class="map-popup" id="tmMapPopup">
+  <div class="map-popup__scrim" id="tmPopupScrim"></div>
+  <div class="map-popup__box">
+    <div class="map-popup__hd">
+      <div class="map-popup__hd-left">
+        <div class="map-popup__mile-badge" id="tmPopupBadge"></div>
+        <div>
+          <div class="map-popup__title" id="tmPopupTitle"></div>
+          <div class="map-popup__type" id="tmPopupType"></div>
+        </div>
+      </div>
+      <button class="map-popup__close" id="tmPopupClose" type="button" aria-label="닫기">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="map-popup__bd">
+      <div class="map-popup__dl" id="tmPopupDl"></div>
+    </div>
+    <div class="map-popup__ft" style="display:flex;gap:8px;">
+      <button class="btn btn--line" id="tmPopupDataBtn" type="button" style="flex:1">원천 데이터</button>
+      <button class="btn btn--pri" id="tmPopupDetailBtn" type="button" style="flex:1">상세 정보 보기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 주제도 상세 정보 드로어 -->
+<div class="tm-drawer" id="tmDrawer">
+  <div class="tm-drawer__hd">
+    <h2 class="tm-drawer__title">주제도 상세 정보</h2>
+    <button class="tm-drawer__close" id="tmDrawerClose" type="button" aria-label="닫기">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+  </div>
+
+  <div class="tm-drawer__info-banner">
+    <i data-lucide="info"></i>
+    <p>선택한 주제도의 상세 정보를 확인할 수 있습니다.<br>본 정보는 조회 전용으로 제공됩니다.</p>
+  </div>
+
+  <div class="tm-drawer__bd" id="tmDrawerBd">
+
+    <!-- 기본 정보 -->
+    <div class="tm-sec-hd">
+      <i data-lucide="file-text"></i>
+      기본 정보
+    </div>
+    <div class="tm-dl">
+      <div class="tm-dl__row"><span class="tm-dl__dt">주제명</span><span class="tm-dl__dd" id="drSubject">행정동별 인구 분포</span></div>
+      <div class="tm-dl__row"><span class="tm-dl__dt">분야</span><span class="tm-dl__dd" id="drField">인구·생활</span></div>
+      <div class="tm-dl__row"><span class="tm-dl__dt">공간 단위</span><span class="tm-dl__dd" id="drSpatialUnit">행정동</span></div>
+      <div class="tm-dl__row"><span class="tm-dl__dt">시각화 유형</span><span class="tm-dl__dd" id="drVisType">단계구분도</span></div>
+      <div class="tm-dl__row"><span class="tm-dl__dt">데이터 기준</span><span class="tm-dl__dd" id="drDataBase">2026.05</span></div>
+      <div class="tm-dl__row"><span class="tm-dl__dt">제공 지역</span><span class="tm-dl__dd" id="drRegion">광명시 전체</span></div>
+      <div class="tm-dl__row"><span class="tm-dl__dt">갱신 주기</span><span class="tm-dl__dd" id="drFreq">월 1회</span></div>
+      <div class="tm-dl__row"><span class="tm-dl__dt">원천 데이터</span><span class="tm-dl__dd" id="drSource">광명시 행정 데이터</span></div>
+    </div>
+
+    <!-- 선택 지역 요약 -->
+    <div class="tm-sec-hd">
+      <i data-lucide="map-pin"></i>
+      선택 지역 요약
+    </div>
+    <div class="tm-summary-kpi">
+      <div class="tm-kpi-card">
+        <div class="tm-kpi-card__lb"><i data-lucide="users"></i>총인구</div>
+        <div class="tm-kpi-card__vl"><span id="drTotalPop">20,541</span><span class="u">명</span></div>
+      </div>
+      <div class="tm-kpi-card">
+        <div class="tm-kpi-card__lb"><i data-lucide="trending-up"></i>전월 대비</div>
+        <div class="tm-kpi-card__vl"><span id="drPrevMonth" style="color:var(--status-danger)">+0.8%</span></div>
+        <div class="tm-kpi-card__trend tm-kpi-card__trend--up" id="drPrevTrend">▲ 증가</div>
+      </div>
+      <div class="tm-kpi-card">
+        <div class="tm-kpi-card__lb"><i data-lucide="activity"></i>유동인구 지수</div>
+        <div class="tm-kpi-card__vl"><span id="drFloatIdx">82</span><span class="u">점</span></div>
+      </div>
+      <div class="tm-kpi-card">
+        <div class="tm-kpi-card__lb" style="color:var(--status-success)"><i data-lucide="leaf"></i>탄소배출 추정</div>
+        <div class="tm-kpi-card__vl"><span id="drCarbonIdx" style="color:var(--status-warning)">72</span><span class="u">점</span></div>
+      </div>
+    </div>
+
+    <!-- 관련 데이터 -->
+    <div class="tm-sec-hd">
+      <i data-lucide="database"></i>
+      관련 데이터
+    </div>
+    <div class="tm-dl">
+      <div class="tm-dl__row">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:26px;height:26px;border-radius:6px;background:var(--gp-primary-soft);display:flex;align-items:center;justify-content:center;flex:none;"><i data-lucide="users" style="width:12px;height:12px;color:var(--gp-primary)"></i></div>
+          <span class="tm-dl__dt" style="color:var(--fg-2);font-weight:600;">주민등록 인구</span>
+        </div>
+        <span class="tm-dl__dd" id="drResidentPop">15,432명</span>
+      </div>
+      <div class="tm-dl__row">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:26px;height:26px;border-radius:6px;background:var(--status-info-soft);display:flex;align-items:center;justify-content:center;flex:none;"><i data-lucide="bar-chart-2" style="width:12px;height:12px;color:var(--status-info)"></i></div>
+          <span class="tm-dl__dt" style="color:var(--fg-2);font-weight:600;">연령대별 인구</span>
+        </div>
+        <a class="tm-dl__dd tm-dl__dd--link" href="#">상세 보기 ›</a>
+      </div>
+      <div class="tm-dl__row">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:26px;height:26px;border-radius:6px;background:var(--status-success-soft);display:flex;align-items:center;justify-content:center;flex:none;"><i data-lucide="home" style="width:12px;height:12px;color:var(--status-success)"></i></div>
+          <span class="tm-dl__dt" style="color:var(--fg-2);font-weight:600;">세대 수</span>
+        </div>
+        <span class="tm-dl__dd" id="drHousehold">7,021세대</span>
+      </div>
+      <div class="tm-dl__row">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:26px;height:26px;border-radius:6px;background:var(--status-warning-soft);display:flex;align-items:center;justify-content:center;flex:none;"><i data-lucide="activity" style="width:12px;height:12px;color:var(--status-warning)"></i></div>
+          <span class="tm-dl__dt" style="color:var(--fg-2);font-weight:600;">유동인구 밀도</span>
+        </div>
+        <a class="tm-dl__dd tm-dl__dd--link" href="#">상세 보기 ›</a>
+      </div>
+    </div>
+
+  </div><!-- /tm-drawer__bd -->
+
+  <div class="tm-drawer__updated">
+    <i data-lucide="clock"></i>
+    <span>최종 갱신일 2026.05.20 10:00</span>
+  </div>
+
+  <div class="tm-drawer__ft">
+    <button class="btn btn--line" id="tmDrawerDataBtn" type="button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>원천 데이터 조회
+    </button>
+    <button class="btn btn--pri" id="tmDrawerExportBtn" type="button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>CSV 내보내기
+    </button>
+  </div>
+
+</div>
+
+<!-- 원천 데이터 모달 -->
+<div class="map-popup" id="tmSrcModal" style="z-index:310;">
+  <div class="map-popup__scrim" id="tmSrcModalScrim"></div>
+  <div class="map-popup__box" style="width:480px;max-width:94vw;max-height:80vh;overflow-y:auto;">
+    <div class="map-popup__hd">
+      <div class="map-popup__hd-left">
+        <div style="width:36px;height:36px;border-radius:8px;background:var(--gp-primary-soft);display:flex;align-items:center;justify-content:center;flex:none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gp-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </div>
+        <div>
+          <div class="map-popup__title" id="tmSrcTitle">원천 데이터 정보</div>
+          <div class="map-popup__type" id="tmSrcSubtitle">-</div>
+        </div>
+      </div>
+      <button class="map-popup__close" id="tmSrcClose" type="button" aria-label="닫기">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="map-popup__bd" style="padding:0 20px 4px;">
+      <div id="tmSrcBody"></div>
+    </div>
+    <div class="map-popup__ft" style="display:flex;gap:8px;">
+      <button class="btn btn--line" id="tmSrcCsvBtn" type="button" style="flex:1">CSV 다운로드</button>
+      <button class="btn btn--ghost" id="tmSrcCloseBtn" type="button" style="flex:1">닫기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'gis.theme-map',
+  header: {
+    title: '도시 데이터 주제도',
+    desc:  '인구·교통·환경·안전 등 도시 데이터를 주제도 형태로 조회하고 지역별 분포와 주요 지표를 지도 중심으로 확인합니다.',
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a6adc7984a1e98b757e7666da6ab377b"></script>
+<script src="../assets/js/page-theme-map.js"></script>
+</body>
+</html>

@@ -487,3 +487,53 @@
 .cs-pg-btn:hover { background: var(--bg-subtle); }
 .cs-pg-btn.on { background: var(--gp-primary); border-color: var(--gp-primary); color: #fff; }
 .cs-pg-btn svg { width: 14px; height: 14px; }
+
+/* ══════════════════════════════
+   드로어 & 모달 (catalog-search 전용)
+══════════════════════════════ */
+
+/* 드로어 푸터 2행 */
+.dw__ft-3 {
+  background: #fff;
+  border-top: 1px solid #E6EBF2;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.dw__ft-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.dw__ft-3 .btn { height: 44px; justify-content: center; width: 100%; }
+
+/* 드로어 내 info 배너 */
+.cs-dw-info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--status-info-soft);
+  margin-bottom: 16px;
+}
+.cs-dw-info-banner svg { width: 16px; height: 16px; color: var(--status-info); flex: none; margin-top: 2px; }
+.cs-dw-info-banner p { font: 400 13px/1.55 var(--font-sans); color: var(--fg-2); margin: 0; }
+
+/* 다운로드 형식 버튼 */
+.dl-fmt-btn {
+  flex: 1;
+  height: 80px;
+  border: 2px solid var(--border-1);
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font: 700 13px/1 var(--font-sans);
+  color: var(--fg-3);
+  transition: border-color var(--dur-fast), background var(--dur-fast), color var(--dur-fast);
+}
+.dl-fmt-btn:hover { border-color: var(--border-strong); background: var(--bg-subtle); color: var(--fg-1); }
+.dl-fmt-btn.on { border-color: var(--gp-primary); background: var(--gp-primary-soft); color: var(--gp-primary); }
+.dl-fmt-btn svg { width: 22px; height: 22px; }

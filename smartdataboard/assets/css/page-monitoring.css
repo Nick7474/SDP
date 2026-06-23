@@ -1,0 +1,94 @@
+/* =====================================================================
+   광명 스마트데이터보드 · 데이터 모니터링 (page-specific)
+   공통 스타일: page-shared.css 참조
+   로드 순서: tokens.css → base.css → shell.css → page-shared.css → page-monitoring.css
+   ===================================================================== */
+
+/* ===================== HEATMAP ===================== */
+.hm{display:grid;grid-template-columns:140px repeat(12,1fr);align-items:stretch;}
+
+/* 헤더 행 — 최근 수집 이력 테이블 헤더와 동일 스타일 */
+.hm__h{
+  font:700 14px/1 var(--font-sans);color:#5A6678;text-align:center;
+  padding:14px 8px;background:#F6F9FC;border-bottom:1px solid #E6EBF2;
+  display:flex;align-items:center;justify-content:center;}
+.hm__h--first{text-align:left;justify-content:flex-start;padding-left:12px;}
+
+/* 데이터 행 라벨 */
+.hm__rl{
+  font:700 15px/1 var(--font-sans);color:#3A465C;
+  padding:14px 8px;white-space:nowrap;
+  border-bottom:1px solid #EEF1F6;
+  display:flex;align-items:center;}
+
+/* 데이터 셀 */
+.hm__cell{
+  padding:11px 7px;display:flex;justify-content:center;align-items:center;
+  border-bottom:1px solid #EEF1F6;}
+
+/* 히트맵 바 */
+.hm__bar{
+  height:9px;width:100%;max-width:62px;border-radius:6px;
+  border:none;padding:0;cursor:default;background:var(--st-ok);
+  transition:transform .12s,box-shadow .12s;}
+.hm__bar--ok   {background:var(--st-ok);}
+.hm__bar--delay{background:var(--st-delay);}
+.hm__bar--err  {background:var(--st-err);}
+.hm__bar--stop {background:var(--st-stop);}
+.hm__bar--wait {background:var(--st-wait);}
+.hm__bar.clk{cursor:pointer;}
+.hm__bar.clk:hover{transform:scaleY(1.9);box-shadow:0 2px 8px rgba(20,40,80,.25);}
+.hm__bar.clk:focus-visible{outline:2px solid var(--gp-primary);outline-offset:3px;}
+
+/* ── 히트맵 툴팁 ── */
+.hm-tooltip {
+  position: fixed;
+  z-index: 300;
+  background: var(--fg-1);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  font: 500 12px/1.5 var(--font-sans);
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: var(--elev-3);
+  transition: opacity .12s;
+}
+.hm-tooltip b { font-weight: 700 }
+
+/* ── 이상 감지 섹션 ── */
+#anomalyBody tr { cursor: pointer; }
+#anomalyBody tr:hover td { background: var(--surface-hover); }
+
+/* ── 수집 이력 상세 모달 ── */
+.hm-modal-scrim {
+  position: fixed; inset: 0;
+  background: rgba(15,30,55,.4);
+  z-index: 200;
+}
+.hm-modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; max-width: 92vw;
+  background: #fff;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--elev-3);
+  z-index: 210;
+  display: flex;
+  flex-direction: column;
+  max-height: 88vh;
+}
+.hm-modal__hd {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid var(--border-1);
+}
+.hm-modal__hd h3 { font: 700 18px/1.3 var(--font-sans); color: var(--fg-1); margin: 0 }
+.hm-modal__bd { padding: 20px 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 20px }
+.hm-modal__sec { display: flex; flex-direction: column }
+.hm-modal__ft {
+  display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+  padding: 14px 24px;
+  border-top: 1px solid var(--border-1);
+}

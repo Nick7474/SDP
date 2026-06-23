@@ -406,6 +406,32 @@
     if (typeof window.GMSB_ALERT_COUNT === 'number') {
       window.GMSB_SET_ALERT_COUNT(window.GMSB_ALERT_COUNT);
     }
+    /* 탭이 있는 페이지에서 탭 전환 시 헤더(H1·설명·브레드크럼프 3뎁스)를 업데이트 */
+    window.gmsbSetTab = function (label, desc) {
+      var ph = document.querySelector('.ph');
+      if (!ph) return;
+      var h1 = ph.querySelector('.ph__t');
+      if (h1) h1.textContent = label;
+      if (desc !== undefined) {
+        var d = ph.querySelector('.ph__d');
+        if (d) d.textContent = desc;
+      }
+      var crumbs = ph.querySelector('.crumbs');
+      if (!crumbs) return;
+      if (!crumbs.dataset.pageCrumb) {
+        var origCur = crumbs.querySelector('span.cur');
+        if (!origCur) return;
+        crumbs.dataset.pageCrumb = origCur.textContent;
+        origCur.className = 'crumb-page';
+        var sep = document.createElement('span'); sep.className = 'sep'; sep.textContent = '›';
+        var tabCur = document.createElement('span'); tabCur.className = 'cur'; tabCur.textContent = label;
+        crumbs.appendChild(sep);
+        crumbs.appendChild(tabCur);
+      } else {
+        var tabCur2 = crumbs.querySelector('span.cur');
+        if (tabCur2) tabCur2.textContent = label;
+      }
+    };
     document.dispatchEvent(new CustomEvent('gmsb:shell-ready'));
   }
 

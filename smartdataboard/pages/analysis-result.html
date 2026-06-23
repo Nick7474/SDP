@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>분석 결과 관리 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-analysis-result.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+<div id="gmsb-topbar"></div>
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- ══ 필터 2행 ══ -->
+    <div class="ar-filter">
+      <!-- Row1: 5개 드롭다운 -->
+      <div class="ar-filter-row">
+        <span class="ar-filter__lb">결과 유형</span>
+        <select class="ar-select" id="fType">
+          <option value="">전체</option>
+          <option value="dashboard">대시보드</option>
+          <option value="compare">비교 분석</option>
+          <option value="trend">추이 분석</option>
+          <option value="spatial">공간 분석</option>
+          <option value="report">외부 리포트</option>
+        </select>
+        <span class="ar-filter__lb">분석 분야</span>
+        <select class="ar-select" id="fField">
+          <option value="">전체</option>
+          <option value="carbon">탄소중립</option>
+          <option value="energy">에너지</option>
+          <option value="mobility">모빌리티</option>
+          <option value="safety">세이프티</option>
+          <option value="data">데이터</option>
+        </select>
+        <span class="ar-filter__lb">연계 도구</span>
+        <select class="ar-select" id="fTool">
+          <option value="">전체</option>
+          <option value="tableau">Tableau</option>
+          <option value="none">없음</option>
+        </select>
+        <span class="ar-filter__lb">데이터 상태</span>
+        <select class="ar-select" id="fStatus">
+          <option value="">전체</option>
+          <option value="active">사용 중</option>
+          <option value="review">검토 필요</option>
+          <option value="inactive">미사용</option>
+        </select>
+        <span class="ar-filter__lb">담당 부서</span>
+        <select class="ar-select" id="fDept">
+          <option value="">전체</option>
+          <option value="env">기후환경과</option>
+          <option value="energy">기후에너지과</option>
+          <option value="traffic">교통정책과</option>
+          <option value="it">스마트도시과</option>
+          <option value="plan">도시계획과</option>
+        </select>
+      </div>
+      <!-- Row2: 기간·지역·검색 + 버튼 -->
+      <div class="ar-filter-row">
+        <span class="ar-filter__lb">기간</span>
+        <div class="ar-date-range">
+          <input type="date" id="dateFrom" placeholder="시작일">
+          <span class="ar-date-sep">~</span>
+          <input type="date" id="dateTo" placeholder="종료일">
+        </div>
+        <span class="ar-filter__lb">기준 지역</span>
+        <select class="ar-select" id="fRegion" style="min-width:130px;">
+          <option value="">전체</option>
+          <option value="gwangmyeong">광명동</option>
+          <option value="cheolsan">철산동</option>
+          <option value="haan">하안동</option>
+          <option value="soha">소하동</option>
+          <option value="iljik">일직동</option>
+        </select>
+        <div class="ar-search-box">
+          <i data-lucide="search"></i>
+          <input type="search" id="searchInput" placeholder="결과명, 담당자 검색">
+        </div>
+        <div class="ar-filter__actions">
+          <button class="btn btn--pri" id="btnSearch" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="search" style="width:14px;height:14px"></i>조회</button>
+          <button class="btn btn--line" id="btnReset" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="refresh-cw" style="width:13px;height:13px"></i>초기화</button>
+          <button class="btn btn--line" id="btnExportAll" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="download" style="width:13px;height:13px"></i>결과 다운로드</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ 테이블 섹션 ══ -->
+    <div class="ar-table-card">
+      <div class="ar-table-hd">
+        <h2>분석 결과 목록</h2>
+        <div class="ar-table-hd__mid">
+          <button class="ar-fav-toggle" id="btnFavOnly" type="button"><i data-lucide="star"></i>즐겨찾기만</button>
+          <div class="ar-tbl-search">
+            <input type="search" id="tblSearch" placeholder="결과명 검색">
+            <button type="button" id="btnTblSearch"><i data-lucide="search"></i></button>
+          </div>
+          <button class="btn btn--pri" id="btnRegister" type="button" style="height:36px;padding:0 16px;font-size:13px;display:inline-flex;align-items:center;gap:5px;"><i data-lucide="plus" style="width:14px;height:14px"></i>결과 등록</button>
+        </div>
+      </div>
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:36px"></th>
+            <th class="l" style="min-width:180px">결과명</th>
+            <th style="min-width:90px">분석 유형</th>
+            <th style="min-width:120px">적용 화면</th>
+            <th style="min-width:130px">기준 기간</th>
+            <th style="min-width:100px">연계 도구</th>
+            <th style="min-width:80px">상태</th>
+            <th style="min-width:100px">수정일</th>
+            <th style="min-width:60px">관리</th>
+          </tr>
+        </thead>
+        <tbody id="resultTableBody"></tbody>
+      </table>
+      <!-- 페이지네이션 -->
+      <div style="display:flex;align-items:center;justify-content:center;position:relative;padding:14px 20px 0;">
+        <span style="font:500 13px/1 var(--font-sans);color:var(--fg-3);position:absolute;left:20px">전체 <strong id="totalCount">24</strong>건</span>
+        <div class="ar-pagination" id="pagination"></div>
+        <div class="ar-per-page">
+          <select id="perPage">
+            <option value="10">10 / 페이지</option>
+            <option value="20">20 / 페이지</option>
+            <option value="50">50 / 페이지</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══ 드로어: 조건 상세 편집 / 결과 등록 ══ -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="분석 결과 편집">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k"><i data-lucide="file-text" class="gp-ico" style="width:15px;height:15px"></i><span id="dwMode">조건 상세 편집</span></div>
+      <h3 id="dwTitle">—</h3>
+    </div>
+    <button class="dw__x" id="dwClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="dw__info-banner">
+      <i data-lucide="info"></i>
+      <p id="dwBannerMsg">선택한 분석 결과의 조건 정보를 확인하고 수정할 수 있습니다.</p>
+    </div>
+
+    <div class="dw__field">
+      <div class="dw__field-lb">결과명 <span class="req">*</span></div>
+      <input type="text" id="fldName" placeholder="결과명을 입력하세요">
+    </div>
+    <div class="dw__field">
+      <div class="dw__field-lb">분석 유형</div>
+      <select id="fldType">
+        <option value="dashboard">대시보드</option>
+        <option value="compare">비교 분석</option>
+        <option value="trend">추이 분석</option>
+        <option value="spatial">공간 분석</option>
+        <option value="report">외부 리포트</option>
+      </select>
+    </div>
+    <div class="dw__field">
+      <div class="dw__field-lb">적용 화면</div>
+      <select id="fldScreen">
+        <option value="analysis-dash">분석 대시보드</option>
+        <option value="data-compare">데이터 비교 분석</option>
+        <option value="analysis-result">분석 결과 관리</option>
+        <option value="external">외부 리포트</option>
+      </select>
+    </div>
+    <div class="dw__field">
+      <div class="dw__field-lb">기준 기간</div>
+      <select id="fldPeriod">
+        <option value="1m">최근 1개월</option>
+        <option value="3m">최근 3개월</option>
+        <option value="q">분기</option>
+        <option value="y">연간</option>
+        <option value="custom">직접 설정</option>
+      </select>
+    </div>
+    <div class="dw__field">
+      <div class="dw__field-lb">연계 필드명</div>
+      <input type="text" id="fldLinkField" placeholder="예: 탄소저감량">
+    </div>
+    <div class="dw__field">
+      <div class="dw__field-lb">Tableau 파라미터</div>
+      <input type="text" id="fldTableauParam" placeholder="예: param_co2_reduction">
+    </div>
+    <div class="dw__field">
+      <div class="dw__field-lb">표시 순서</div>
+      <div class="spinbox">
+        <button class="spinbox__btn" id="spinDown" type="button">−</button>
+        <input type="number" id="fldOrder" value="1" min="1" max="99">
+        <button class="spinbox__btn" id="spinUp" type="button">+</button>
+      </div>
+    </div>
+    <div class="dw__field">
+      <div class="dw__field-lb">사용 여부</div>
+      <div class="toggle-wrap">
+        <label class="toggle">
+          <input type="checkbox" id="fldActive" checked>
+          <span class="toggle__track"></span>
+          <span class="toggle__thumb"></span>
+        </label>
+        <span class="toggle-label active" id="toggleLabel">사용 중</span>
+      </div>
+    </div>
+    <div class="dw__field">
+      <div class="dw__field-lb">설명</div>
+      <textarea id="fldDesc" placeholder="분석 결과에 대한 설명을 입력하세요"></textarea>
+    </div>
+  </div>
+  <div class="dw__ft-3">
+    <div class="dw__ft-row">
+      <button class="btn btn--line" id="btnPreview" type="button"><i data-lucide="eye" style="width:14px;height:14px"></i> 미리보기</button>
+      <button class="btn btn--line" id="btnHistory" type="button"><i data-lucide="history" style="width:14px;height:14px"></i> 변경 이력 보기</button>
+    </div>
+    <div class="dw__ft-row">
+      <button class="btn btn--line" id="btnFavToggle" type="button"><i data-lucide="star" style="width:14px;height:14px"></i> 즐겨찾기</button>
+      <button class="btn btn--line" id="btnShareUrl" type="button"><i data-lucide="link" style="width:14px;height:14px"></i> URL 복사</button>
+    </div>
+    <div class="dw__ft-row dw__ft-row--full" id="deactivateRow">
+      <button class="btn btn--line" id="btnDeactivate" type="button" style="color:var(--status-danger);border-color:var(--status-danger)"><i data-lucide="power-off" style="width:14px;height:14px"></i> 비활성화</button>
+    </div>
+    <div class="dw__ft-row">
+      <button class="btn btn--ghost" id="btnCancel" type="button">취소</button>
+      <button class="btn btn--pri" id="btnSave" type="button">저장</button>
+    </div>
+  </div>
+</aside>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'analysis.result-manage',
+  header: {
+    title: '분석 결과 관리',
+    desc: '저장된 분석 결과를 목록으로 확인하고, 필터 조건에 따라 조회·관리할 수 있습니다.',
+    actions: '<div class="hd-stat-bar"><div class="hd-stat">저장 결과 <b id="statSaved">24개</b></div><div class="hd-stat">활성 결과 <b id="statActive">18개</b></div><div class="hd-stat">외부 연계 <b id="statExternal">6개</b></div><div class="hd-stat">최근 수정 <b class="blue" id="statUpdated">15:07</b></div></div>'+'<button class="btn btn--line" id="btnRefresh" type="button" style="height:32px;padding:0 12px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="refresh-cw" style="width:12px;height:12px"></i>새로고침</button>',
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-analysis-result.js"></script>
+</body>
+</html>

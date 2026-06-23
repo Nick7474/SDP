@@ -378,7 +378,13 @@
   /* ════════════════════════════════════
      탭 전환
   ════════════════════════════════════ */
+  const TAB_META = {
+    api: { label: '데이터 현황',  desc: '제공 API와 데이터 접근 상태, 호출 현황, 오류 여부를 목록에서 확인합니다.' },
+    key: { label: '인증키 관리', desc: '데이터 접근에 사용되는 인증키를 발급·회수·관리합니다.' }
+  };
+
   function initTabs() {
+    if (window.gmsbSetTab) gmsbSetTab(TAB_META.api.label, TAB_META.api.desc);
     const tabs = document.querySelectorAll('.page-tab');
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
@@ -387,6 +393,7 @@
         const active = tab.dataset.tab;
         document.getElementById('tabApi').style.display = active === 'api' ? '' : 'none';
         document.getElementById('tabKey').style.display = active === 'key' ? '' : 'none';
+        if (TAB_META[active] && window.gmsbSetTab) gmsbSetTab(TAB_META[active].label, TAB_META[active].desc);
       });
     });
   }
@@ -454,23 +461,40 @@
     });
   }
 
-  function renderApiPagination(total) {
-    const pages = Math.ceil(total / API_PAGE_SIZE);
-    const pag = document.getElementById('apiPagination');
-    if (pages <= 1) { pag.innerHTML = `<span class="ds-pg-info">전체 ${total}건</span>`; return; }
-    let html = `<span class="ds-pg-info">전체 ${total}건</span>`;
-    html += `<button class="ds-pg-btn" id="apiPrev" ${apiPage === 1 ? 'disabled' : ''}><i data-lucide="chevron-left" style="width:14px;height:14px"></i></button>`;
-    for (let i = 1; i <= pages; i++) {
-      html += `<button class="ds-pg-btn ${i === apiPage ? 'on' : ''}" data-pg="${i}">${i}</button>`;
-    }
-    html += `<button class="ds-pg-btn" id="apiNext" ${apiPage === pages ? 'disabled' : ''}><i data-lucide="chevron-right" style="width:14px;height:14px"></i></button>`;
-    pag.innerHTML = html;
-    lucide.createIcons();
+  function buildPgBtns(page, pages, prefix) {
+    const MAX = 5;
+    let s = Math.max(1, page - Math.floor(MAX / 2));
+    let e = Math.min(pages, s + MAX - 1);
+    if (e - s < MAX - 1) s = Math.max(1, e - MAX + 1);
+    let b = `<button class="ds-pg-btn" id="${prefix}First" ${page===1?'disabled':''}>&laquo;</button>`;
+    b += `<button class="ds-pg-btn" id="${prefix}Prev" ${page===1?'disabled':''}>&lsaquo;</button>`;
+    if (s > 1) { b += `<button class="ds-pg-btn" data-pg="1">1</button>`; if (s > 2) b += `<span class="ds-pg-sep">…</span>`; }
+    for (let i = s; i <= e; i++) b += `<button class="ds-pg-btn ${i===page?'on':''}" data-pg="${i}">${i}</button>`;
+    if (e < pages) { if (e < pages-1) b += `<span class="ds-pg-sep">…</span>`; b += `<button class="ds-pg-btn" data-pg="${pages}">${pages}</button>`; }
+    b += `<button class="ds-pg-btn" id="${prefix}Next" ${page===pages?'disabled':''}>&rsaquo;</button>`;
+    b += `<button class="ds-pg-btn" id="${prefix}Last" ${page===pages?'disabled':''}>&raquo;</button>`;
+    return b;
+  }
+
+  function bindPgBtns(pag, pages, getPage, setPage) {
     pag.querySelectorAll('[data-pg]').forEach(btn => {
-      btn.addEventListener('click', () => { apiPage = +btn.dataset.pg; renderApiTable(); });
+      btn.addEventListener('click', () => { setPage(+btn.dataset.pg); });
     });
-    pag.querySelector('#apiPrev')?.addEventListener('click', () => { if (apiPage > 1) { apiPage--; renderApiTable(); } });
-    pag.querySelector('#apiNext')?.addEventListener('click', () => { if (apiPage < pages) { apiPage++; renderApiTable(); } });
+    pag.querySelector('[id$="First"]')?.addEventListener('click', () => { if (getPage() > 1) setPage(1); });
+    pag.querySelector('[id$="Prev"]')?.addEventListener('click',  () => { if (getPage() > 1) setPage(getPage() - 1); });
+    pag.querySelector('[id$="Next"]')?.addEventListener('click',  () => { if (getPage() < pages) setPage(getPage() + 1); });
+    pag.querySelector('[id$="Last"]')?.addEventListener('click',  () => { if (getPage() < pages) setPage(pages); });
+  }
+
+  function renderApiPagination(total) {
+    const pages = Math.ceil(total / API_PAGE_SIZE) || 1;
+    const pag = document.getElementById('apiPagination');
+    if (pages <= 1) {
+      pag.innerHTML = `<span class="ds-pg-info">전체 ${total}건</span><div></div><div></div>`;
+      return;
+    }
+    pag.innerHTML = `<span class="ds-pg-info">전체 ${total}건</span><div class="ds-pg-btns">${buildPgBtns(apiPage, pages, 'api')}</div><div></div>`;
+    bindPgBtns(pag, pages, () => apiPage, p => { apiPage = p; renderApiTable(); });
   }
 
   function renderApiLog() {
@@ -600,15 +624,31 @@
   let keyPage = 1;
   let currentKeyId = null;
 
+  function filteredKeys() {
+    const ds = document.getElementById('keyDataset')?.value || '';
+    const q = (document.getElementById('keySearch')?.value || '').toLowerCase().trim();
+    return KEYS.filter(k => {
+      if (keyFilters.status && k.status !== keyFilters.status) return false;
+      if (keyFilters.perm && k.perm !== keyFilters.perm) return false;
+      if (ds && k.dataset !== ds) return false;
+      if (q && !k.user.toLowerCase().includes(q) && !k.dept.toLowerCase().includes(q) && !k.dataset.toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }
+
   function renderKeyTable() {
+    const data = filteredKeys();
     const tbody = document.getElementById('keyTbody');
-    if (!KEYS.length) {
-      tbody.innerHTML = `<tr class="tbl__empty"><td colspan="12"><i data-lucide="inbox"></i>권한 데이터가 없습니다.</td></tr>`;
+    const countEl = document.getElementById('keyCount');
+    if (countEl) countEl.textContent = `전체 ${data.length}건`;
+    if (!data.length) {
+      tbody.innerHTML = `<tr class="tbl__empty"><td colspan="12"><i data-lucide="inbox"></i>조건에 맞는 권한이 없습니다.</td></tr>`;
       lucide.createIcons();
+      document.getElementById('keyPagination').innerHTML = '<span class="ds-pg-info">전체 0건</span><div></div><div></div>';
       return;
     }
     const start = (keyPage - 1) * KEY_PAGE_SIZE;
-    const slice = KEYS.slice(start, start + KEY_PAGE_SIZE);
+    const slice = data.slice(start, start + KEY_PAGE_SIZE);
     tbody.innerHTML = slice.map(k => {
       const dday = calcDDay(k.end);
       const maskedKey = k.apiKey
@@ -631,13 +671,15 @@
           <td style="font-size:12px;color:var(--fg-3)">${k.grantedBy}</td>
           <td>${keyStatusBadge(k.status)}</td>
           <td class="ac-reject-cell">${k.rejectReason || '<span style="color:var(--fg-disabled)">—</span>'}</td>
-          <td style="text-align:center">
+          <td style="text-align:center;white-space:nowrap">
             <button class="tbtn tbtn--sm ac-key-btn" data-kid="${k.id}" type="button">보기</button>
+            <button class="tbtn tbtn--sm ac-key-extend-btn" data-kid="${k.id}" type="button" style="margin-left:4px;color:var(--gp-primary)">기간연장</button>
+            <button class="tbtn tbtn--sm ac-key-revoke-btn" data-kid="${k.id}" type="button" style="margin-left:4px;color:var(--status-danger)"${k.status === 'expired' ? ' disabled' : ''}>회수</button>
           </td>
         </tr>`;
     }).join('');
     lucide.createIcons();
-    renderKeyPagination(KEYS.length);
+    renderKeyPagination(data.length);
 
     tbody.querySelectorAll('tr[data-kid]').forEach(tr => {
       tr.style.cursor = 'pointer';
@@ -645,6 +687,18 @@
       tr.querySelector('.ac-key-btn').addEventListener('click', e => {
         e.stopPropagation();
         openKeyDrawer(tr.dataset.kid);
+      });
+    });
+    tbody.querySelectorAll('.ac-key-extend-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        openExtendModal(btn.dataset.kid);
+      });
+    });
+    tbody.querySelectorAll('.ac-key-revoke-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        openRevokeModal(btn.dataset.kid);
       });
     });
     tbody.querySelectorAll('.ac-key-copy').forEach(btn => {
@@ -658,22 +712,14 @@
   }
 
   function renderKeyPagination(total) {
-    const pages = Math.ceil(total / KEY_PAGE_SIZE);
+    const pages = Math.ceil(total / KEY_PAGE_SIZE) || 1;
     const pag = document.getElementById('keyPagination');
-    if (pages <= 1) { pag.innerHTML = `<span class="ds-pg-info">전체 ${total}건</span>`; return; }
-    let html = `<span class="ds-pg-info">전체 ${total}건</span>`;
-    html += `<button class="ds-pg-btn" id="keyPrev" ${keyPage === 1 ? 'disabled' : ''}><i data-lucide="chevron-left" style="width:14px;height:14px"></i></button>`;
-    for (let i = 1; i <= pages; i++) {
-      html += `<button class="ds-pg-btn ${i === keyPage ? 'on' : ''}" data-pg="${i}">${i}</button>`;
+    if (pages <= 1) {
+      pag.innerHTML = `<span class="ds-pg-info">전체 ${total}건</span><div></div><div></div>`;
+      return;
     }
-    html += `<button class="ds-pg-btn" id="keyNext" ${keyPage === pages ? 'disabled' : ''}><i data-lucide="chevron-right" style="width:14px;height:14px"></i></button>`;
-    pag.innerHTML = html;
-    lucide.createIcons();
-    pag.querySelectorAll('[data-pg]').forEach(btn => {
-      btn.addEventListener('click', () => { keyPage = +btn.dataset.pg; renderKeyTable(); });
-    });
-    pag.querySelector('#keyPrev')?.addEventListener('click', () => { if (keyPage > 1) { keyPage--; renderKeyTable(); } });
-    pag.querySelector('#keyNext')?.addEventListener('click', () => { if (keyPage < pages) { keyPage++; renderKeyTable(); } });
+    pag.innerHTML = `<span class="ds-pg-info">전체 ${total}건</span><div class="ds-pg-btns">${buildPgBtns(keyPage, pages, 'key')}</div><div></div>`;
+    bindPgBtns(pag, pages, () => keyPage, p => { keyPage = p; renderKeyTable(); });
   }
 
   /* ════════════════════════════════════
@@ -782,27 +828,249 @@
       }
       closeDrawer();
     });
+    document.getElementById('kdExtendBtn')?.addEventListener('click', () => {
+      if (currentKeyId) openExtendModal(currentKeyId);
+    });
+    document.getElementById('kdRevokeBtn')?.addEventListener('click', () => {
+      if (currentKeyId) openRevokeModal(currentKeyId);
+    });
+    document.getElementById('adDocBtn')?.addEventListener('click', () => {
+      showToast('API 명세 문서를 새 창에서 엽니다.');
+      window.open('about:blank', '_blank');
+    });
+    document.getElementById('adKeyBtn')?.addEventListener('click', () => {
+      closeDrawer();
+      const tabs = document.querySelectorAll('.page-tab');
+      tabs.forEach(t => t.classList.remove('on'));
+      const keyTab = document.querySelector('.page-tab[data-tab="key"]');
+      if (keyTab) keyTab.classList.add('on');
+      document.getElementById('tabApi').style.display = 'none';
+      document.getElementById('tabKey').style.display = '';
+      window.scrollTo(0, 0);
+      showToast('인증키 관리 탭으로 이동했습니다.');
+    });
+    document.getElementById('adLogBtn')?.addEventListener('click', () => {
+      showToast('호출 로그 상세 조회 기능이 준비 중입니다.');
+    });
     document.getElementById('scrim').addEventListener('click', closeDrawer);
   }
 
   /* ════════════════════════════════════
-     권한 부여 버튼 + 사용목적 템플릿
+     인증키 관리 수평 필터
   ════════════════════════════════════ */
-  function initGrantBtn() {
-    document.getElementById('grantBtn')?.addEventListener('click', () => {
-      showToast('권한이 부여되었습니다.');
+  let keyFilters = { status: '', perm: '' };
+
+  function initKeyFilter() {
+    /* 칩 그룹 토글 */
+    ['keyStatusGroup', 'keyPermGroup'].forEach(groupId => {
+      const group = document.getElementById(groupId);
+      if (!group) return;
+      const field = groupId === 'keyStatusGroup' ? 'status' : 'perm';
+      group.querySelectorAll('.key-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          group.querySelectorAll('.key-chip').forEach(c => c.classList.remove('on'));
+          chip.classList.add('on');
+          keyFilters[field] = chip.dataset.val;
+        });
+      });
     });
-    document.querySelector('.ac-user-chip__del')?.addEventListener('click', e => {
-      e.currentTarget.closest('.ac-user-chip').remove();
+
+    /* 실시간 검색 */
+    document.getElementById('keySearch')?.addEventListener('input', () => { keyPage = 1; renderKeyTable(); });
+    document.getElementById('keyDataset')?.addEventListener('change', () => { keyPage = 1; renderKeyTable(); });
+
+    /* 조회 / 초기화 */
+    document.getElementById('btnKeySearch')?.addEventListener('click', () => {
+      keyPage = 1; renderKeyTable();
+    });
+    document.getElementById('btnKeyReset')?.addEventListener('click', () => {
+      keyFilters = { status: '', perm: '' };
+      document.querySelectorAll('#keyStatusGroup .key-chip, #keyPermGroup .key-chip').forEach(c => c.classList.remove('on'));
+      document.querySelector('#keyStatusGroup .key-chip[data-val=""]')?.classList.add('on');
+      document.querySelector('#keyPermGroup .key-chip[data-val=""]')?.classList.add('on');
+      const ds = document.getElementById('keyDataset');
+      if (ds) ds.value = '';
+      const ks = document.getElementById('keySearch');
+      if (ks) ks.value = '';
+      keyPage = 1; renderKeyTable();
     });
   }
 
-  function initTplChips() {
+  /* ════════════════════════════════════
+     권한 부여 드로어
+  ════════════════════════════════════ */
+  function initGrantDrawer() {
+    const GRANT_USERS = [
+      { name: '이OO', dept: '기후환경과' },
+      { name: '박OO', dept: '교통정책과' },
+      { name: '김OO', dept: '안전총괄과' },
+      { name: '최OO', dept: '스마트도시과' },
+      { name: '정OO', dept: '환경정책과' },
+      { name: '강OO', dept: '기후에너지과' },
+      { name: '조OO', dept: '보건행정과' },
+      { name: '한OO', dept: '복지정책과' },
+      { name: '임OO', dept: '세정과' },
+      { name: '유OO', dept: '상수도과' }
+    ];
+    let selectedGrantUser = null;
+
+    function renderGrantUserChip(u) {
+      const wrap = document.getElementById('grantUserChip');
+      if (!wrap) return;
+      selectedGrantUser = u;
+      wrap.innerHTML = `<div class="ac-user-chip">
+        <span class="ac-user-chip__avatar">${u.name[0]}</span>
+        <span class="ac-user-chip__name">${u.name}</span>
+        <span class="ac-user-chip__dept">${u.dept}</span>
+        <button class="ac-user-chip__del" type="button">×</button>
+      </div>`;
+      wrap.querySelector('.ac-user-chip__del')?.addEventListener('click', () => {
+        wrap.innerHTML = '';
+        selectedGrantUser = null;
+      });
+    }
+
+    /* 사용자 검색 */
+    const userSearchInput = document.getElementById('grantUserSearch');
+    if (userSearchInput) {
+      userSearchInput.addEventListener('input', () => {
+        const q = userSearchInput.value.toLowerCase().trim();
+        if (!q) return;
+        const found = GRANT_USERS.find(u =>
+          u.name.toLowerCase().includes(q) || u.dept.toLowerCase().includes(q)
+        );
+        if (found) renderGrantUserChip(found);
+      });
+    }
+
+    document.getElementById('btnGrantOpen')?.addEventListener('click', () => openDrawer('grantDrawer'));
+    document.getElementById('grantDrawerClose')?.addEventListener('click', closeDrawer);
+
+    /* 권한 부여 실행 */
+    document.getElementById('grantBtn')?.addEventListener('click', () => {
+      const dataset = document.getElementById('grantDataset')?.value || '';
+      const perm    = document.querySelector('input[name="grantType"]:checked')?.value || 'read';
+      const dateInputs = document.querySelectorAll('.ac-date-input');
+      const startDate  = dateInputs[0]?.value || new Date().toISOString().slice(0, 10);
+      const endDate    = dateInputs[1]?.value || '';
+      const memo       = document.getElementById('grantMemo')?.value?.trim() || '';
+      const u          = selectedGrantUser || GRANT_USERS[0];
+      const permScopeMap = { both: 'API + 다운로드', read: 'API 열람', download: '다운로드' };
+      const newId = 'KEY_N' + String(Date.now()).slice(-4);
+
+      KEYS.unshift({
+        id: newId, user: u.name, dept: u.dept,
+        dataset, perm,
+        start: startDate, end: endDate,
+        granted: new Date().toISOString().slice(0, 10),
+        grantedBy: '관리자',
+        status: 'active',
+        apiKey: 'GM-API-' + Math.random().toString(36).slice(2,6).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase(),
+        rejectReason: null,
+        purpose: memo || '데이터 접근 권한 부여',
+        reason: memo,
+        scope: permScopeMap[perm] || 'API 열람', fmt: 'JSON',
+        log: [{ ts: nowStr(), msg: '권한 부여 처리', who: '관리자', type: 'ok' }]
+      });
+
+      keyPage = 1;
+      renderKeyTable();
+      showToast(`${u.name}님에게 권한이 부여되었습니다.`);
+      closeDrawer();
+
+      /* 초기화 */
+      if (userSearchInput) userSearchInput.value = '';
+      const chipWrap = document.getElementById('grantUserChip');
+      if (chipWrap) chipWrap.innerHTML = '';
+      selectedGrantUser = null;
+      const memoEl = document.getElementById('grantMemo');
+      if (memoEl) memoEl.value = '';
+    });
+
+    /* 메모 템플릿 칩 */
     const memo = document.getElementById('grantMemo');
     document.querySelectorAll('.ac-tpl-chip').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (memo) memo.value = btn.dataset.tpl;
-      });
+      btn.addEventListener('click', () => { if (memo) memo.value = btn.dataset.tpl; });
+    });
+  }
+
+  function initTplChips() { /* initGrantDrawer 내부로 통합 — 호환 유지용 noop */ }
+
+  /* ════════════════════════════════════
+     기간 연장 모달
+  ════════════════════════════════════ */
+  let extendKeyId = null;
+
+  function openExtendModal(id) {
+    const k = KEYS.find(x => x.id === id);
+    if (!k) return;
+    extendKeyId = id;
+    const endEl = document.getElementById('extendCurrentEnd');
+    const newEl = document.getElementById('extendNewEnd');
+    if (endEl) endEl.value = k.end;
+    if (newEl) { newEl.value = ''; newEl.min = k.end; }
+    const overlay = document.getElementById('extendOverlay');
+    if (overlay) { overlay.style.display = 'flex'; lucide.createIcons(); }
+  }
+
+  function closeExtendModal() {
+    const overlay = document.getElementById('extendOverlay');
+    if (overlay) overlay.style.display = 'none';
+    extendKeyId = null;
+  }
+
+  function initExtendModal() {
+    document.getElementById('extendCloseBtn')?.addEventListener('click', closeExtendModal);
+    document.getElementById('extendCancelBtn')?.addEventListener('click', closeExtendModal);
+    document.getElementById('extendBg')?.addEventListener('click', closeExtendModal);
+    document.getElementById('extendSaveBtn')?.addEventListener('click', () => {
+      const newEnd = document.getElementById('extendNewEnd')?.value;
+      if (!newEnd) { showToast('새 종료일을 선택해 주세요.'); return; }
+      const k = KEYS.find(x => x.id === extendKeyId);
+      if (!k) return;
+      if (newEnd <= k.end) { showToast('새 종료일은 현재 종료일 이후여야 합니다.'); return; }
+      k.end = newEnd;
+      k.log.push({ ts: nowStr(), msg: `기간 연장: ${newEnd}까지`, who: '관리자', type: 'ok' });
+      renderKeyTable();
+      closeExtendModal();
+      showToast(`유효 기간이 ${newEnd}까지 연장되었습니다.`);
+    });
+  }
+
+  /* ════════════════════════════════════
+     권한 회수 모달
+  ════════════════════════════════════ */
+  let revokeKeyId = null;
+
+  function openRevokeModal(id) {
+    const k = KEYS.find(x => x.id === id);
+    if (!k) return;
+    revokeKeyId = id;
+    const msg = document.getElementById('revokeMsg');
+    if (msg) msg.innerHTML = `<strong>${k.user}</strong>(${k.dept})님의 <strong>${k.dataset}</strong> 접근 권한을 즉시 회수합니다.<br>이 작업은 되돌릴 수 없습니다.`;
+    const overlay = document.getElementById('revokeOverlay');
+    if (overlay) { overlay.style.display = 'flex'; lucide.createIcons(); }
+  }
+
+  function closeRevokeModal() {
+    const overlay = document.getElementById('revokeOverlay');
+    if (overlay) overlay.style.display = 'none';
+    revokeKeyId = null;
+  }
+
+  function initRevokeModal() {
+    document.getElementById('revokeCancelBtn')?.addEventListener('click', closeRevokeModal);
+    document.getElementById('revokeBg')?.addEventListener('click', closeRevokeModal);
+    document.getElementById('revokeConfirmBtn')?.addEventListener('click', () => {
+      const k = KEYS.find(x => x.id === revokeKeyId);
+      if (!k) return;
+      k.status = 'expired';
+      k.rejectReason = '관리자 권한 회수';
+      k.log.push({ ts: nowStr(), msg: '권한 회수 처리', who: '관리자', type: 'rej' });
+      renderKeyTable();
+      closeRevokeModal();
+      closeDrawer();
+      showToast('권한이 즉시 회수되었습니다.');
     });
   }
 
@@ -836,9 +1104,12 @@
     renderApiTable();
     renderApiLog();
     renderKeyTable();
+    initKeyFilter();
     initDrawers();
-    initGrantBtn();
+    initGrantDrawer();
     initTplChips();
+    initExtendModal();
+    initRevokeModal();
     initRefreshBtn();
   }
 

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시스템 설정 관리 · 광명 스마트데이터보드</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/shell.css">
+<link rel="stylesheet" href="../assets/css/page-shared.css">
+<link rel="stylesheet" href="../assets/css/page-system-prefs.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+<div id="gmsb-topbar"></div>
+
+<div class="shell">
+  <div id="gmsb-sidebar"></div>
+
+  <main class="page">
+    <div id="gmsb-header"></div>
+
+    <!-- 3열 레이아웃 -->
+    <div class="sp-layout">
+
+      <!-- 좌: 설정 메뉴 -->
+      <aside class="sp-menu">
+        <button class="sp-menu-item on" data-tab="env" type="button">
+          <i data-lucide="settings"></i><span>시스템 환경 설정</span>
+        </button>
+        <button class="sp-menu-item" data-tab="policy" type="button">
+          <i data-lucide="file-text"></i><span>운영 정책 설정</span>
+        </button>
+        <button class="sp-menu-item" data-tab="link" type="button">
+          <i data-lucide="link"></i><span>연계 시스템 설정</span>
+        </button>
+        <button class="sp-menu-item" data-tab="sso" type="button">
+          <i data-lucide="user-check"></i><span>SSO 연동 설정</span>
+        </button>
+        <button class="sp-menu-item" data-tab="log" type="button">
+          <i data-lucide="archive"></i><span>로그 보관 설정</span>
+        </button>
+      </aside>
+
+      <!-- 중: 설정 폼 콘텐츠 -->
+      <div class="sp-content panel">
+
+        <!-- ── Tab 1: 시스템 환경 설정 ── -->
+        <div id="tabEnv" class="sp-tab-content">
+          <h3 class="sp-content-title">시스템 환경 설정</h3>
+          <div class="sp-form-grid">
+            <!-- 왼쪽 열 -->
+            <div class="sp-form-col">
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">시스템명</span>
+                <input type="text" class="sp-form-input" value="광명 스마트데이터보드">
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">운영 모드</span>
+                <select class="sp-form-select">
+                  <option selected>운영</option>
+                  <option>개발</option>
+                  <option>테스트</option>
+                </select>
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">기준 시간대</span>
+                <select class="sp-form-select">
+                  <option selected>Asia/Seoul (UTC+09:00)</option>
+                  <option>UTC+00:00</option>
+                  <option>America/New_York (UTC-05:00)</option>
+                </select>
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">기본 갱신 주기</span>
+                <select class="sp-form-select">
+                  <option selected>1시간</option>
+                  <option>30분</option>
+                  <option>15분</option>
+                  <option>실시간</option>
+                </select>
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">기본 시작 페이지</span>
+                <select class="sp-form-select">
+                  <option selected>대시보드</option>
+                  <option>운영 모니터링</option>
+                  <option>GIS 도시 데이터</option>
+                </select>
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">대시보드 자동 새로고침</span>
+                <div class="sp-toggle-row">
+                  <label class="sp-toggle">
+                    <input type="checkbox" checked class="sp-tgl-input">
+                    <span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span>
+                  </label>
+                  <span class="sp-toggle-text">사용</span>
+                </div>
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">장애 알림 사용</span>
+                <div class="sp-toggle-row">
+                  <label class="sp-toggle">
+                    <input type="checkbox" checked class="sp-tgl-input">
+                    <span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span>
+                  </label>
+                  <span class="sp-toggle-text">사용</span>
+                </div>
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">공지 노출 사용 여부</span>
+                <div class="sp-toggle-row">
+                  <label class="sp-toggle">
+                    <input type="checkbox" checked class="sp-tgl-input">
+                    <span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span>
+                  </label>
+                  <span class="sp-toggle-text">사용</span>
+                </div>
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">데이터 지연 기준</span>
+                <select class="sp-form-select">
+                  <option selected>15분</option>
+                  <option>30분</option>
+                  <option>1시간</option>
+                </select>
+              </div>
+            </div>
+            <!-- 오른쪽 열 -->
+            <div class="sp-form-col">
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">세션 유지 시간</span>
+                <select class="sp-form-select">
+                  <option selected>30분</option>
+                  <option>1시간</option>
+                  <option>2시간</option>
+                  <option>4시간</option>
+                </select>
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">기본 지도 중심</span>
+                <select class="sp-form-select">
+                  <option selected>광명시 전체</option>
+                  <option>광명권역</option>
+                  <option>철산역권</option>
+                  <option>하안권역</option>
+                </select>
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">기본 언어</span>
+                <select class="sp-form-select">
+                  <option selected>한국어</option>
+                  <option>English</option>
+                </select>
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">날짜 표시 형식</span>
+                <select class="sp-form-select">
+                  <option selected>YYYY-MM-DD</option>
+                  <option>YY.MM.DD</option>
+                  <option>MM/DD/YYYY</option>
+                </select>
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">시간 표시 형식</span>
+                <select class="sp-form-select">
+                  <option selected>24시간 (HH:mm)</option>
+                  <option>12시간 (hh:mm AM/PM)</option>
+                </select>
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">숫자 표시 형식</span>
+                <select class="sp-form-select">
+                  <option selected>1,234.56</option>
+                  <option>1234.56</option>
+                  <option>1.234,56</option>
+                </select>
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">시간대 표시</span>
+                <select class="sp-form-select">
+                  <option selected>표시 (예: KST)</option>
+                  <option>숨김</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Tab 2: 운영 정책 설정 ── -->
+        <div id="tabPolicy" class="sp-tab-content" style="display:none">
+          <h3 class="sp-content-title">운영 정책 설정</h3>
+
+          <div class="sp-policy-sec">
+            <div class="sp-policy-sec__title"><i data-lucide="lock"></i>비밀번호 정책</div>
+            <div class="sp-form-grid">
+              <div class="sp-form-col">
+                <div class="sp-form-field">
+                  <span class="sp-form-lbl">비밀번호 최소 길이</span>
+                  <select class="sp-form-select"><option selected>8자</option><option>10자</option><option>12자</option></select>
+                </div>
+                <div class="sp-form-field">
+                  <span class="sp-form-lbl">복잡도 요구</span>
+                  <div class="sp-toggle-row">
+                    <label class="sp-toggle"><input type="checkbox" checked class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label>
+                    <span class="sp-toggle-text">대/소문자+숫자+특수문자</span>
+                  </div>
+                </div>
+                <div class="sp-form-field">
+                  <span class="sp-form-lbl">비밀번호 만료 주기</span>
+                  <select class="sp-form-select"><option selected>90일</option><option>180일</option><option>없음</option></select>
+                </div>
+                <div class="sp-form-field">
+                  <span class="sp-form-lbl">로그인 실패 잠금</span>
+                  <select class="sp-form-select"><option selected>5회</option><option>3회</option><option>10회</option></select>
+                </div>
+              </div>
+              <div class="sp-form-col">
+                <div class="sp-form-field">
+                  <span class="sp-form-lbl">동시 로그인 허용</span>
+                  <div class="sp-toggle-row">
+                    <label class="sp-toggle"><input type="checkbox" checked class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label>
+                    <span class="sp-toggle-text">사용</span>
+                  </div>
+                </div>
+                <div class="sp-form-field">
+                  <span class="sp-form-lbl">세션 만료 자동 로그아웃</span>
+                  <div class="sp-toggle-row">
+                    <label class="sp-toggle"><input type="checkbox" checked class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label>
+                    <span class="sp-toggle-text">사용</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sp-policy-sec">
+            <div class="sp-policy-sec__title"><i data-lucide="database"></i>데이터 정책</div>
+            <div class="sp-form-grid">
+              <div class="sp-form-col">
+                <div class="sp-form-field">
+                  <span class="sp-form-lbl">개인정보 마스킹</span>
+                  <div class="sp-toggle-row">
+                    <label class="sp-toggle"><input type="checkbox" checked class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label>
+                    <span class="sp-toggle-text">사용</span>
+                  </div>
+                </div>
+                <div class="sp-form-field">
+                  <span class="sp-form-lbl">다운로드 이력 저장</span>
+                  <div class="sp-toggle-row">
+                    <label class="sp-toggle"><input type="checkbox" checked class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label>
+                    <span class="sp-toggle-text">사용</span>
+                  </div>
+                </div>
+              </div>
+              <div class="sp-form-col">
+                <div class="sp-form-field">
+                  <span class="sp-form-lbl">다운로드 일일 한도</span>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <input type="number" class="sp-form-input" value="50" style="width:100px">
+                    <span style="font:500 14px/1 var(--font-sans);color:var(--fg-3)">건</span>
+                  </div>
+                </div>
+                <div class="sp-form-field">
+                  <span class="sp-form-lbl">API 호출 한도</span>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <input type="number" class="sp-form-input" value="1000" style="width:100px">
+                    <span style="font:500 14px/1 var(--font-sans);color:var(--fg-3)">회/일</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Tab 3: 연계 시스템 설정 ── -->
+        <div id="tabLink" class="sp-tab-content" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <h3 class="sp-content-title" style="margin:0">연계 시스템 설정</h3>
+            <button class="btn btn--pri" id="btnAddLink" type="button" style="height:36px;padding:0 14px;font-size:13px;display:inline-flex;align-items:center;gap:6px"><i data-lucide="plus" style="width:14px;height:14px"></i>연계 시스템 추가</button>
+          </div>
+          <div style="overflow:hidden;border-radius:var(--radius-md);border:1px solid var(--border-1)">
+            <table class="tbl sp-link-tbl">
+              <thead>
+                <tr>
+                  <th class="l">시스템명</th>
+                  <th>유형</th>
+                  <th class="l">Endpoint</th>
+                  <th>인증 방식</th>
+                  <th>갱신 주기</th>
+                  <th>상태</th>
+                  <th>최근 연결</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
+              <tbody id="linkTbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── Tab 4: SSO 연동 설정 ── -->
+        <div id="tabSso" class="sp-tab-content" style="display:none">
+          <h3 class="sp-content-title">SSO 연동 설정</h3>
+          <div class="sp-sso-provider">
+            <span class="sp-form-lbl">SSO 제공자</span>
+            <div class="sp-radio-group">
+              <label class="sp-radio"><input type="radio" name="ssoProvider" value="gwangmyeong" checked>광명시 SSO</label>
+              <label class="sp-radio"><input type="radio" name="ssoProvider" value="ldap">LDAP</label>
+              <label class="sp-radio"><input type="radio" name="ssoProvider" value="oauth2">OAuth2</label>
+            </div>
+          </div>
+          <div class="sp-form-grid">
+            <div class="sp-form-col">
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">연동 URL</span>
+                <input type="url" class="sp-form-input" value="https://sso.gwangmyeong.go.kr/auth">
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">클라이언트 ID</span>
+                <input type="text" class="sp-form-input" value="gmsb-dashboard-client">
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">클라이언트 시크릿</span>
+                <div class="sp-pw-field">
+                  <input type="password" class="sp-form-input" value="••••••••••••••••" id="ssoSecret">
+                  <button class="sp-pw-eye" type="button"><i data-lucide="eye"></i></button>
+                </div>
+              </div>
+            </div>
+            <div class="sp-form-col">
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">콜백 URL</span>
+                <input type="url" class="sp-form-input" value="https://gmsb.gwangmyeong.go.kr/auth/callback" readonly style="background:var(--surface-inset);color:var(--fg-3)">
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">로그아웃 URL</span>
+                <input type="url" class="sp-form-input" value="https://gmsb.gwangmyeong.go.kr/auth/logout">
+              </div>
+              <div class="sp-form-field">
+                <span class="sp-form-lbl">자동 계정 생성</span>
+                <div class="sp-toggle-row">
+                  <label class="sp-toggle"><input type="checkbox" class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label>
+                  <span class="sp-toggle-text">미사용</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn--line" id="ssoTestBtn" style="margin-top:8px">
+            <i data-lucide="plug" class="gp-ico"></i>연결 테스트
+          </button>
+        </div>
+
+        <!-- ── Tab 5: 로그 보관 설정 ── -->
+        <div id="tabLog" class="sp-tab-content" style="display:none">
+          <h3 class="sp-content-title">로그 보관 설정</h3>
+          <div class="sp-log-storage">
+            <div class="sp-log-storage__hd">
+              <span class="sp-log-storage__lbl">스토리지 사용 현황</span>
+              <span class="sp-log-storage__val">9.6 GB / 50 GB (19.2%)</span>
+            </div>
+            <div class="sp-log-storage__bar">
+              <div class="sp-log-storage__fill" style="width:19.2%"></div>
+            </div>
+            <div class="sp-log-storage__legend">
+              <span class="sp-log-dot sp-log-dot--access"></span>접속 로그 2.3GB
+              <span class="sp-log-dot sp-log-dot--api"></span>API 호출 5.1GB
+              <span class="sp-log-dot sp-log-dot--data"></span>데이터 변경 1.8GB
+              <span class="sp-log-dot sp-log-dot--err"></span>오류 로그 0.4GB
+            </div>
+          </div>
+          <div style="overflow:hidden;border-radius:var(--radius-md);border:1px solid var(--border-1);margin-top:20px">
+            <table class="tbl sp-log-tbl">
+              <thead>
+                <tr>
+                  <th class="l">로그 유형</th>
+                  <th>보관 기간</th>
+                  <th>자동 삭제</th>
+                  <th>압축 저장</th>
+                  <th>현재 크기</th>
+                  <th>마지막 정리</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="l">접속 로그</td>
+                  <td><select class="sp-tbl-select"><option>90일</option><option>180일</option><option>365일</option></select></td>
+                  <td><label class="sp-toggle sp-toggle--sm"><input type="checkbox" checked class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label></td>
+                  <td><label class="sp-toggle sp-toggle--sm"><input type="checkbox" checked class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label></td>
+                  <td style="font-weight:600">2.3 GB</td>
+                  <td style="font-size:13px;color:var(--fg-3)">2026.06.01</td>
+                </tr>
+                <tr>
+                  <td class="l">API 호출 로그</td>
+                  <td><select class="sp-tbl-select"><option>90일</option><option selected>180일</option><option>365일</option></select></td>
+                  <td><label class="sp-toggle sp-toggle--sm"><input type="checkbox" checked class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label></td>
+                  <td><label class="sp-toggle sp-toggle--sm"><input type="checkbox" class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label></td>
+                  <td style="font-weight:600">5.1 GB</td>
+                  <td style="font-size:13px;color:var(--fg-3)">2026.05.15</td>
+                </tr>
+                <tr>
+                  <td class="l">데이터 변경 이력</td>
+                  <td><select class="sp-tbl-select"><option>90일</option><option>180일</option><option selected>365일</option></select></td>
+                  <td><label class="sp-toggle sp-toggle--sm"><input type="checkbox" checked class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label></td>
+                  <td><label class="sp-toggle sp-toggle--sm"><input type="checkbox" checked class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label></td>
+                  <td style="font-weight:600">1.8 GB</td>
+                  <td style="font-size:13px;color:var(--fg-3)">2026.06.01</td>
+                </tr>
+                <tr>
+                  <td class="l">오류 로그</td>
+                  <td><select class="sp-tbl-select"><option selected>90일</option><option>180일</option><option>365일</option></select></td>
+                  <td><label class="sp-toggle sp-toggle--sm"><input type="checkbox" checked class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label></td>
+                  <td><label class="sp-toggle sp-toggle--sm"><input type="checkbox" class="sp-tgl-input"><span class="sp-toggle__track"><span class="sp-toggle__thumb"></span></span></label></td>
+                  <td style="font-weight:600">0.4 GB</td>
+                  <td style="font-size:13px;color:var(--fg-3)">2026.06.04</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 하단 액션 바 -->
+        <div class="sp-action-bar">
+          <div class="sp-action-left">
+            <span class="sp-action-hint" id="spHint" style="font:400 13px/1 var(--font-sans);color:var(--fg-4)"></span>
+          </div>
+          <div class="sp-action-right">
+            <button class="btn btn--pri" id="spSaveBtn">저장</button>
+            <button class="btn btn--line" id="spResetBtn">초기화</button>
+          </div>
+        </div>
+
+      </div><!-- /sp-content -->
+
+      <!-- 우: 설정 안내 -->
+      <div class="sp-guide">
+        <div class="sp-guide__title"><i data-lucide="info"></i>설정 안내</div>
+        <ul class="sp-guide__list" id="guideList"></ul>
+      </div>
+
+    </div><!-- /sp-layout -->
+
+  </main>
+</div>
+
+<!-- 연계 시스템 추가 모달 -->
+<div class="sp-modal-scrim" id="spModalScrim" style="display:none"></div>
+<div class="sp-modal" id="spLinkModal" style="display:none" role="dialog" aria-modal="true" aria-label="연계 시스템 추가">
+  <div class="sp-modal__hd">
+    <h3>연계 시스템 추가</h3>
+    <button class="dw__x" id="spLinkModalClose" type="button" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="sp-modal__bd">
+    <div class="sp-form-grid">
+      <div class="sp-form-col">
+        <div class="sp-form-field"><span class="sp-form-lbl">시스템명 <em style="color:var(--status-danger)">*</em></span><input type="text" class="sp-form-input" id="lnkName" placeholder="예: 신규 API 시스템"></div>
+        <div class="sp-form-field"><span class="sp-form-lbl">유형 <em style="color:var(--status-danger)">*</em></span>
+          <select class="sp-form-select" id="lnkType"><option value="API">API</option><option value="DB">DB</option><option value="File">File</option><option value="Sensor">Sensor</option><option value="Batch">Batch</option></select>
+        </div>
+        <div class="sp-form-field"><span class="sp-form-lbl">Endpoint <em style="color:var(--status-danger)">*</em></span><input type="text" class="sp-form-input" id="lnkEp" placeholder="/api/v1/..."></div>
+        <div class="sp-form-field"><span class="sp-form-lbl">인증 방식</span>
+          <select class="sp-form-select" id="lnkAuth"><option>API Key</option><option>OAuth2</option><option>SSH Key</option><option>DB 인증</option><option>내부</option></select>
+        </div>
+      </div>
+      <div class="sp-form-col">
+        <div class="sp-form-field"><span class="sp-form-lbl">갱신 주기</span>
+          <select class="sp-form-select" id="lnkCycle"><option>실시간</option><option>5분</option><option>10분</option><option>1시간</option><option>일배치</option><option>월간</option><option>수시</option></select>
+        </div>
+        <div class="sp-form-field"><span class="sp-form-lbl">담당 부서</span><input type="text" class="sp-form-input" id="lnkDept" placeholder="예: 스마트도시과"></div>
+        <div class="sp-form-field"><span class="sp-form-lbl">비고</span><input type="text" class="sp-form-input" id="lnkNote" placeholder="추가 설명 (선택)"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sp-modal__ft">
+    <button class="btn btn--line" id="spLinkModalCancel" type="button">취소</button>
+    <button class="btn btn--pri" id="spLinkModalSave" type="button">추가</button>
+  </div>
+</div>
+
+<script>
+window.GMSB_BASE = '../';
+window.GMSB_PAGE = {
+  active: 'system.prefs',
+  header: {
+    title: '시스템 설정 관리',
+    desc: '광명 스마트데이터보드의 운영환경, 정책, 연계 설정 등 시스템 전반의 설정을 관리합니다.',
+    actions: '<div class="hd-stat-bar"><div class="hd-stat">운영 상태 <b class="green">● 정상</b></div><div class="hd-stat">연계 시스템 <b>12개</b></div><div class="hd-stat">저장 정책 <b>180일</b></div><div class="hd-stat">최근 변경 <b class="blue">15:07</b></div></div>'+'<button class="btn btn--line" id="btnRefresh" type="button" style="height:32px;padding:0 12px;font-size:13px;display:inline-flex;align-items:center;gap:5px"><i data-lucide="refresh-cw" style="width:12px;height:12px"></i>새로고침</button>'
+  }
+};
+</script>
+<script src="../assets/js/nav.config.js"></script>
+<script src="../assets/js/shell.js"></script>
+<script src="../assets/js/page-system-prefs.js"></script>
+</body>
+</html>

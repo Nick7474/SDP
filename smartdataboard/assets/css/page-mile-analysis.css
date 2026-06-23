@@ -1,0 +1,126 @@
+/* =====================================================================
+   광명 스마트데이터보드 · 마일 지표 분석
+   ===================================================================== */
+
+/* ── 탭 바 → page-shared.css .page-tab-bar 참조 ── */
+.ma-pane{display:none;}
+.ma-pane.on{display:block;}
+
+/* ── KPI 스트립 (4개) ── */
+.ma-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
+.ma-kpi{background:var(--surface-card);border:1px solid var(--border-1);border-radius:var(--radius-lg);box-shadow:var(--elev-1);padding:18px 20px;display:flex;align-items:center;gap:14px;}
+.ma-kpi__ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;flex:none;}
+.ma-kpi__ico svg{width:22px;height:22px;}
+.ma-kpi__lb{font:500 13px/1 var(--font-sans);color:var(--fg-3);margin-bottom:7px;}
+.ma-kpi__vl{font:800 22px/1 var(--font-sans);color:var(--fg-1);}
+.ma-kpi__vl .u{font:600 13px/1 var(--font-sans);color:var(--fg-4);margin-left:2px;}
+.ma-kpi__sub{font:500 12px/1 var(--font-sans);color:var(--fg-3);margin-top:5px;}
+.ma-kpi__sub.warn{color:var(--status-warning);}
+.ma-kpi__sub.err{color:var(--status-danger);}
+
+/* ── 종합 분석 상단 2컬럼 ── */
+.ma-top{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+
+/* 공통 카드 */
+.ma-card{background:var(--surface-card);border:1px solid var(--border-1);border-radius:var(--radius-lg);box-shadow:var(--elev-2);padding:24px;}
+.ma-card__hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.ma-card__t{font:700 17px/1 var(--font-sans);color:var(--fg-1);}
+.ma-card__chart{position:relative;height:260px;}
+
+/* 마일 핵심 지표 목록 */
+.mile-kpi-list{display:flex;flex-direction:column;gap:10px;}
+.mile-kpi-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1px solid var(--border-1);border-radius:var(--radius-md);cursor:pointer;transition:border-color var(--dur-fast),box-shadow var(--dur-fast);}
+.mile-kpi-item:hover{border-color:var(--border-primary);box-shadow:var(--elev-hover);}
+.mile-kpi-item.active{border-color:var(--gp-point);background:var(--gp-primary-tint);}
+.mile-kpi-item__ico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:none;}
+.mile-kpi-item__ico svg{width:19px;height:19px;}
+.mile-kpi-item__name{font:700 14px/1 var(--font-sans);color:var(--fg-1);display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.mile-kpi-item__vals{display:flex;gap:14px;flex-wrap:wrap;}
+.mile-kpi-item__v{font:400 12px/1 var(--font-sans);color:var(--fg-3);}
+.mile-kpi-item__v strong{font-weight:700;color:var(--fg-1);}
+
+/* ── 추이 차트 카드 ── */
+.ma-chart-card{background:var(--surface-card);border:1px solid var(--border-1);border-radius:var(--radius-lg);box-shadow:var(--elev-2);padding:24px;margin-bottom:20px;}
+.ma-chart-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.ma-chart-t{font:700 17px/1 var(--font-sans);color:var(--fg-1);}
+.ma-chart-legend{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0 14px;}
+.ma-chart-legend span{display:flex;align-items:center;gap:6px;font:500 13px/1 var(--font-sans);color:var(--fg-3);}
+.ma-chart-legend i{display:inline-block;width:18px;height:3px;border-radius:2px;flex:none;}
+.ma-chart-body{position:relative;height:200px;}
+
+/* ── 테이블 카드 ── */
+.ma-table-card{background:var(--surface-card);border:1px solid var(--border-1);border-radius:var(--radius-lg);box-shadow:var(--elev-2);padding:24px;}
+.ma-table-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.ma-table-hd h2{font:700 17px/1 var(--font-sans);color:var(--fg-1);}
+.ma-table-hd__actions{display:flex;gap:8px;}
+
+/* 마일 아이콘 작은 버전 */
+.mile-tag{display:inline-flex;align-items:center;gap:5px;font:700 12px/1 var(--font-sans);padding:3px 8px;border-radius:99px;}
+
+/* 진행 바 */
+.prog{display:flex;align-items:center;gap:8px;}
+.prog__track{flex:1;min-width:80px;height:6px;background:var(--bg-sunken);border-radius:99px;overflow:hidden;}
+.prog__fill{height:100%;border-radius:99px;}
+.prog__pct{min-width:36px;font:700 13px/1 var(--font-sans);color:var(--fg-2);text-align:right;}
+.tbl-up{color:var(--status-success);font-weight:700;}
+.tbl-down{color:var(--status-danger);font-weight:700;}
+
+/* ── 운영실적 탭 ── */
+
+/* 필터 행 */
+.ma-filter{background:var(--surface-card);border:1px solid var(--border-1);border-radius:var(--radius-lg);box-shadow:var(--elev-1);padding:16px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px;}
+.ma-filter__group{display:flex;align-items:center;gap:7px;}
+.ma-filter__lb{font:600 14px/1 var(--font-sans);color:var(--fg-2);white-space:nowrap;}
+.ma-select{height:36px;padding:0 10px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);font:400 14px/1 var(--font-sans);color:var(--fg-1);background:var(--surface-card);min-width:130px;cursor:pointer;}
+.ma-filter__sep{width:1px;height:22px;background:var(--border-1);margin:0 2px;}
+.ma-filter__actions{display:flex;gap:8px;margin-left:auto;}
+
+/* 운영실적 3컬럼 */
+.ma-perf{display:grid;grid-template-columns:300px 1fr 260px;gap:20px;margin-bottom:20px;}
+
+/* 마일 목표 대비 목록 */
+.perf-list{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+.perf-item{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1.5px solid var(--border-1);border-radius:var(--radius-md);cursor:pointer;transition:border-color var(--dur-fast),box-shadow var(--dur-fast),background var(--dur-fast);}
+.perf-item:hover{border-color:var(--border-primary);}
+.perf-item.active{border-color:var(--gp-point);background:var(--gp-primary-tint);}
+.perf-item__body{flex:1;min-width:0;}
+.perf-item__name{font:700 14px/1 var(--font-sans);color:var(--fg-1);margin-bottom:8px;display:flex;align-items:center;gap:7px;}
+.perf-item__val{font:500 12px/1 var(--font-sans);color:var(--fg-3);margin-bottom:6px;}
+
+/* 선택 마일 상세 */
+.sel-hd{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:var(--radius-md);background:var(--bg-subtle);margin-bottom:12px;}
+.sel-hd__ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none;}
+.sel-hd__ico svg{width:20px;height:20px;}
+.sel-hd__name{font:700 16px/1 var(--font-sans);color:var(--fg-1);}
+.sel-hd__status{margin-top:4px;}
+.sel-vals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.sel-val{background:var(--surface-card);border:1px solid var(--border-1);border-radius:var(--radius-md);padding:11px 13px;text-align:center;}
+.sel-val .lb{font:400 12px/1 var(--font-sans);color:var(--fg-3);margin-bottom:5px;}
+.sel-val .vl{font:700 13px/1 var(--font-sans);color:var(--fg-1);}
+
+/* 주요 변화 */
+.change-list{display:flex;flex-direction:column;gap:9px;margin-top:4px;}
+.change-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-subtle);border-radius:var(--radius-md);}
+.change-ico{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:none;font:700 12px/1 var(--font-sans);}
+.change-ico.up{background:var(--status-success-soft);color:var(--status-success);}
+.change-ico.down{background:var(--status-danger-soft);color:var(--status-danger);}
+.change-body{flex:1;}
+.change-name{font:600 13px/1.2 var(--font-sans);color:var(--fg-1);}
+.change-val{font:400 12px/1 var(--font-sans);color:var(--fg-3);margin-top:2px;}
+.change-pct{font:700 13px/1 var(--font-sans);}
+.change-pct.up{color:var(--status-success);}
+.change-pct.down{color:var(--status-danger);}
+
+/* 차트 헤더 우측 토글 */
+.period-sel{height:30px;padding:0 8px;border:1px solid var(--border-strong);border-radius:6px;font:400 13px/1 var(--font-sans);color:var(--fg-2);background:var(--surface-card);}
+
+/* 테이블 > 버튼 */
+.row-go{width:28px;height:28px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface-card);color:var(--fg-3);display:inline-grid;place-items:center;cursor:pointer;transition:border-color var(--dur-fast),color var(--dur-fast);}
+.row-go:hover{border-color:var(--gp-point);color:var(--gp-point);}
+.row-go svg{width:14px;height:14px;}
+
+/* 드로어 */
+.dw__info-banner{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;border-radius:12px;background:var(--status-info-soft);margin-bottom:16px;}
+.dw__info-banner svg{width:18px;height:18px;color:var(--status-info);flex:none;margin-top:1px;}
+.dw__info-banner p{font:400 13px/1.5 var(--font-sans);color:var(--fg-2);margin:0;}
+.dw__mini-chart{position:relative;height:120px;margin-top:8px;}

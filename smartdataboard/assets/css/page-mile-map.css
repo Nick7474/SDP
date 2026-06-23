@@ -1,0 +1,435 @@
+/* =====================================================================
+   광명 스마트데이터보드 · 4종 마일별 데이터 지도 (전용 스타일)
+   공통 GIS 스타일은 gis-shared.css 참조
+   ===================================================================== */
+
+/* ---- 마일 유형 라디오 리스트 (필터 패널 전용) ---- */
+.mile-radio-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.mile-radio-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 12px;
+  border-bottom: 1px solid var(--border-2);
+  cursor: pointer;
+  transition: background .12s;
+}
+
+.mile-radio-item:last-child { border-bottom: none; }
+.mile-radio-item:hover { background: var(--surface-hover); }
+
+.mile-radio-item input[type="radio"] {
+  margin-left: auto;
+  width: 15px;
+  height: 15px;
+  accent-color: var(--gp-point);
+  cursor: pointer;
+  flex: none;
+}
+
+.mile-radio-ico {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.mile-radio-lb {
+  font: 600 13px/1 var(--font-sans);
+  color: var(--fg-2);
+  flex: 1;
+}
+
+.mile-radio-item:has(input:checked) { background: var(--gp-primary-tint); }
+.mile-radio-item:has(input:checked) .mile-radio-lb { color: var(--fg-1); }
+
+/* ---- 하단 마일별 상세 데이터 (mile-map 전용 래퍼) ---- */
+.mile-detail {
+  margin-top: 20px;
+  background: #fff;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-2);
+  overflow: visible;
+}
+
+/* gis-shared.css의 .gis-toolbar, .gis-tab, .gis-controls 등을
+   mile-map 전용 alias로도 사용 (HTML 호환) */
+.mile-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.mile-toolbar::after {
+  content: '';
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 0;
+  height: 1px;
+  background: var(--border-1);
+}
+
+.mile-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface-inset);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+}
+
+.mile-tab {
+  height: 36px;
+  padding: 0 18px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 600 13px/1 var(--font-sans);
+  color: var(--fg-3);
+  transition: background .18s, color .18s, box-shadow .18s;
+  white-space: nowrap;
+}
+
+.mile-tab:hover { background: #fff; color: var(--fg-1); box-shadow: var(--elev-1); }
+
+.mile-tab.on {
+  background: var(--gp-primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(4,78,158,.22);
+}
+
+.mile-controls {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  height: 36px;
+  position: relative;
+}
+
+.mile-pane {
+  display: none;
+  padding: 22px 24px;
+}
+
+.mile-pane.on { display: block; }
+
+/* KPI 스트립 (gis-shared의 gis-kpi-* 와 동일 패턴, mile 접두어 유지) */
+.mile-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.mile-kpi-item {
+  padding: 14px 14px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  position: relative;
+}
+
+.mile-kpi-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 28px;
+  background: var(--border-1);
+}
+
+.mile-kpi-ico {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--ico-bg, var(--surface-inset));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.mile-kpi-ico i,
+.mile-kpi-ico svg {
+  width: 18px;
+  height: 18px;
+  color: var(--ico-color, var(--fg-3));
+}
+
+.mile-kpi__info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.mile-kpi__lb {
+  font: 500 11px/1 var(--font-sans);
+  color: var(--fg-3);
+  white-space: nowrap;
+}
+
+.mile-kpi__row { display: none; }
+
+.mile-kpi__vl {
+  font: 700 18px/1 var(--font-sans);
+  color: var(--fg-1);
+  white-space: nowrap;
+  transition: color .18s;
+}
+
+.mile-kpi__vl .u {
+  font: 500 11px/1 var(--font-sans);
+  color: var(--fg-4);
+  margin-left: 2px;
+}
+
+/* 차트 3열 */
+.mile-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+
+.mile-chart-card {
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.mile-chart-card__hd {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.mile-chart-card__title {
+  font: 700 13px/1 var(--font-sans);
+  color: var(--fg-1);
+  margin: 0;
+}
+
+.mile-chart-card__sub {
+  font: 400 11px/1 var(--font-sans);
+  color: var(--fg-4);
+  white-space: nowrap;
+}
+
+/* ---- 영역선택 드로우 모드 ---- */
+.map-tool-btn2.active {
+  background: var(--gp-primary-soft);
+  color: var(--gp-primary);
+  font-weight: 700;
+}
+
+.gis-map-area.draw-mode { cursor: crosshair !important; }
+.gis-map-area.draw-mode #gisMap { cursor: crosshair !important; }
+
+.draw-hint {
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(22,36,59,.82);
+  color: rgba(255,255,255,.92);
+  font: 500 12px/1 var(--font-sans);
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 420;
+}
+
+.gis-map-area.draw-mode .draw-hint { display: block; }
+
+/* ---- 영역 선택 결과 모달 ---- */
+.area-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.area-modal.open {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.area-modal__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(20,36,60,.3);
+}
+
+.area-modal__box {
+  position: relative;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-3);
+  width: 420px;
+  max-width: 92vw;
+  overflow: hidden;
+  transform: translateY(16px);
+  transition: transform .22s var(--ease-out);
+}
+
+.area-modal.open .area-modal__box { transform: translateY(0); }
+
+.area-modal__hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px 13px;
+  border-bottom: 1px solid var(--border-2);
+}
+
+.area-modal__title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font: 700 14px/1 var(--font-sans);
+  color: var(--fg-1);
+}
+
+.area-modal__title svg { color: var(--gp-primary); }
+
+.area-modal__close {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: var(--surface-hover);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--fg-3);
+  transition: background .12s;
+}
+
+.area-modal__close:hover { background: var(--border-1); }
+
+.area-modal__bd {
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.area-modal__kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+}
+
+.area-modal__kpi-lb {
+  font: 500 11px/1 var(--font-sans);
+  color: var(--fg-4);
+}
+
+.area-modal__kpi-vl {
+  font: 700 18px/1.2 var(--font-sans);
+  color: var(--fg-1);
+}
+
+.area-modal__kpi-vl .u {
+  font: 500 11px/1 var(--font-sans);
+  color: var(--fg-4);
+  margin-left: 2px;
+}
+
+.area-modal__pins {
+  grid-column: 1 / -1;
+  padding: 10px 14px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+}
+
+.area-modal__pins-hd {
+  font: 600 11px/1 var(--font-sans);
+  color: var(--fg-4);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.area-modal__pin-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.area-modal__pin-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  font: 500 11px/1 var(--font-sans);
+  background: #fff;
+  border: 1px solid var(--border-1);
+  color: var(--fg-2);
+  white-space: nowrap;
+}
+
+.area-modal__pin-chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.area-modal__ft {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border-2);
+  background: var(--bg-subtle);
+}
+
+.area-modal__ft .btn {
+  min-width: 80px;
+  justify-content: center;
+}

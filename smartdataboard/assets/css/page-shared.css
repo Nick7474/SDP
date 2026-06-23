@@ -238,10 +238,10 @@
 .ds-map-badge--ok     {background:var(--gp-primary-soft);color:var(--gp-primary);}
 .ds-map-badge--partial{background:var(--status-warning-soft);color:var(--status-warning);}
 .ds-map-badge--none   {background:var(--bg-sunken);color:var(--fg-3);}
-/* 페이지네이션 */
-.ds-pagination{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid var(--border-2);}
+/* 페이지네이션 — 3열 그리드: 좌=건수 중=버튼 우=여백 */
+.ds-pagination{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:14px 20px;border-top:1px solid var(--border-2);}
 .ds-pg-info{font:400 13px/1 var(--font-sans);color:var(--fg-3);}
-.ds-pg-btns{display:flex;gap:4px;align-items:center;}
+.ds-pg-btns{display:flex;gap:4px;align-items:center;justify-self:center;}
 .ds-pg-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border-1);background:#fff;font:600 13px/1 var(--font-sans);color:var(--fg-2);cursor:pointer;display:grid;place-items:center;transition:background var(--dur-fast),border-color var(--dur-fast);}
 .ds-pg-btn:hover{background:var(--bg-subtle);}
 .ds-pg-btn.on{background:var(--gp-primary);border-color:var(--gp-primary);color:#fff;}

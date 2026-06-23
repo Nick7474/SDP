@@ -90,6 +90,132 @@
   </main>
 </div>
 
+<!-- 스크림 -->
+<div class="scrim" id="scrim"></div>
+
+<!-- 상세 드로어 -->
+<aside class="drawer" id="detailDrawer" aria-hidden="true" aria-label="데이터셋 상세">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k" id="dd_rank">데이터셋 정보</div>
+      <h3 id="dd_title">—</h3>
+    </div>
+    <button class="dw__x" id="ddClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div id="dd_tags" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px"></div>
+    <div class="dw__sec">
+      <h4><i data-lucide="info" class="gp-ico"></i>기본 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>제공기관</dt><dd id="dd_provider">—</dd></div>
+        <div class="dl__r"><dt>데이터 형태</dt><dd id="dd_type">—</dd></div>
+        <div class="dl__r"><dt>업데이트 주기</dt><dd id="dd_cycle">—</dd></div>
+        <div class="dl__r"><dt>공개 범위</dt><dd id="dd_scope">—</dd></div>
+        <div class="dl__r"><dt>최근 수정일</dt><dd id="dd_modified">—</dd></div>
+        <div class="dl__r"><dt>다운로드 수</dt><dd id="dd_downloads">—</dd></div>
+      </dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="file-text" class="gp-ico"></i>데이터 설명</h4>
+      <p id="dd_desc" style="font:400 14px/1.65 var(--font-sans);color:var(--fg-2);margin:0"></p>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="bar-chart-2" class="gp-ico"></i>AI 유사도 분석</h4>
+      <dl class="dl" id="dd_sim"></dl>
+    </div>
+  </div>
+  <div class="dw__ft-3">
+    <div class="dw__ft-row">
+      <button class="btn btn--line" id="ddMetaBtn" type="button"><i data-lucide="file-text" class="gp-ico"></i>메타데이터 보기</button>
+      <button class="btn btn--line" id="ddDownloadBtn" type="button"><i data-lucide="download" class="gp-ico"></i>다운로드</button>
+    </div>
+    <div class="dw__ft-row">
+      <button class="btn btn--line" id="ddCloseBtn" type="button">닫기</button>
+      <button class="btn btn--pri" id="ddApiBtn" type="button"><i data-lucide="cloud-upload" class="gp-ico"></i>API 신청</button>
+    </div>
+  </div>
+</aside>
+
+<!-- 메타데이터 드로어 -->
+<aside class="drawer" id="metaDrawer" aria-hidden="true" aria-label="DCAT-AP 메타데이터">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k">DCAT-AP 메타데이터</div>
+      <h3 id="md_title">—</h3>
+    </div>
+    <button class="dw__x" id="mdClose" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="cs-dw-info-banner">
+      <i data-lucide="info"></i>
+      <p>DCAT-AP(Data Catalog Vocabulary Application Profile) 표준 기반 메타데이터입니다. 메타데이터 편집은 AI 메타데이터 추천 페이지에서 진행하세요.</p>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="database" class="gp-ico"></i>식별 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>데이터셋명</dt><dd id="md_title2">—</dd></div>
+        <div class="dl__r"><dt>데이터셋 ID</dt><dd id="md_id" style="font-family:monospace;font-size:12px">—</dd></div>
+        <div class="dl__r"><dt>발행 기관</dt><dd id="md_publisher">—</dd></div>
+        <div class="dl__r"><dt>라이선스</dt><dd id="md_license">—</dd></div>
+      </dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="tag" class="gp-ico"></i>분류 및 키워드</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>주제 영역</dt><dd id="md_subject">—</dd></div>
+        <div class="dl__r" style="flex-wrap:wrap;gap:6px"><dt>키워드</dt><dd id="md_keywords" style="text-align:right">—</dd></div>
+        <div class="dl__r"><dt>공간 범위</dt><dd>광명시 전역</dd></div>
+      </dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="settings" class="gp-ico"></i>제공 정보</h4>
+      <dl class="dl">
+        <div class="dl__r"><dt>데이터 형식</dt><dd id="md_format">—</dd></div>
+        <div class="dl__r"><dt>갱신 주기</dt><dd id="md_cycle">—</dd></div>
+        <div class="dl__r"><dt>API Endpoint</dt><dd id="md_endpoint" style="font-family:monospace;font-size:11px;text-align:right;color:var(--gp-primary)">—</dd></div>
+        <div class="dl__r"><dt>파일 크기</dt><dd id="md_size">—</dd></div>
+      </dl>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="file-text" class="gp-ico"></i>데이터 설명</h4>
+      <p id="md_desc" style="font:400 14px/1.65 var(--font-sans);color:var(--fg-2);margin:0"></p>
+    </div>
+  </div>
+  <div class="dw__ft">
+    <button class="btn btn--line" id="mdCloseBtn" type="button">닫기</button>
+    <button class="btn btn--pri" id="mdEditBtn" type="button"><i data-lucide="sparkles" class="gp-ico"></i>AI 메타데이터 편집</button>
+  </div>
+</aside>
+
+<!-- 다운로드 모달 -->
+<div id="downloadOverlay" style="display:none;position:fixed;inset:0;z-index:200">
+  <div id="downloadBg" style="position:absolute;inset:0;background:rgba(20,40,80,.45)"></div>
+  <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:480px;max-width:92vw;background:#fff;border-radius:20px;box-shadow:0 10px 40px rgba(20,40,80,.15);padding:32px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+      <h3 style="font:700 18px/1 var(--font-sans);color:var(--fg-1);margin:0;display:flex;align-items:center;gap:8px">
+        <i data-lucide="download" style="width:20px;height:20px;color:var(--gp-primary)"></i>데이터 다운로드
+      </h3>
+      <button id="downloadClose" style="width:30px;height:30px;border:none;background:transparent;cursor:pointer;color:var(--fg-3);border-radius:8px;display:grid;place-items:center" aria-label="닫기"><i data-lucide="x" style="width:18px;height:18px"></i></button>
+    </div>
+    <div style="background:var(--bg-subtle);border-radius:12px;padding:14px 18px;margin-bottom:22px;border:1px solid var(--border-2)">
+      <div id="dl_dsTitle" style="font:700 15px/1.3 var(--font-sans);color:var(--fg-1)">—</div>
+      <div id="dl_dsMeta" style="font:400 12px/1 var(--font-sans);color:var(--fg-3);margin-top:8px">—</div>
+    </div>
+    <div style="margin-bottom:22px">
+      <div style="font:600 13px/1 var(--font-sans);color:var(--fg-2);margin-bottom:12px">다운로드 형식 선택</div>
+      <div style="display:flex;gap:10px" id="dl_fmtGroup"></div>
+    </div>
+    <div style="background:var(--gp-primary-tint);border-radius:10px;padding:12px 14px;margin-bottom:22px;display:flex;align-items:flex-start;gap:8px;border:1px solid var(--border-primary)">
+      <i data-lucide="info" style="width:15px;height:15px;color:var(--gp-primary);flex:none;margin-top:1px"></i>
+      <p style="font:400 12px/1.5 var(--font-sans);color:var(--fg-2);margin:0">공공데이터 활용 시 출처를 표기해 주세요. 본 데이터는 <b>CC BY 4.0</b> 라이선스를 따릅니다.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <button class="btn btn--line" id="downloadCancelBtn" type="button" style="height:46px">취소</button>
+      <button class="btn btn--pri" id="downloadConfirmBtn" type="button" style="height:46px"><i data-lucide="download" class="gp-ico"></i>다운로드</button>
+    </div>
+  </div>
+</div>
+
 <script>
 window.GMSB_BASE = '../';
 window.GMSB_PAGE = {

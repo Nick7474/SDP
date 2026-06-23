@@ -244,6 +244,7 @@ body{background:var(--content-bg);color:var(--fg-2);font-family:var(--font-sans)
 .crumbs .sep{color:#C2CBD8;}
 .crumbs .cur{color:#6B778C;font-weight:600;}
 .crumbs .gp-ico{width:15px;height:15px;}
+.crumbs .crumb-page{color:#6B778C;}
 .ph__row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;}
 .ph__t{font:800 30px/1.2 var(--font-sans);color:#1A2942;margin:0;}
 .ph__d{font:500 15px/1.5 var(--font-sans);color:#7A8699;margin:9px 0 0;}
