@@ -58,7 +58,7 @@ window.GMSB_BRAND = {
   logo: 'assets/img/bi-board.svg',
   name: 'Smart Data Board',
   cityLogo: 'assets/img/bi-gwangmyeong.png',
-  cityTitle: '광명시 <span class="ct-smart">스마트</span><span class="ct-board">데이터보드</span>',
+  cityTitle: '광명 <span class="ct-smart">스마트</span><span class="ct-board">데이터보드</span>',
   user: '홍길동',
   alerts: 1
 };
