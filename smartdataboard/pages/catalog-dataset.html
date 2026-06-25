@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>데이터셋 관리 · 광명 스마트데이터보드</title>
+<title>데이터 카탈로그 관리 · 광명 스마트데이터보드</title>
 <link rel="stylesheet" href="../assets/css/tokens.css">
 <link rel="stylesheet" href="../assets/css/base.css">
 <link rel="stylesheet" href="../assets/css/shell.css">
@@ -26,29 +26,29 @@
       <div class="kpi">
         <span class="kpi__ic kpi__ic--blue"><i data-lucide="database"></i></span>
         <div>
-          <div class="kpi__lb">전체 데이터셋</div>
+          <div class="kpi__lb">전체 데이터 카탈로그</div>
           <div class="kpi__vl">72<span class="u">건</span></div>
         </div>
       </div>
       <div class="kpi">
         <span class="kpi__ic kpi__ic--green"><i data-lucide="globe"></i></span>
         <div>
-          <div class="kpi__lb">공개 데이터셋</div>
+          <div class="kpi__lb">공개 데이터 카탈로그</div>
           <div class="kpi__vl">54<span class="u">건</span></div>
         </div>
       </div>
       <div class="kpi">
-        <span class="kpi__ic kpi__ic--amber"><i data-lucide="clock"></i></span>
+        <span class="kpi__ic kpi__ic--blue"><i data-lucide="lock"></i></span>
         <div>
-          <div class="kpi__lb">검토 필요</div>
-          <div class="kpi__vl">12<span class="u">건</span></div>
+          <div class="kpi__lb">제한·비공개</div>
+          <div class="kpi__vl">18<span class="u">건</span></div>
         </div>
       </div>
       <div class="kpi">
-        <span class="kpi__ic kpi__ic--red"><i data-lucide="triangle-alert"></i></span>
+        <span class="kpi__ic kpi__ic--amber"><i data-lucide="unlink"></i></span>
         <div>
-          <div class="kpi__lb">메타데이터 오류</div>
-          <div class="kpi__vl">6<span class="u">건</span></div>
+          <div class="kpi__lb">표준어 미매핑</div>
+          <div class="kpi__vl">9<span class="u">건</span></div>
         </div>
       </div>
     </div>
@@ -96,16 +96,16 @@
           <option value="external">외부 연계</option>
           <option value="api">API 연계</option>
         </select>
-        <span class="cd-filter-lbl">메타데이터</span>
-        <select class="cd-select" id="fMeta">
+        <span class="cd-filter-lbl">표준어 매핑</span>
+        <select class="cd-select" id="fMap">
           <option value="">전체</option>
-          <option value="ok">정상</option>
-          <option value="review">검토 필요</option>
-          <option value="err">오류</option>
+          <option value="ok">매핑</option>
+          <option value="partial">일부 미매핑</option>
+          <option value="none">미매핑</option>
         </select>
         <div class="cd-search">
           <i data-lucide="search"></i>
-          <input type="search" id="dsSearchInput" placeholder="데이터셋명, ID, 담당부서 검색" aria-label="검색">
+          <input type="search" id="dsSearchInput" placeholder="데이터 카탈로그명, ID, 담당부서 검색" aria-label="검색">
         </div>
         <div class="cd-filter-actions">
           <button class="btn btn--pri" id="btnDsSearch" type="button" style="display:inline-flex;align-items:center;gap:6px"><i data-lucide="search" style="width:14px;height:14px"></i>조회</button>
@@ -114,20 +114,11 @@
       </div>
     </div>
 
-    <!-- AI 추천 스트립 -->
-    <div class="cd-ai-strip" id="cdAiStrip">
-      <div class="cd-ai-strip__hd">
-        <i data-lucide="sparkles"></i>AI 추천 데이터셋
-        <button class="cd-ai-strip__close" id="btnAiStripClose" type="button" aria-label="닫기"><i data-lucide="x"></i></button>
-      </div>
-      <div class="cd-ai-strip__list" id="cdAiList"></div>
-    </div>
-
     <!-- 테이블 카드 -->
     <div class="ds-table-card">
       <div class="ds-table-hd">
         <div class="ds-table-hd__left">
-          <span>데이터셋 목록</span>
+          <span>데이터 카탈로그 목록</span>
         </div>
         <div class="ds-table-hd__actions">
           <div class="ds-view-toggle">
@@ -135,7 +126,7 @@
             <button class="ds-view-btn" id="dsViewCard" type="button" title="카드 보기" aria-label="카드 보기"><i data-lucide="layout-grid"></i></button>
           </div>
           <button class="btn btn--pri" id="dsBtnAdd" type="button">
-            <i data-lucide="plus" class="gp-ico"></i>데이터셋 등록
+            <i data-lucide="plus" class="gp-ico"></i>데이터 카탈로그 등록
           </button>
           <button class="btn btn--line" id="dsBtnReview" type="button">
             <i data-lucide="check-circle" class="gp-ico"></i>일괄 검토
@@ -151,13 +142,11 @@
             <tr>
               <th style="width:36px;"></th>
               <th style="width:40px;"><input type="checkbox" id="dsChkAll" aria-label="전체 선택"></th>
-              <th class="l">데이터셋 ID</th>
-              <th class="l">데이터셋명</th>
+              <th class="l">데이터 카탈로그 ID</th>
+              <th class="l">데이터 카탈로그명</th>
               <th>분류</th>
               <th>유형</th>
               <th>공개 상태</th>
-              <th>메타데이터 상태</th>
-              <th>품질 점수 <i data-lucide="info" style="width:13px;height:13px;vertical-align:-2px;color:var(--fg-4)"></i></th>
               <th>표준어 매핑</th>
               <th>수정일</th>
               <th>담당 부서</th>
@@ -178,7 +167,7 @@
 <div class="scrim" id="scrim"></div>
 
 <!-- 상세 드로어 -->
-<aside class="drawer" id="drawer" aria-hidden="true" aria-label="데이터셋 상세">
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="데이터 카탈로그 상세">
   <div class="dw__hd">
     <div class="ti">
       <div class="k" id="dwId">—</div>
@@ -192,8 +181,8 @@
     <div class="dw__sec">
       <h4><i data-lucide="file-text" class="gp-ico"></i>1. 기본 정보</h4>
       <dl class="dl">
-        <div class="dl__r"><dt>데이터셋명</dt><dd id="f_name">—</dd></div>
-        <div class="dl__r"><dt>데이터셋 ID</dt><dd id="f_id">—</dd></div>
+        <div class="dl__r"><dt>데이터 카탈로그명</dt><dd id="f_name">—</dd></div>
+        <div class="dl__r"><dt>데이터 카탈로그 ID</dt><dd id="f_id">—</dd></div>
         <div class="dl__r"><dt>분류</dt><dd id="f_dtype">—</dd></div>
         <div class="dl__r"><dt>유형</dt><dd id="f_ftype">—</dd></div>
         <div class="dl__r"><dt>파일 형식</dt><dd id="f_fmt">—</dd></div>
@@ -213,16 +202,8 @@
     </div>
 
     <div class="dw__sec">
-      <h4><i data-lucide="bar-chart-2" class="gp-ico"></i>3. 메타데이터 품질</h4>
+      <h4><i data-lucide="link" class="gp-ico"></i>3. 표준어 매핑</h4>
       <dl class="dl">
-        <div class="dl__r"><dt>메타데이터 상태</dt><dd id="f_meta">—</dd></div>
-        <div class="dl__r" style="flex-direction:column;gap:8px;">
-          <dt>품질 점수</dt>
-          <dd style="width:100%;text-align:left;">
-            <div class="ds-quality-bar"><div class="ds-quality-fill" id="f_qbar"></div></div>
-            <span id="f_qscore" style="font-size:13px;color:var(--fg-2);margin-top:4px;display:block"></span>
-          </dd>
-        </div>
         <div class="dl__r"><dt>표준어 매핑</dt><dd id="f_mapping">—</dd></div>
         <div class="dl__r"><dt>태그</dt><dd id="f_tags">—</dd></div>
         <div class="dl__r"><dt>설명 요약</dt><dd id="f_desc" style="font-weight:400;text-align:left;font-size:13px;max-width:200px;">—</dd></div>
@@ -257,12 +238,78 @@
   </div>
 </aside>
 
+<!-- 수동 등록 드로어 -->
+<aside class="drawer" id="regDrawer" aria-hidden="true" aria-label="데이터 카탈로그 수동 등록">
+  <div class="dw__hd">
+    <div class="ti">
+      <div class="k">수동 등록</div>
+      <h3>데이터 카탈로그 등록</h3>
+    </div>
+    <button class="dw__x" id="reg_close" aria-label="닫기"><i data-lucide="x"></i></button>
+  </div>
+  <div class="dw__bd">
+    <div class="cdreg-banner">
+      <i data-lucide="info"></i>
+      <p>DCAT-AP 필수 항목을 채우면 등록됩니다. 표준어 매핑을 비워두면 <b>미매핑</b>으로 등록되며, 카탈로그 관리에서 보완할 수 있습니다.</p>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="file-text" class="gp-ico"></i>기본 정보</h4>
+      <div class="cdreg-f"><label>데이터 카탈로그명 <span class="req">*</span></label><input id="reg_name" type="text" placeholder="예: 교통량 상시조사 자료"></div>
+      <div class="cdreg-f"><label>영문명</label><input id="reg_eng" type="text" placeholder="예: Traffic Volume Survey"></div>
+      <div class="cdreg-row">
+        <div class="cdreg-f"><label>분류</label>
+          <select id="reg_dtype"><option>인구</option><option>교통</option><option>복지</option><option>환경</option><option>안전·재난</option><option>스마트시티</option><option>경제</option></select>
+        </div>
+        <div class="cdreg-f"><label>데이터 형식</label>
+          <select id="reg_fmt"><option>API</option><option>CSV</option><option>JSON</option><option>DB</option></select>
+        </div>
+      </div>
+      <div class="cdreg-row">
+        <div class="cdreg-f"><label>제공기관/부서</label><input id="reg_dept" type="text" placeholder="예: 교통정책과"></div>
+        <div class="cdreg-f"><label>갱신주기</label><input id="reg_cycle" type="text" placeholder="예: 일 1회"></div>
+      </div>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="align-left" class="gp-ico"></i>설명·분류</h4>
+      <div class="cdreg-f"><label>설명 <span class="req">*</span></label><textarea id="reg_desc" placeholder="데이터의 내용을 설명하세요."></textarea></div>
+      <div class="cdreg-f"><label>주제영역</label><input id="reg_theme" type="text" placeholder="예: 교통·모빌리티"></div>
+      <div class="cdreg-f"><label>키워드</label><input id="reg_keywords" type="text" placeholder="쉼표로 구분"></div>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="shield" class="gp-ico"></i>공개·라이선스</h4>
+      <div class="cdreg-row">
+        <div class="cdreg-f"><label>공개범위 <span class="req">*</span></label>
+          <select id="reg_pub"><option value="open">공개</option><option value="limited">제한공개</option><option value="closed">비공개</option></select>
+        </div>
+        <div class="cdreg-f"><label>라이선스</label><input id="reg_license" type="text" value="CC BY 4.0"></div>
+      </div>
+    </div>
+
+    <div class="dw__sec">
+      <h4><i data-lucide="link" class="gp-ico"></i>표준어 매핑 <span class="cdreg-note">수동 — 표준용어를 비우면 미매핑</span></h4>
+      <div id="reg_mapRows" class="cdreg-maprows"></div>
+      <button class="btn btn--line cdreg-addrow" id="reg_addRow" type="button"><i data-lucide="plus" class="gp-ico"></i>항목 추가</button>
+      <div class="cdreg-mapsum" id="reg_mapSum"></div>
+    </div>
+  </div>
+  <div class="dw__ft">
+    <div class="cdreg-valid" id="reg_valid"></div>
+    <div class="dw__ft-row">
+      <button class="btn btn--line" id="reg_cancel" type="button">취소</button>
+      <button class="btn btn--pri" id="reg_submit" type="button" disabled><i data-lucide="check" class="gp-ico"></i>등록</button>
+    </div>
+  </div>
+</aside>
+
 <!-- 활용신청 모달 -->
 <div class="cd-apply-overlay" id="applyOverlay">
   <div class="cd-apply-overlay__bg" id="applyBg"></div>
   <div class="cd-apply-modal">
     <div class="cd-apply-modal__hd">
-      <h3>데이터셋 활용신청</h3>
+      <h3>데이터 카탈로그 활용신청</h3>
       <button class="cd-apply-modal__x" id="applyCloseBtn" type="button" aria-label="닫기"><i data-lucide="x"></i></button>
     </div>
     <div class="cd-apply-modal__ds">
@@ -316,8 +363,8 @@ window.GMSB_BASE = '../';
 window.GMSB_PAGE = {
   active: 'catalog.dataset',
   header: {
-    title: '데이터셋 관리',
-    desc: '등록된 데이터셋의 공개 상태, 메타데이터 품질, 표준어 매핑 상태를 한 화면에서 관리합니다.',
+    title: '데이터 카탈로그 관리',
+    desc: '카탈로그에 등록된 데이터의 공개 상태와 표준어 매핑을 한 화면에서 관리합니다.',
     actions: '<span class="ph__upd">마지막 갱신 : <b>2026-06-19 10:15:45</b></span><button class="btn btn--line" id="refreshBtn"><i data-lucide="refresh-cw" class="gp-ico"></i>새로고침</button>'
   }
 };

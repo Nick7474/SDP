@@ -21,71 +21,58 @@
   <main class="page">
     <div id="gmsb-header"></div>
 
-    <!-- 검색 패널 -->
-    <section class="cs-search-panel">
-      <div class="cs-search-box-wrap">
-        <div class="cs-search-box">
-          <i data-lucide="search" class="cs-search-ico"></i>
-          <input type="text" id="csInput" class="cs-search-input"
-            placeholder="필요한 데이터를 자연어로 검색하세요. 예: 광명시 탄소배출 관련 데이터 찾아줘"
-            autocomplete="off" aria-label="데이터 검색" aria-autocomplete="list" aria-controls="csAutoList">
+    <!-- ════════ 대화형 검색 ════════ -->
+    <section class="csx" id="csx">
+      <div class="csx-inner">
+
+        <!-- 빈 상태: 중앙 히어로 -->
+        <div class="csx-hero" id="csxHero">
+          <div class="csx-hero__badge"><i data-lucide="sparkles"></i></div>
+          <h2 class="csx-hero__title">무엇을 찾아드릴까요?</h2>
+          <p class="csx-hero__sub">광명시 <b>데이터</b>를 자연어로 물어보세요. AI가 관련 데이터셋을 찾아 정리해 드립니다.</p>
+
+          <!-- 중앙 입력창 -->
+          <div class="csx-box" style="position:relative">
+            <div class="csx-autocomplete" id="csAutoHero" role="listbox"></div>
+            <textarea class="csx-box__field" id="csInputHero" rows="1"
+              placeholder="예: 광명시 탄소배출 관련 데이터 찾아줘"
+              autocomplete="off" aria-label="데이터 검색"></textarea>
+            <button class="csx-box__send" id="csSendHero" type="button" aria-label="검색"><i data-lucide="arrow-up"></i></button>
+          </div>
+
+          <!-- 추천 / 최근 검색어 -->
+          <div class="csx-hero__lists">
+            <div class="csx-suggest">
+              <div class="csx-suggest__lbl"><i data-lucide="sparkles"></i>추천 검색어</div>
+              <div class="csx-chips" id="suggestChipsHero"></div>
+            </div>
+            <div class="csx-suggest" id="recentHero" style="display:none">
+              <div class="csx-suggest__lbl"><i data-lucide="clock"></i>최근 검색어
+                <button class="csx-recent-clear" id="recentClearHero" type="button">전체 삭제</button>
+              </div>
+              <div class="csx-chips" id="recentChipsHero"></div>
+            </div>
+          </div>
         </div>
-        <button class="btn btn--pri cs-search-btn" id="csSearchBtn" type="button">검색</button>
-        <!-- 자동완성 드롭다운 -->
-        <div class="cs-autocomplete" id="csAutoList" role="listbox">
-          <div class="cs-autocomplete__hd">추천</div>
+
+        <!-- 대화 스레드 -->
+        <div class="csx-thread" id="csxThread"></div>
+
+        <!-- 하단 고정 컴포저 -->
+        <div class="csx-composer" id="csxComposer">
+          <div class="csx-composer__quick" id="csxQuick"></div>
+          <div class="csx-box" style="position:relative">
+            <div class="csx-autocomplete" id="csAuto" role="listbox"></div>
+            <textarea class="csx-box__field" id="csInput" rows="1"
+              placeholder="데이터를 자연어로 검색하세요"
+              autocomplete="off" aria-label="데이터 검색"></textarea>
+            <button class="csx-box__send" id="csSend" type="button" aria-label="검색"><i data-lucide="arrow-up"></i></button>
+          </div>
+          <div class="csx-hint">AI가 자연어 질의를 해석해 관련 데이터셋을 찾아 정리한 결과입니다. 정확한 제공 정보는 각 데이터셋 상세에서 확인하세요.</div>
         </div>
-      </div>
-      <div class="cs-suggest">
-        <span class="cs-suggest__lbl">추천 검색어</span>
-        <div class="cs-suggest__chips" id="suggestChips"></div>
-      </div>
-      <!-- 최근 검색어 -->
-      <div class="cs-recent" id="csRecent" style="display:none">
-        <span class="cs-suggest__lbl" style="white-space:nowrap">최근 검색어</span>
-        <div class="cs-recent__list" id="csRecentList"></div>
-        <button class="cs-recent__clear" id="csRecentClear" type="button">전체 삭제</button>
+
       </div>
     </section>
-
-    <!-- 메인 2열 -->
-    <div class="cs-main">
-
-      <!-- 좌: AI 분석 결과 -->
-      <aside class="cs-ai-panel" id="csAiPanel">
-        <div class="cs-ai-panel__hd">
-          <span class="cs-ai-icon"><i data-lucide="sparkles"></i></span>
-          <h3>AI 분석 결과</h3>
-        </div>
-        <div class="cs-ai-body" id="csAiBody">
-          <div class="cs-ai-placeholder">
-            <i data-lucide="search"></i>
-            <p>검색어를 입력하면<br>AI가 분석 결과를 제공합니다.</p>
-          </div>
-        </div>
-      </aside>
-
-      <!-- 우: 검색 결과 -->
-      <section class="cs-result-panel">
-        <div class="cs-result-hd" id="csResultHd" style="display:none">
-          <span class="cs-result-meta" id="csResultMeta"></span>
-          <div class="cs-sort">
-            <button class="cs-sort-btn on" data-sort="rel" type="button">관련도</button>
-            <button class="cs-sort-btn" data-sort="new" type="button">최신순</button>
-            <button class="cs-sort-btn" data-sort="pop" type="button">인기순</button>
-          </div>
-        </div>
-        <div id="csResultList">
-          <div class="cs-empty-state" id="csEmptyState">
-            <i data-lucide="database"></i>
-            <p>검색 결과가 여기에 표시됩니다.</p>
-            <span>자연어로 필요한 데이터를 검색해 보세요.</span>
-          </div>
-        </div>
-        <div class="cs-pagination" id="csPagination" style="display:none"></div>
-      </section>
-
-    </div><!-- /cs-main -->
 
   </main>
 </div>
@@ -222,8 +209,8 @@ window.GMSB_PAGE = {
   active: 'catalog.data-search',
   header: {
     title: '데이터 검색·조회',
-    desc: 'AI 기반 검색으로 필요한 데이터셋을 찾고, 유사도와 제공 정보를 비교합니다.',
-    actions: '<span class="ph__upd">마지막 갱신 : <b>2026-06-19 10:15:45</b></span><button class="btn btn--line" id="refreshBtn"><i data-lucide="refresh-cw" class="gp-ico"></i>새로고침</button>'
+    desc: '자연어로 질문하면 AI가 광명시 데이터를 찾아 정리해 드립니다.',
+    actions: '<button class="btn btn--line" id="csNewChat"><i data-lucide="plus" class="gp-ico"></i>새 대화</button>'
   }
 };
 </script>

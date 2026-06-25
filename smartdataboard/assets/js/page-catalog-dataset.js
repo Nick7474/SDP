@@ -1,5 +1,5 @@
 /* =====================================================================
-   광명 스마트데이터보드 · 데이터셋 관리
+   광명 스마트데이터보드 · 데이터 카탈로그 관리
    ===================================================================== */
 (function () {
   'use strict';
@@ -52,7 +52,6 @@
     renderTable(DATASETS);
     renderCards(DATASETS);
     renderPagination(DATASETS.length);
-    renderAiStrip();
     initDrawer();
     initFilters();
     initSearch();
@@ -60,6 +59,7 @@
     initButtons();
     initViewToggle();
     initApplyModal();
+    initRegDrawer();
     if (window.lucide) lucide.createIcons();
   }
 
@@ -92,33 +92,6 @@
     if (window.lucide) lucide.createIcons();
   }
 
-  /* ── AI 추천 스트립 ── */
-  function renderAiStrip() {
-    var strip = document.getElementById('cdAiStrip');
-    var list  = document.getElementById('cdAiList');
-    if (!strip || !list) return;
-    var recs = DATASETS.filter(function (d) { return d.aiRec; });
-    if (!recs.length) return;
-    list.innerHTML = recs.map(function (ds) {
-      return [
-        '<button class="cd-ai-item" data-id="' + ds.id + '" type="button">',
-          '<div class="cd-ai-item__body">',
-            '<div class="cd-ai-item__name">' + ds.name + '</div>',
-            '<div class="cd-ai-item__id">' + ds.id + ' · ' + ds.dtype + '</div>',
-          '</div>',
-          '<div class="cd-ai-item__arr"><i data-lucide="chevron-right"></i></div>',
-        '</button>'
-      ].join('');
-    }).join('');
-    strip.classList.add('on');
-    list.querySelectorAll('.cd-ai-item').forEach(function (btn) {
-      btn.addEventListener('click', function () { openDrawer(this.dataset.id); });
-    });
-    var closeBtn = document.getElementById('btnAiStripClose');
-    if (closeBtn) closeBtn.addEventListener('click', function () { strip.classList.remove('on'); });
-    if (window.lucide) lucide.createIcons();
-  }
-
   /* ── 테이블 렌더링 ── */
   function renderTable(data) {
     var tbody   = document.getElementById('dsTbody');
@@ -126,34 +99,23 @@
     if (!tbody) return;
     if (countEl) countEl.textContent = '전체 ' + data.length + '건';
     if (!data.length) {
-      tbody.innerHTML = '<tr class="tbl__empty"><td colspan="13"><i data-lucide="inbox"></i>조건에 맞는 데이터가 없습니다.</td></tr>';
+      tbody.innerHTML = '<tr class="tbl__empty"><td colspan="11"><i data-lucide="inbox"></i>조건에 맞는 데이터가 없습니다.</td></tr>';
       if (window.lucide) lucide.createIcons();
       return;
     }
     tbody.innerHTML = data.map(function (ds) {
       var isFav    = favorites.has(ds.id);
       var pubPill  = pubBadge(ds.pub);
-      var metaPill = metaBadge(ds.meta);
-      var qCls     = ds.quality >= 85 ? 'high' : ds.quality >= 65 ? 'mid' : 'low';
       var mapBadge = mappingBadge(ds.mapping);
-      var aiBadge  = ds.aiRec ? '<span class="ds-ai-badge"><i data-lucide="sparkles"></i>AI</span>' : '';
-      var histBadge= ds.histCount > 0 ? '<span class="ds-hist-badge">' + ds.histCount + '건 변경</span>' : '';
       return [
         '<tr data-id="' + ds.id + '">',
           '<td><button class="ds-fav-btn' + (isFav ? ' on' : '') + '" data-id="' + ds.id + '" type="button" title="즐겨찾기" aria-label="즐겨찾기 토글"><i data-lucide="star"></i></button></td>',
           '<td><input type="checkbox" class="ds-row-chk" aria-label="선택"></td>',
           '<td class="l"><span class="ds-id-link" data-id="' + ds.id + '">' + ds.id + '</span></td>',
-          '<td class="l" style="font-weight:600;color:var(--fg-1)">' + ds.name + aiBadge + histBadge + '</td>',
+          '<td class="l" style="font-weight:600;color:var(--fg-1)">' + ds.name + '</td>',
           '<td>' + ds.dtype + '</td>',
           '<td>' + ds.ftype + '</td>',
           '<td>' + pubPill + '</td>',
-          '<td>' + metaPill + '</td>',
-          '<td>',
-            '<div class="ds-qbar-wrap">',
-              '<div class="ds-qbar"><div class="ds-qbar-fill ' + qCls + '" style="width:' + ds.quality + '%"></div></div>',
-              '<span class="ds-qbar-val ' + qCls + '">' + ds.quality + '점</span>',
-            '</div>',
-          '</td>',
           '<td>' + mapBadge + '</td>',
           '<td style="font-size:12px;white-space:nowrap">' + ds.modified.replace(' ', '<br>') + '</td>',
           '<td style="font-size:12px">' + ds.dept + '</td>',
@@ -195,7 +157,6 @@
     }
     grid.innerHTML = data.map(function (ds) {
       var isFav   = favorites.has(ds.id);
-      var aiBadge = ds.aiRec ? '<span class="ds-ai-badge"><i data-lucide="sparkles"></i>AI 추천</span>' : '';
       return [
         '<div class="ds-card-item" data-id="' + ds.id + '">',
           '<div class="ds-card-item__hd">',
@@ -204,11 +165,10 @@
           '</div>',
           '<div class="ds-card-item__name">' + ds.name + '</div>',
           '<div class="ds-card-item__badges">',
-            pubBadge(ds.pub), metaBadge(ds.meta), aiBadge,
+            pubBadge(ds.pub), mappingBadge(ds.mapping),
           '</div>',
           '<div class="ds-card-item__ft">',
             '<span>' + ds.dept + '</span>',
-            '<span style="font:700 12px/1 var(--font-sans);color:' + (ds.quality >= 85 ? 'var(--status-success)' : ds.quality >= 65 ? 'var(--status-warning)' : 'var(--status-danger)') + '">' + ds.quality + '점</span>',
           '</div>',
         '</div>'
       ].join('');
@@ -371,14 +331,7 @@
     set('f_src',     ds.src);
     set('f_cycle',   ds.cycle);
     set('f_modified',ds.modified);
-    set('f_meta',    META_LABEL[ds.meta] || ds.meta);
 
-    var qbar = document.getElementById('f_qbar');
-    if (qbar) {
-      qbar.style.width = ds.quality + '%';
-      qbar.style.background = ds.quality >= 85 ? 'var(--status-success)' : ds.quality >= 65 ? 'var(--status-warning)' : 'var(--status-danger)';
-    }
-    set('f_qscore',  ds.quality + '점');
     set('f_mapping', { ok:'매핑', partial:'일부 미매핑', none:'미매핑' }[ds.mapping] || ds.mapping);
     set('f_tags',    ds.dtype + ', 광명시');
     set('f_desc',    ds.desc);
@@ -469,7 +422,7 @@
       });
     });
 
-    ['fFmt', 'fReg', 'fMeta'].forEach(function (id) {
+    ['fFmt', 'fReg', 'fMap'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.addEventListener('change', applyFilter);
     });
@@ -480,7 +433,7 @@
     var pub   = getChipVal('cgPub');
     var fmt   = val('fFmt');
     var reg   = val('fReg');
-    var meta  = val('fMeta');
+    var map   = val('fMap');
     var q     = (val('dsSearchInput')).trim().toLowerCase();
 
     var filtered = DATASETS.filter(function (ds) {
@@ -488,7 +441,7 @@
       if (pub   && ds.pub   !== pub)   return false;
       if (fmt   && ds.fmt.toLowerCase() !== fmt.toLowerCase()) return false;
       if (reg   && ds.reg   !== reg)   return false;
-      if (meta  && ds.meta  !== meta)  return false;
+      if (map   && ds.mapping !== map)  return false;
       if (q && ds.name.toLowerCase().indexOf(q) < 0 &&
                ds.id.toLowerCase().indexOf(q) < 0 &&
                ds.dept.indexOf(q) < 0) return false;
@@ -523,7 +476,7 @@
     if (resetBtn) resetBtn.addEventListener('click', function () {
       document.querySelectorAll('.cd-chip-group .cd-chip').forEach(function (c) { c.classList.remove('on'); });
       document.querySelectorAll('.cd-chip-group .cd-chip[data-val=""]').forEach(function (c) { c.classList.add('on'); });
-      ['fFmt', 'fReg', 'fMeta'].forEach(function (id) {
+      ['fFmt', 'fReg', 'fMap'].forEach(function (id) {
         var el = document.getElementById(id);
         if (el) el.value = '';
       });
@@ -551,10 +504,10 @@
     var addBtn = document.getElementById('dsBtnAdd');
     var rvwBtn = document.getElementById('dsBtnReview');
     var dlBtn  = document.getElementById('dsBtnDl');
-    if (addBtn) addBtn.addEventListener('click', function () { showToast('데이터셋 등록 기능은 준비 중입니다.'); });
+    if (addBtn) addBtn.addEventListener('click', openRegDrawer);
     if (rvwBtn) rvwBtn.addEventListener('click', function () {
       var checked = document.querySelectorAll('.ds-row-chk:checked');
-      if (!checked.length) { showToast('검토할 데이터셋을 선택해 주세요.'); return; }
+      if (!checked.length) { showToast('검토할 데이터 카탈로그을 선택해 주세요.'); return; }
       showToast(checked.length + '건 일괄 검토 요청이 접수되었습니다.');
     });
     if (dlBtn) dlBtn.addEventListener('click', function () {
@@ -563,9 +516,9 @@
   }
 
   function exportCsv(data) {
-    var cols = ['ID','데이터셋명','분류','유형','공개상태','메타데이터','품질점수','담당부서','수정일'];
+    var cols = ['ID','데이터 카탈로그명','분류','유형','공개상태','표준어 매핑','담당부서','수정일'];
     var rows = data.map(function (ds) {
-      return [ds.id, ds.name, ds.dtype, ds.ftype, PUB_LABEL[ds.pub]||ds.pub, META_LABEL[ds.meta]||ds.meta, ds.quality, ds.dept, ds.modified].map(function (v) {
+      return [ds.id, ds.name, ds.dtype, ds.ftype, PUB_LABEL[ds.pub]||ds.pub, ({ok:'매핑',partial:'일부 미매핑',none:'미매핑'}[ds.mapping]||ds.mapping), ds.dept, ds.modified].map(function (v) {
         return '"' + String(v).replace(/"/g, '""') + '"';
       }).join(',');
     });
@@ -593,6 +546,101 @@
       el.style.opacity = '0'; el.style.transform = 'translateX(-50%) translateY(10px)';
     }, 2800);
   }
+
+
+  /* ── 수동 등록 드로어 ── */
+  var regSeq = 0;
+  function dEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+  function regPad(n){ return ('0'+n).slice(-2); }
+  function regPad3(n){ return ('00'+n).slice(-3); }
+
+  function openRegDrawer(){
+    resetRegForm();
+    var d=document.getElementById('regDrawer'); if(d) d.classList.add('on');
+    var sc=document.getElementById('scrim'); if(sc) sc.classList.add('on');
+    validateReg();
+    if (window.lucide) lucide.createIcons();
+  }
+  function closeRegDrawer(){
+    var d=document.getElementById('regDrawer'); if(d) d.classList.remove('on');
+    var sc=document.getElementById('scrim'); if(sc) sc.classList.remove('on');
+  }
+  function resetRegForm(){
+    ['reg_name','reg_eng','reg_dept','reg_cycle','reg_desc','reg_theme','reg_keywords'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
+    var lic=document.getElementById('reg_license'); if(lic) lic.value='CC BY 4.0';
+    var pub=document.getElementById('reg_pub'); if(pub) pub.selectedIndex=0;
+    var dt=document.getElementById('reg_dtype'); if(dt) dt.selectedIndex=0;
+    var fm=document.getElementById('reg_fmt'); if(fm) fm.selectedIndex=0;
+    var rows=document.getElementById('reg_mapRows'); if(rows){ rows.innerHTML=''; addMapRow(); addMapRow(); }
+    updateMapSum();
+  }
+  function addMapRow(field, std){
+    var rows=document.getElementById('reg_mapRows'); if(!rows) return;
+    var row=document.createElement('div'); row.className='cdreg-maprow';
+    row.innerHTML='<input type="text" class="reg-mf-field" placeholder="항목명" value="'+(field?dEsc(field):'')+'">'
+      +'<input type="text" class="reg-mf-std" placeholder="표준용어(비우면 미매핑)" value="'+(std?dEsc(std):'')+'">'
+      +'<button class="cdreg-del" type="button" aria-label="삭제"><i data-lucide="x"></i></button>';
+    row.querySelector('.cdreg-del').addEventListener('click', function(){ row.remove(); updateMapSum(); });
+    row.querySelectorAll('input').forEach(function(i){ i.addEventListener('input', updateMapSum); });
+    rows.appendChild(row);
+    if (window.lucide) lucide.createIcons();
+  }
+  function getMapStats(){
+    var rows=Array.prototype.slice.call(document.querySelectorAll('#reg_mapRows .cdreg-maprow'));
+    var mapped=0, unmapped=0;
+    rows.forEach(function(r){
+      var f=r.querySelector('.reg-mf-field').value.trim();
+      var s=r.querySelector('.reg-mf-std').value.trim();
+      if(!f) return;
+      if(s) mapped++; else unmapped++;
+    });
+    return { mapped:mapped, unmapped:unmapped };
+  }
+  function updateMapSum(){
+    var st=getMapStats();
+    var el=document.getElementById('reg_mapSum');
+    if(el) el.innerHTML='<span class="ok"><i data-lucide="check"></i>매핑 '+st.mapped+'</span><span class="no"><i data-lucide="alert-circle"></i>미매핑 '+st.unmapped+'</span>';
+    if (window.lucide) lucide.createIcons();
+  }
+  function validateReg(){
+    var name=(document.getElementById('reg_name')||{}).value||'';
+    var desc=(document.getElementById('reg_desc')||{}).value||'';
+    var ok = name.trim() && desc.trim();
+    var v=document.getElementById('reg_valid'), btn=document.getElementById('reg_submit');
+    if(v){ if(ok){ v.className='cdreg-valid ok'; v.innerHTML='<i data-lucide="check-circle"></i>DCAT-AP 필수 항목 충족 · 등록 가능'; }
+           else { v.className='cdreg-valid warn'; v.innerHTML='<i data-lucide="alert-circle"></i>데이터 카탈로그명·설명은 필수입니다'; } }
+    if(btn) btn.disabled = !ok;
+    if (window.lucide) lucide.createIcons();
+  }
+  function initRegDrawer(){
+    var addBtn=document.getElementById('reg_addRow'); if(addBtn) addBtn.addEventListener('click', function(){ addMapRow(); });
+    ['reg_name','reg_desc'].forEach(function(id){ var e=document.getElementById(id); if(e) e.addEventListener('input', validateReg); });
+    var c1=document.getElementById('reg_close'); if(c1) c1.addEventListener('click', closeRegDrawer);
+    var c2=document.getElementById('reg_cancel'); if(c2) c2.addEventListener('click', closeRegDrawer);
+    var sc=document.getElementById('scrim'); if(sc) sc.addEventListener('click', closeRegDrawer);
+    var sub=document.getElementById('reg_submit'); if(sub) sub.addEventListener('click', submitReg);
+  }
+  function submitReg(){
+    var btn=document.getElementById('reg_submit'); if(btn && btn.disabled) return;
+    var st=getMapStats();
+    var mapping = st.unmapped===0 ? 'ok' : (st.mapped===0 ? 'none' : 'partial');
+    var name=document.getElementById('reg_name').value.trim();
+    var dt=document.getElementById('reg_dtype').value;
+    var fm=document.getElementById('reg_fmt').value;
+    var pub=document.getElementById('reg_pub').value;
+    var dept=document.getElementById('reg_dept').value.trim()||'—';
+    var n=new Date();
+    var ts=n.getFullYear()+'-'+regPad(n.getMonth()+1)+'-'+regPad(n.getDate())+' '+regPad(n.getHours())+':'+regPad(n.getMinutes());
+    regSeq+=1;
+    DATASETS.unshift({ id:'GM-NEW-'+regPad3(regSeq), name:name, dtype:dt, ftype:fm, fmt:fm, pub:pub, meta:'ok', quality:0,
+      mapping:mapping, dept:dept, src:'수동 등록', cycle:document.getElementById('reg_cycle').value.trim()||'—',
+      modified:ts, reg:'manual', provide:fm, records:'—', size:'—', scope: pub==='open'?'광명시 전체':'제한 공개',
+      aiRec:false, histCount:0, desc:document.getElementById('reg_desc').value.trim() });
+    renderTable(DATASETS); renderCards(DATASETS); renderPagination(DATASETS.length);
+    closeRegDrawer();
+    showToast('데이터 카탈로그 등록 완료' + (st.unmapped>0 ? ' · 표준어 미매핑 '+st.unmapped+'건' : ''));
+  }
+
 
   init();
 })();

@@ -34,7 +34,7 @@ window.GMSB_NAV = [
   /* 4. AI 데이터 카탈로그 */
   { id: 'catalog', label: 'AI 데이터 카탈로그', icon: 'database', img: '04_LM_IC.png', children: [
     { id: 'data-search',  label: '데이터 검색/조회',   href: 'pages/catalog-search.html' },
-    { id: 'dataset',      label: '데이터셋 관리',      href: 'pages/catalog-dataset.html' },
+    { id: 'dataset',      label: '데이터 카탈로그 관리',      href: 'pages/catalog-dataset.html' },
     { id: 'ai-meta',      label: 'AI 메타데이터 추천', href: 'pages/catalog-ai-meta.html' },
     { id: 'data-access',  label: '데이터 접근 관리',   href: 'pages/catalog-access.html' }
   ]},

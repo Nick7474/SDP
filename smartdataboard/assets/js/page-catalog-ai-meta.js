@@ -66,7 +66,7 @@
         '</tr>'
       ].join('');
     }).join('');
-    if (!slice.length) tbody.innerHTML = '<tr class="tbl__empty"><td colspan="10"><i data-lucide="inbox"></i>항목이 없습니다.</td></tr>';
+    if (!slice.length) tbody.innerHTML = '<tr class="tbl__empty"><td colspan="9"><i data-lucide="inbox"></i>항목이 없습니다.</td></tr>';
     tbody.querySelectorAll('tr[data-spec-no]').forEach(function (tr) {
       tr.addEventListener('click', function (e) {
         if (e.target.closest('.spec-row-detail')) return;
@@ -304,27 +304,19 @@
     initBatchActions();
     initHistModal();
     initAddModal();
-    renderSpecTable(SPEC_ITEMS);
-    renderSpecPagination(SPEC_ITEMS.length);
-    initSpecStartBtn();
-    initSpecActions();
-    initSpecDrawer();
-    renderAiRecTable(AI_REC_ITEMS);
-    initAiReason();
-    initAiSave();
+    initReg();
     if (window.lucide) lucide.createIcons();
   }
 
-  var TAB_MAP = { term: 'tabTerm', spec: 'tabSpec', airec: 'tabAiRec' };
+  var TAB_MAP = { reg: 'tabReg', term: 'tabTerm' };
   var TAB_META = {
-    term:  { label: '표준용어 관리',        desc: 'AI 데이터 카탈로그의 표준어를 관리하고 동의어·금칙어를 설정합니다.' },
-    spec:  { label: '인터페이스 정의서 분석', desc: '인터페이스 정의서를 분석하여 데이터 항목, 타입, 필수 여부, 표준어 매핑 상태를 확인합니다.' },
-    airec: { label: 'AI 기반 메타데이터 추천', desc: 'AI가 데이터셋을 분석하여 표준 메타데이터 항목과 값을 자동 추천합니다.' }
+    reg:  { label: 'AI 카탈로그 등록', desc: '데이터 허브에 수집됐지만 카탈로그에 미등록된 데이터를 AI와 함께 메타데이터를 정리해 등록합니다.' },
+    term: { label: '표준용어 관리',    desc: 'AI 데이터 카탈로그의 표준어를 관리하고 동의어·금칙어를 설정합니다.' }
   };
 
   /* ── 탭 ── */
   function initTabs() {
-    if (window.gmsbSetTab) gmsbSetTab(TAB_META.term.label, TAB_META.term.desc);
+    if (window.gmsbSetTab) gmsbSetTab(TAB_META.reg.label, TAB_META.reg.desc);
     document.querySelectorAll('.page-tab').forEach(function (btn) {
       btn.addEventListener('click', function () {
         document.querySelectorAll('.page-tab').forEach(function (b) { b.classList.remove('on'); });
@@ -473,8 +465,6 @@
     tbody.innerHTML = data.map(function (t) {
       var stCls = { active:'active', review:'review', inactive:'inactive' }[t.status] || 'inactive';
       var stLbl = { active:'사용중', review:'검토중', inactive:'미사용' }[t.status] || t.status;
-      var confPct = Math.round(t.aiConf * 100);
-      var confCls = confPct >= 85 ? 'high' : confPct >= 65 ? 'mid' : 'low';
       return [
         '<tr data-id="' + t.id + '">',
           '<td><input type="checkbox" class="term-row-chk" data-id="' + t.id + '" aria-label="선택"></td>',
@@ -482,14 +472,6 @@
           '<td class="l" style="color:var(--fg-3);font-size:12px">' + t.eng + '</td>',
           '<td>' + t.field + '</td>',
           '<td class="l" style="font-size:12px;color:var(--fg-2)">' + t.syn + '</td>',
-          '<td>' + t.datasets + '건</td>',
-          '<td class="l"><span class="am-ds-link" data-id="' + t.id + '">' + t.linked + '</span></td>',
-          '<td>',
-            '<div class="am-conf-bar-wrap">',
-              '<div class="am-conf-bar"><div class="am-conf-fill am-conf-fill--' + confCls + '" style="width:' + confPct + '%"></div></div>',
-              '<span class="am-conf-val am-conf-val--' + confCls + '">' + confPct + '%</span>',
-            '</div>',
-          '</td>',
           '<td><span class="am-status am-status--' + stCls + '">' + stLbl + '</span></td>',
           '<td style="font-size:12px;white-space:nowrap">' + t.regDate + '</td>',
           '<td style="font-size:12px;white-space:nowrap">' + t.lastUsed + '</td>',
@@ -617,7 +599,6 @@
     setSelect('td_field',  t.field);
     var statusLbl = { active:'사용중', review:'검토중', inactive:'미사용' };
     setSelect('td_status', statusLbl[t.status] || t.status);
-    setInput('td_datasets', t.datasets + '건');
 
     var descTA = document.getElementById('td_desc');
     if (descTA) { descTA.value = t.desc || ''; }
@@ -629,7 +610,6 @@
     var memoHint = document.getElementById('td_memoHint');
     if (memoHint) memoHint.textContent = '0/300';
 
-    set('td_linked', t.linked);
     var lastInput = document.getElementById('td_lastUsed');
     if (lastInput) lastInput.value = t.lastUsed.replace(/\./g, '-');
 
@@ -646,10 +626,6 @@
       });
     }
 
-    /* AI 신뢰도 */
-    var confPct = Math.round(t.aiConf * 100);
-    set('td_aiScore', confPct + '%');
-    set('td_aiDesc', confPct >= 85 ? '표준어 매핑 신뢰도가 높습니다.' : confPct >= 65 ? '일부 항목 검토가 필요합니다.' : '표준어 매핑 검토가 필요합니다.');
 
     var drawer = document.getElementById('termDrawer');
     var scrim  = document.getElementById('scrim');
@@ -916,6 +892,286 @@
       el.style.opacity = '0'; el.style.transform = 'translateX(-50%) translateY(10px)';
     }, 2800);
   }
+
+
+  /* ═══════════════════════════════════════════
+     AI 카탈로그 등록 (통합 워크플로우)
+  ═══════════════════════════════════════════ */
+  var REG_DATA = [
+    { id:'HUB-TRF-014', cat:'교통', name:'교통량 상시조사 자료', en:'Traffic Volume Survey', ifId:'IF-TRF-014', dept:'교통정책과', cycle:'일 1회', format:'CSV / API', last:'2026-06-23',
+      theme:'교통·모빌리티', keywords:['교통량','상시조사','지점'], descSeed:'광명시 주요 지점의 교통량 상시조사 결과입니다. 지점·차종·시간대별 통행량을 일 단위로 집계합니다.',
+      fields:[ {name:'지점코드',type:'String',std:'지점코드'}, {name:'조사일자',type:'Date',std:'조사일자'}, {name:'차종',type:'String',std:'차종'},
+               {name:'시간대',type:'String',std:'시간대'}, {name:'통행량',type:'Number',std:'통행량'}, {name:'방향',type:'String',std:'방향구분'},
+               {name:'혼잡도지수',type:'Number',std:null}, {name:'평균속도',type:'Number',std:'평균속도'} ] },
+    { id:'HUB-MOB-022', cat:'교통', name:'공공자전거 대여이력', en:'Public Bike Rental History', ifId:'IF-MOB-022', dept:'교통정책과', cycle:'5분', format:'API / JSON', last:'2026-06-23',
+      theme:'교통·모빌리티', keywords:['공공자전거','대여','반납'], descSeed:'공공자전거 대여소별 대여·반납 이력입니다. 대여소, 이용시간, 이동거리 정보를 포함합니다.',
+      fields:[ {name:'대여소ID',type:'String',std:'대여소식별자'}, {name:'대여일시',type:'DateTime',std:'대여일시'}, {name:'반납일시',type:'DateTime',std:'반납일시'},
+               {name:'이용시간',type:'Number',std:'이용시간'}, {name:'이동거리',type:'Number',std:'이동거리'}, {name:'자전거번호',type:'String',std:null},
+               {name:'회원구분',type:'String',std:'회원구분'} ] },
+    { id:'HUB-ENV-031', cat:'환경', name:'하천 수위 센서', en:'River Water Level Sensor', ifId:'IF-ENV-031', dept:'안전총괄과', cycle:'10분', format:'API / JSON', last:'2026-06-23',
+      theme:'환경·안전', keywords:['하천','수위','센서','침수'], descSeed:'광명시 하천 수위 센서의 10분 단위 실시간 수위 측정값입니다. 침수 예경보 시스템과 연계됩니다.',
+      fields:[ {name:'센서ID',type:'String',std:'센서식별자'}, {name:'측정일시',type:'DateTime',std:'측정일시'}, {name:'수위',type:'Number',std:'수위'},
+               {name:'경보단계',type:'String',std:null}, {name:'하천명',type:'String',std:'하천명'}, {name:'설치위치',type:'String',std:'설치위치'} ] },
+    { id:'HUB-ENG-009', cat:'에너지', name:'공공건물 에너지 사용량', en:'Public Building Energy Usage', ifId:'IF-ENG-009', dept:'기후에너지과', cycle:'일 1회', format:'CSV / API', last:'2026-06-22',
+      theme:'에너지·환경', keywords:['공공건물','에너지','전력','가스'], descSeed:'광명시 공공건물별 일일 에너지(전력·가스) 사용량 집계 데이터입니다.',
+      fields:[ {name:'건물코드',type:'String',std:'건물코드'}, {name:'사용일자',type:'Date',std:'사용일자'}, {name:'전력사용량',type:'Number',std:'전력사용량'},
+               {name:'가스사용량',type:'Number',std:'가스사용량'}, {name:'난방도일',type:'Number',std:null}, {name:'연면적',type:'Number',std:'연면적'} ] }
+  ];
+
+  var regSel = null, regMeta = null, regBusy = false;
+  var regFilter = { q:'', cat:'', dept:'', fmt:'' };
+
+  function regEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function byReg(id){ return REG_DATA.filter(function(x){ return x.id===id; })[0]; }
+  function curQ(){ var s=document.getElementById('regSearch'); return s ? s.value.trim() : ''; }
+
+  function initReg(){
+    renderRegList();
+    initRegFilters();
+    var input = document.getElementById('regInput'), send = document.getElementById('regSend');
+    if (send) send.addEventListener('click', regFire);
+    if (input){
+      input.addEventListener('keydown', function(e){ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); regFire(); } });
+      input.addEventListener('input', function(){ this.style.height='auto'; this.style.height=Math.min(this.scrollHeight,120)+'px'; });
+    }
+    var meta = document.getElementById('regMeta');
+    if (meta){ meta.addEventListener('input', regOnEdit); meta.addEventListener('change', regOnEdit); }
+    var submit = document.getElementById('regSubmit');
+    if (submit) submit.addEventListener('click', regSubmitFn);
+    var reset = document.getElementById('regReset');
+    if (reset) reset.addEventListener('click', function(){ if (regSel && !confirm('진행 중인 내용을 초기화할까요?')) return; resetReg(); });
+  }
+
+  function renderRegList(){
+    var box = document.getElementById('regList'); if(!box) return;
+    var data = REG_DATA.filter(function(d){
+      if (regFilter.q && (d.name+' '+d.ifId).toLowerCase().indexOf(regFilter.q.toLowerCase())<0) return false;
+      if (regFilter.cat && d.cat !== regFilter.cat) return false;
+      if (regFilter.dept && d.dept !== regFilter.dept) return false;
+      if (regFilter.fmt && d.format.indexOf(regFilter.fmt) < 0) return false;
+      return true;
+    });
+    if(!data.length){ box.innerHTML = '<div class="reg-list__empty">미등록 데이터가 없습니다.</div>'; return; }
+    box.innerHTML = data.map(function(d){
+      return '<button class="reg-item'+(regSel===d.id?' is-active':'')+'" type="button" data-id="'+d.id+'">'
+        + '<div class="reg-item__name">'+regEsc(d.name)+'</div>'
+        + '<div class="reg-item__meta">'+regEsc(d.ifId)+' · '+regEsc(d.dept)+' <span class="reg-item__tag">수집중</span></div>'
+        + '</button>';
+    }).join('');
+    box.querySelectorAll('.reg-item').forEach(function(b){ b.addEventListener('click', function(){ selectReg(this.dataset.id); }); });
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function resetReg(){
+    regSel = null; regMeta = null; regBusy = false;
+    renderRegList();
+    var thread = document.getElementById('regThread');
+    if (thread) thread.innerHTML = '<div class="reg-chat__empty"><i data-lucide="messages-square"></i><p>왼쪽에서 카탈로그 미등록 데이터를 선택하면<br>AI가 정의서·구조를 분석해 메타데이터를 제안합니다.</p></div>';
+    var comp = document.getElementById('regComposer'); if (comp) comp.style.display = 'none';
+    var meta = document.getElementById('regMeta'); if (meta) meta.innerHTML = '<div class="reg-meta__empty"><i data-lucide="file-cog"></i><p>데이터를 선택하면<br>AI가 메타데이터를 채웁니다.</p></div>';
+    var ft = document.getElementById('regMetaFt'); if (ft) ft.style.display = 'none';
+    var rb = document.getElementById('regReset'); if (rb) rb.style.display = 'none';
+    var input = document.getElementById('regInput'); if (input){ input.value = ''; input.style.height = 'auto'; }
+    setStep(1);
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function initRegFilters(){
+    var search = document.getElementById('regSearch');
+    if (search) search.addEventListener('input', function(){ regFilter.q = this.value.trim(); renderRegList(); });
+    var cats = []; REG_DATA.forEach(function(d){ if(cats.indexOf(d.cat)<0) cats.push(d.cat); });
+    var chipBox = document.getElementById('regCatChips');
+    if (chipBox){
+      chipBox.innerHTML = '<button class="reg-chip-f on" type="button" data-cat="">전체</button>'
+        + cats.map(function(c){ return '<button class="reg-chip-f" type="button" data-cat="'+regEsc(c)+'">'+regEsc(c)+'</button>'; }).join('');
+      chipBox.querySelectorAll('.reg-chip-f').forEach(function(b){
+        b.addEventListener('click', function(){
+          chipBox.querySelectorAll('.reg-chip-f').forEach(function(x){ x.classList.remove('on'); });
+          this.classList.add('on'); regFilter.cat = this.dataset.cat; renderRegList();
+        });
+      });
+    }
+    var depts = []; REG_DATA.forEach(function(d){ if(depts.indexOf(d.dept)<0) depts.push(d.dept); });
+    var dsel = document.getElementById('regDept');
+    if (dsel){
+      dsel.innerHTML = '<option value="">전체 부서</option>' + depts.map(function(d){ return '<option value="'+regEsc(d)+'">'+regEsc(d)+'</option>'; }).join('');
+      dsel.addEventListener('change', function(){ regFilter.dept = this.value; renderRegList(); });
+    }
+    var fmts = []; REG_DATA.forEach(function(d){ d.format.split('/').forEach(function(p){ p=p.trim(); if(p && fmts.indexOf(p)<0) fmts.push(p); }); });
+    var fsel = document.getElementById('regFmt');
+    if (fsel){
+      fsel.innerHTML = '<option value="">전체 형식</option>' + fmts.map(function(f){ return '<option value="'+regEsc(f)+'">'+regEsc(f)+'</option>'; }).join('');
+      fsel.addEventListener('change', function(){ regFilter.fmt = this.value; renderRegList(); });
+    }
+  }
+
+  function buildMeta(d){
+    return { title:d.name, titleEn:d.en||'', desc:d.descSeed, theme:d.theme, keywords:d.keywords.slice(),
+      provider:d.dept, cycle:d.cycle, format:d.format, access:'공개', license:'CC BY 4.0',
+      terms: d.fields.map(function(f){ return { field:f.name, type:f.type, std:f.std, isNew:!f.std, name:(f.std||f.name) }; }) };
+  }
+
+  function selectReg(id){
+    if (regBusy) return;
+    var d = byReg(id); if(!d) return;
+    regSel = id; regMeta = buildMeta(d);
+    renderRegList();
+    var thread = document.getElementById('regThread');
+    thread.innerHTML = '';
+    document.getElementById('regComposer').style.display = 'block';
+    var rb0 = document.getElementById('regReset'); if (rb0) rb0.style.display = 'inline-flex';
+    renderMeta();
+    setStep(2);
+    regBusy = true;
+    var body = regTyping();
+    setTimeout(function(){
+      body.innerHTML = aiIntroHtml(d, regMeta);
+      regBusy = false; setStep(3); validateReg();
+      if (window.lucide) lucide.createIcons(); regScroll();
+    }, 600);
+  }
+
+  function aiIntroHtml(d, m){
+    var exist = m.terms.filter(function(t){ return !t.isNew; }).length;
+    var news  = m.terms.filter(function(t){ return t.isNew; });
+    var nl = news.map(function(t){ return '<span class="new">'+regEsc(t.field)+'</span>'; }).join(', ');
+    return '<b>'+regEsc(d.name)+'</b>의 인터페이스 정의서(<b>'+regEsc(d.ifId)+'</b>)와 데이터 구조를 확인했습니다.'
+      + '<ul>'
+      + '<li>항목 <b>'+m.terms.length+'개</b> 인식 · '+regEsc(d.format)+' · 수집주기 '+regEsc(d.cycle)+'</li>'
+      + '<li>표준용어 <span class="ok">기존 매핑 '+exist+'건</span> / <span class="new">신규 등록 제안 '+news.length+'건</span>'+(news.length?' — '+nl:'')+'</li>'
+      + '</ul>'
+      + '오른쪽 패널에 메타데이터 초안을 채웠습니다. 공개범위·주제 등을 자연어로 조정하거나 바로 <b>카탈로그 등록</b>하세요.'
+      + (news.length ? '<br><br>신규 표준용어 '+news.length+'건은 <b>등록하는 순간 표준용어 사전에 자동 등재</b>됩니다.' : '');
+  }
+
+  function regFld(label, ctrl, req, ai, who){
+    var tags = (req?'<span class="req">*</span>':'')
+      + (ai?' <span class="ai"><i data-lucide="sparkles"></i>AI</span>':'')
+      + (who?' <span class="ai" style="background:var(--gp-primary-soft);color:var(--gp-primary)">'+who+'</span>':'');
+    return '<div class="reg-fld"><div class="reg-fld__lb">'+regEsc(label)+tags+'</div>'+ctrl+'</div>';
+  }
+  function regOpt(arr, sel){ return arr.map(function(o){ return '<option'+(o===sel?' selected':'')+'>'+o+'</option>'; }).join(''); }
+
+  function renderMeta(){
+    var box = document.getElementById('regMeta'); if(!box || !regMeta) return;
+    var m = regMeta;
+    var exist = m.terms.filter(function(t){ return !t.isNew; }).length, news = m.terms.length - exist;
+    var rows = m.terms.map(function(t){
+      return '<div class="reg-term"><div class="reg-term__field">'+regEsc(t.field)+'<small>'+regEsc(t.type)+'</small></div>'
+        + (t.isNew
+            ? '<span class="reg-term__std newterm"><i data-lucide="plus-circle"></i>신규: '+regEsc(t.name)+'</span>'
+            : '<span class="reg-term__std exist"><i data-lucide="check-circle"></i>'+regEsc(t.name)+'</span>')
+        + '</div>';
+    }).join('');
+    box.innerHTML =
+        regFld('데이터셋명', '<input type="text" data-fld="title" value="'+regEsc(m.title)+'">', true, false)
+      + regFld('영문명', '<input type="text" data-fld="titleEn" value="'+regEsc(m.titleEn)+'" placeholder="영문명">', false, false)
+      + regFld('설명', '<textarea data-fld="desc">'+regEsc(m.desc)+'</textarea>', true, false)
+      + regFld('주제영역', '<input type="text" data-fld="theme" value="'+regEsc(m.theme)+'">', false, false)
+      + regFld('키워드', '<input type="text" data-fld="keywords" value="'+regEsc(m.keywords.join(', '))+'" placeholder="쉼표로 구분">', false, false)
+      + regFld('공개범위', '<select data-fld="access">'+regOpt(['공개','제한공개','비공개'], m.access)+'</select>', true, false, '사람')
+      + regFld('제공기관', '<input type="text" data-fld="provider" value="'+regEsc(m.provider)+'">', false, false, '자동')
+      + regFld('갱신주기', '<input type="text" data-fld="cycle" value="'+regEsc(m.cycle)+'">', false, false, '자동')
+      + regFld('데이터 형식', '<input type="text" data-fld="format" value="'+regEsc(m.format)+'">', false, false, '자동')
+      + regFld('라이선스', '<input type="text" data-fld="license" value="'+regEsc(m.license)+'">', false, false)
+      + '<div class="reg-fld"><div class="reg-fld__lb"><i data-lucide="link"></i>표준용어 매핑 <span class="ai">자동</span></div>'
+        + '<div class="reg-terms">'+rows+'</div>'
+        + '<div class="reg-term-sum"><span class="exist"><i data-lucide="check"></i>기존 '+exist+'</span><span class="newterm"><i data-lucide="plus"></i>신규 '+news+'</span></div>'
+      + '</div>';
+    document.getElementById('regMetaFt').style.display = 'flex';
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function regOnEdit(e){
+    var el = e.target.closest('[data-fld]'); if(!el || !regMeta) return;
+    var f = el.dataset.fld;
+    if (f==='title') regMeta.title = el.value;
+    else if (f==='titleEn') regMeta.titleEn = el.value;
+    else if (f==='desc') regMeta.desc = el.value;
+    else if (f==='theme') regMeta.theme = el.value;
+    else if (f==='access') regMeta.access = el.value;
+    else if (f==='provider') regMeta.provider = el.value;
+    else if (f==='cycle') regMeta.cycle = el.value;
+    else if (f==='format') regMeta.format = el.value;
+    else if (f==='license') regMeta.license = el.value;
+    else if (f==='keywords') regMeta.keywords = el.value.split(',').map(function(x){ return x.trim(); }).filter(Boolean);
+    validateReg();
+  }
+
+  function validateReg(){
+    var v = document.getElementById('regValid'), btn = document.getElementById('regSubmit');
+    if(!v || !btn) return;
+    var ok = regMeta && regMeta.title.trim() && regMeta.desc.trim() && regMeta.access;
+    if (ok){ v.className='reg-valid ok'; v.innerHTML='<i data-lucide="check-circle"></i>DCAT-AP 표준 검증 통과 · 등록 가능'; btn.disabled=false; }
+    else { v.className='reg-valid warn'; v.innerHTML='<i data-lucide="alert-circle"></i>데이터셋명·설명을 확인하세요'; btn.disabled=true; }
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function regFire(){
+    var input = document.getElementById('regInput'); var t = (input.value||'').trim();
+    if(!t || regBusy || !regMeta) return;
+    regUser(t); input.value=''; input.style.height='auto';
+    regBusy = true; var body = regTyping();
+    setTimeout(function(){ body.innerHTML = applyCommand(t); regBusy=false; renderMeta(); validateReg(); if(window.lucide) lucide.createIcons(); regScroll(); }, 480);
+  }
+
+  function applyCommand(t){
+    var ch = [];
+    if(/비공개/.test(t)){ regMeta.access='비공개'; ch.push('공개범위 → <b>비공개</b>'); }
+    else if(/제한\s*공개/.test(t)){ regMeta.access='제한공개'; ch.push('공개범위 → <b>제한공개</b>'); }
+    else if(/공개/.test(t)){ regMeta.access='공개'; ch.push('공개범위 → <b>공개</b>'); }
+    var mt = t.match(/주제[^가-힣]*['"]?([가-힣·\w ]{2,15})['"]?\s*(?:으로|로)/);
+    if(mt){ regMeta.theme = mt[1].trim(); ch.push('주제영역 → <b>'+regEsc(regMeta.theme)+'</b>'); }
+    var kw = t.match(/키워드\s*['"]?([가-힣\w]{1,12})['"]?\s*추가/);
+    if(kw){ regMeta.keywords.push(kw[1]); ch.push('키워드 <b>'+regEsc(kw[1])+'</b> 추가'); }
+    if(ch.length) return '반영했습니다. '+ch.join(', ')+'. 오른쪽 패널을 확인하세요.';
+    return '메타데이터 항목을 자연어로 조정할 수 있어요. 예: "공개범위 제한공개로", "주제 교통으로", "키워드 OOO 추가". 준비되면 <b>카탈로그 등록</b>을 눌러 주세요.';
+  }
+
+  function regSubmitFn(){
+    var btn = document.getElementById('regSubmit');
+    if(!regMeta || (btn && btn.disabled)) return;
+    var news = regMeta.terms.filter(function(t){ return t.isNew; });
+    var exist = regMeta.terms.length - news.length;
+    var name = regMeta.title, access = regMeta.access;
+    setStep(4);
+    regUser('카탈로그에 등록해줘.');
+    regBusy = true; var body = regTyping();
+    setTimeout(function(){
+      body.innerHTML = '<b>'+regEsc(name)+'</b> 카탈로그(CKAN) 등록을 완료했습니다.'
+        + '<ul><li>DCAT-AP 메타데이터 등록 · 공개범위 <b>'+regEsc(access)+'</b></li>'
+        + '<li>표준용어 <span class="ok">기존 매핑 '+exist+'건</span>'
+        + (news.length ? ' · <span class="new">신규 '+news.length+'건 표준용어 사전 자동 등재</span>' : '') + '</li></ul>';
+      regBusy = false;
+      if (typeof showToast === 'function') showToast('카탈로그 등록 완료 · 표준용어 '+news.length+'건 신규 등재');
+      REG_DATA = REG_DATA.filter(function(x){ return x.id !== regSel; });
+      regSel = null; regMeta = null;
+      renderRegList();
+      document.getElementById('regMeta').innerHTML = '<div class="reg-meta__empty"><i data-lucide="file-cog"></i><p>데이터를 선택하면<br>AI가 메타데이터를 채웁니다.</p></div>';
+      document.getElementById('regMetaFt').style.display = 'none';
+      document.getElementById('regComposer').style.display = 'none';
+      var rb1 = document.getElementById('regReset'); if (rb1) rb1.style.display = 'none';
+      setStep(1);
+      if (window.lucide) lucide.createIcons(); regScroll();
+    }, 700);
+  }
+
+  function regMsg(role, html){
+    var thread = document.getElementById('regThread');
+    var el = document.createElement('div'); el.className = 'reg-msg reg-msg--'+role;
+    el.innerHTML = '<div class="reg-msg__av"><i data-lucide="'+(role==='ai'?'sparkles':'user')+'"></i></div><div class="reg-msg__bubble">'+html+'</div>';
+    thread.appendChild(el); if (window.lucide) lucide.createIcons(); regScroll();
+    return el.querySelector('.reg-msg__bubble');
+  }
+  function regUser(t){ return regMsg('user', regEsc(t)); }
+  function regTyping(){ return regMsg('ai', '<div class="reg-typing"><span></span><span></span><span></span></div>'); }
+  function regScroll(){ var th = document.getElementById('regThread'); if(th) th.scrollTop = th.scrollHeight; }
+
+  function setStep(n){
+    var steps = document.querySelectorAll('#regSteps .reg-step');
+    steps.forEach(function(s){ var v=parseInt(s.dataset.step,10); s.classList.toggle('is-on', v===n); s.classList.toggle('is-done', v<n); });
+  }
+
 
   init();
 })();
