@@ -279,7 +279,7 @@
 .md__table-wrap { overflow-x: auto; margin: 0 0 16px; border: 1px solid var(--border-1); border-radius: var(--radius-md); }
 .md table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .md thead th {
-  background: #ffffff;
+  background: var(--bg-subtle);
   color: var(--fg-2);
   font: 700 13px/1.4 var(--font-sans);
   text-align: left;
@@ -288,6 +288,7 @@
   white-space: nowrap;
 }
 .md tbody td {
+  background: #ffffff;
   padding: 11px 14px;
   border-bottom: 1px solid var(--border-2);
   color: var(--fg-1);
