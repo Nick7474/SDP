@@ -952,6 +952,16 @@
     document.getElementById('tmDrawer').classList.remove('open');
   }
 
+  function nowStr() {
+    var d = new Date(), p = function(n) { return String(n).padStart(2,'0'); };
+    return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#refreshBtn')) return;
+    var el = document.getElementById('updTime');
+    if (el) el.textContent = nowStr();
+  });
+
   window.tmPage = { closePopup: closePopup, closeDrawer: closeDrawer };
 
   init();
