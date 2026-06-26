@@ -1206,5 +1206,21 @@
     if (m) m.classList.remove('open');
   }
 
+  function nowStr() {
+    var d = new Date();
+    var pad = function(n) { return String(n).padStart(2, '0'); };
+    return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + ' ' +
+           pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+  }
+
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('#refreshBtn');
+    if (!btn) return;
+    var el = document.getElementById('updTime');
+    if (el) el.textContent = nowStr();
+    renderTable();
+    if (typeof renderLayerTable === 'function') renderLayerTable();
+  });
+
   init();
 })();
