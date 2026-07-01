@@ -64,7 +64,7 @@
         '<td style="font:400 13px/1.5 var(--font-sans);color:var(--fg-2)">' + a.detail + '</td>' +
         '<td class="num">' + a.detectedAt + '</td>' +
         '<td class="num">' + a.duration + '</td>' +
-        '<td><span class="pill ' + pc + '">' + STLABEL[a.status] + '</span></td>' +
+        '<td style="font:400 13px/1 var(--font-sans);color:var(--fg-2)">' + a.dept + '</td>' +
         '<td><button class="tbtn tbtn--sm" type="button">상세</button></td>' +
       '</tr>';
     }).join('');
