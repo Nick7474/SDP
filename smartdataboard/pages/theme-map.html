@@ -352,30 +352,38 @@
         </div>
 
         <!-- 오버레이 범례 -->
-        <div class="tm-overlay-legend" id="tmOverlayLegend">
-          <div class="tm-overlay-section">
-            <div class="tm-overlay-section__title">시각화 유형</div>
-            <div class="tm-vis-type">
-              <div class="tm-vis-dot"></div>
-              <span id="tmVisTypeLabel">히트맵</span>
-            </div>
+        <div class="tm-overlay-legend js-gis-legend" id="tmOverlayLegend" data-legend-key="theme-map">
+          <div class="ce-legend-head">
+            <span class="ce-legend-head__title">범례</span>
+            <button class="ce-legend-toggle" type="button" aria-label="범례 접기" title="범례 접기">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+            </button>
           </div>
-          <div class="tm-overlay-section">
-            <div class="tm-overlay-section__title">데이터 수준</div>
-            <div class="tm-scale-list">
-              <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#E0483D"></div>매우 높음</div>
-              <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#ED8B16"></div>높음</div>
-              <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#1AAA5E"></div>보통</div>
-              <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#0C8AE5"></div>낮음</div>
-              <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#E5EDF8"></div>매우 낮음</div>
+          <div class="ce-legend-body tm-legend-body">
+            <div class="tm-overlay-section">
+              <div class="tm-overlay-section__title">시각화 유형</div>
+              <div class="tm-vis-type">
+                <div class="tm-vis-dot"></div>
+                <span id="tmVisTypeLabel">히트맵</span>
+              </div>
             </div>
-          </div>
-          <div class="tm-overlay-section">
-            <div class="tm-overlay-section__title">활성 레이어</div>
-            <div class="tm-active-list" id="tmActiveLayers">
-              <div class="tm-active-item"><div class="tm-active-dot" style="background:#0C8AE5"></div>행정동별 인구 분포</div>
-              <div class="tm-active-item"><div class="tm-active-dot" style="background:#1AAA5E"></div>유동인구 밀도</div>
-              <div class="tm-active-item"><div class="tm-active-dot" style="background:#1AAA5E"></div>탄소배출 추정 분포</div>
+            <div class="tm-overlay-section">
+              <div class="tm-overlay-section__title">데이터 수준</div>
+              <div class="tm-scale-list">
+                <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#E0483D"></div>매우 높음</div>
+                <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#ED8B16"></div>높음</div>
+                <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#1AAA5E"></div>보통</div>
+                <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#0C8AE5"></div>낮음</div>
+                <div class="tm-scale-item"><div class="tm-scale-dot" style="background:#E5EDF8"></div>매우 낮음</div>
+              </div>
+            </div>
+            <div class="tm-overlay-section">
+              <div class="tm-overlay-section__title">활성 레이어</div>
+              <div class="tm-active-list" id="tmActiveLayers">
+                <div class="tm-active-item"><div class="tm-active-dot" style="background:#0C8AE5"></div>행정동별 인구 분포</div>
+                <div class="tm-active-item"><div class="tm-active-dot" style="background:#1AAA5E"></div>유동인구 밀도</div>
+                <div class="tm-active-item"><div class="tm-active-dot" style="background:#1AAA5E"></div>탄소배출 추정 분포</div>
+              </div>
             </div>
           </div>
         </div>
@@ -570,6 +578,7 @@ window.GMSB_PAGE = {
 </script>
 <script src="../assets/js/nav.config.js"></script>
 <script src="../assets/js/shell.js"></script>
+<script src="../assets/js/gis-legend-toggle.js"></script>
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a6adc7984a1e98b757e7666da6ab377b"></script>
 <script src="../assets/js/page-theme-map.js"></script>
 </body>

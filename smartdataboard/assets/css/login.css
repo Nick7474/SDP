@@ -122,7 +122,7 @@
   transition:border-color .15s,box-shadow .15s;
 }
 .lg-input-wrap .lg-input{padding-right:48px;}
-.lg-input:focus{border-color:#044e9e;box-shadow:0 0 0 3px rgba(4,78,158,.10);}
+.lg-input:focus{border-color:#044e9e;box-shadow:none;}
 .lg-input::placeholder{color:#adb1b8;}
 
 .lg-pw-eye{

@@ -170,6 +170,90 @@
 }
 .sp-policy-sec__title svg { width:16px;height:16px;color:var(--gp-primary) }
 
+/* ─── 알림 정책 ─── */
+.sp-alert-flow {
+  display: grid;
+  grid-template-columns: 1fr 24px 1fr 24px 1fr 24px 1fr;
+  gap: 8px;
+  align-items: stretch;
+  margin-bottom: 20px;
+}
+.sp-alert-flow__step {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+}
+.sp-alert-flow__ic {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: var(--gp-point-soft);
+  color: var(--gp-point);
+  display: grid;
+  place-items: center;
+  margin-bottom: 10px;
+}
+.sp-alert-flow__ic svg { width:17px;height:17px }
+.sp-alert-flow__step b {
+  display: block;
+  font: 800 14px/1.2 var(--font-sans);
+  color: var(--fg-1);
+  margin-bottom: 6px;
+}
+.sp-alert-flow__step p {
+  margin: 0;
+  font: 400 12px/1.45 var(--font-sans);
+  color: var(--fg-3);
+  word-break: keep-all;
+}
+.sp-alert-flow__arr {
+  width: 16px;
+  height: 16px;
+  align-self: center;
+  justify-self: center;
+  color: var(--fg-disabled);
+}
+.sp-alert-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.sp-alert-checks label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 500 14px/1 var(--font-sans);
+  color: var(--fg-2);
+}
+.sp-alert-checks input { accent-color: var(--gp-point) }
+.sp-alert-rule-box {
+  margin-top: 18px;
+  padding: 16px 18px;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  background: var(--gp-primary-tint);
+}
+.sp-alert-rule-box__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font: 800 14px/1 var(--font-sans);
+  color: var(--gp-primary);
+}
+.sp-alert-rule-box__title svg { width:16px;height:16px }
+.sp-alert-rule-box p {
+  margin: 6px 0 0;
+  font: 400 13px/1.55 var(--font-sans);
+  color: var(--fg-2);
+}
+.sp-alert-rule-box b {
+  color: var(--gp-primary);
+  margin-right: 6px;
+}
+
 /* ─── 연계 시스템 테이블 ─── */
 .sp-link-tbl .l { text-align: left }
 .sp-link-tbl td.ep { font-family: monospace; font-size: 12px; color: var(--fg-3) }

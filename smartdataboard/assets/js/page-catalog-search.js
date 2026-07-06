@@ -6,7 +6,14 @@
 (function () {
   'use strict';
 
-  var SUGGESTS = ['주민등록인구 통계', '태양광 발전량 및 탄소 배출량', '친환경DRT 운행 현황', '대기측정소 실시간 측정', '소방긴급구조정보'];
+  var SUGGESTS = [
+    'DRT 노선의 시간대별 운행 정보를 보여줘',
+    '오류가 많이 발생한 데이터를 찾아줘',
+    '특정 데이터 값을 찾아줘',
+    '15시에 도착한 DRT 버스가 뭐야?',
+    '전기차 충전소 데이터의 최근 갱신 상태를 알려줘',
+    'API 제공 가능한 교통 데이터를 보여줘'
+  ];
 
   var DATASETS = [
     { id:'ds1',  rank:1,  modified:'2026-06-18', downloads:3820,
@@ -119,6 +126,10 @@
     initDrawers();
     initDownloadModal();
     initNewChat();
+    initGuideDrawer();
+    if (new URLSearchParams(location.search).get('guide') === 'open') {
+      setTimeout(function () { openDrawer('guideDrawer'); }, 80);
+    }
     if (window.lucide) lucide.createIcons();
   }
 
@@ -306,8 +317,13 @@
   /* ── 응답 마크다운 생성 (AI 서버 md 응답 모사) ── */
   function buildAnswer(q, list) {
     var top = list[0];
+    var scenario = detectScenario(q);
     var lines = [];
     lines.push('**‘' + q + '’** 검색 결과, 관련성이 높은 데이터셋 **' + list.length + '건**을 찾았습니다.');
+    if (scenario) {
+      lines.push('');
+      lines.push('> ' + scenario.summary);
+    }
     lines.push('');
     lines.push('| # | 데이터셋 | 제공기관 | 데이터 형태 | 갱신 주기 | 공개 범위 | 유사도 |');
     lines.push('| --- | --- | --- | --- | --- | --- | ---: |');
@@ -317,11 +333,70 @@
     });
     lines.push('');
     lines.push('> **가장 적합한 데이터셋**은 *' + top.title + '* (유사도 ' + top.simTotal.toFixed(2) + ')입니다. ' + top.desc);
+    if (scenario && scenario.rows) {
+      lines.push('');
+      lines.push('**업무 질의 결과 예시**');
+      lines = lines.concat(scenario.rows);
+    }
     lines.push('');
     lines.push('**바로 할 수 있는 작업**');
     lines.push('- 데이터셋 이름을 누르면 상세·유사도 분석을 확인할 수 있습니다.');
     lines.push('- 제공 형식: ' + (top.formats || []).map(function (f) { return '`' + f + '`'; }).join(', ') + ' — 메타데이터 확인 후 다운로드 또는 API 신청이 가능합니다.');
+    lines.push('- 표, 차트, 지도, 상세 패널은 실제 운영 연계 범위에 따라 단계적으로 연결합니다.');
     return lines.join('\n');
+  }
+
+  function detectScenario(q) {
+    var s = q.toLowerCase();
+    if (/(drt|버스)/i.test(q) && /(시간대|운행)/.test(q)) {
+      return {
+        summary: 'DRT 운행 현황 데이터에서 시간대별 운행 건수와 차량 상태를 조회하는 업무 시나리오입니다.',
+        rows: [
+          '| 시간대 | 운행 건수 | 평균 탑승 | 주요 노선 |',
+          '| --- | ---: | ---: | --- |',
+          '| 07~09시 | 42건 | 8.4명 | 광명역 ↔ 소하권 |',
+          '| 15~16시 | 18건 | 5.2명 | 철산권 ↔ 하안권 |',
+          '| 18~20시 | 51건 | 9.1명 | 광명역 ↔ 일직권 |'
+        ]
+      };
+    }
+    if (/오류|장애|실패|품질/.test(q)) {
+      return {
+        summary: '품질 점수와 갱신 실패 이력을 기준으로 오류 가능성이 높은 데이터셋을 찾는 운영 점검 시나리오입니다.',
+        rows: [
+          '| 점검 항목 | 데이터셋 | 상태 | 조치 |',
+          '| --- | --- | --- | --- |',
+          '| 갱신 지연 | 전기차충전소 현황 | 주의 | 원천 API 상태 확인 |',
+          '| 메타 누락 | 강우량계 시설 현황 | 검토 | 담당부서/갱신주기 보완 |',
+          '| 제한공개 | 소방긴급구조정보 | 제한 | 접근 권한 승인 필요 |'
+        ]
+      };
+    }
+    if (/(15시|15:00)/.test(q) && /(drt|버스)/i.test(q)) {
+      return {
+        summary: '15시 조건으로 DRT 도착 이력과 차량 ID를 좁혀 보는 상세 조회 시나리오입니다.',
+        rows: [
+          '| 도착시각 | 차량 ID | 노선 | 도착 정류장 | 상태 |',
+          '| --- | --- | --- | --- | --- |',
+          '| 15:02 | DRT-014 | 광명역 순환 | 일직동 환승거점 | 도착 |',
+          '| 15:11 | DRT-021 | 하안권 순환 | 하안사거리 | 운행중 |',
+          '| 15:27 | DRT-008 | 철산권 순환 | 철산역 | 도착 |'
+        ]
+      };
+    }
+    if (/특정|값|찾아/.test(q)) {
+      return {
+        summary: '값 기반 검색은 데이터셋명뿐 아니라 설명, 키워드, 메타데이터 항목까지 함께 탐색합니다.',
+        rows: [
+          '| 검색 범위 | 확인 내용 | 연결 화면 |',
+          '| --- | --- | --- |',
+          '| 데이터셋 | 관련 데이터셋 후보 | 상세 패널 |',
+          '| 메타데이터 | 키워드/주제/Endpoint | 메타데이터 드로어 |',
+          '| 제공 데이터 | 값 조건 조회 | 표/다운로드/API |'
+        ]
+      };
+    }
+    return null;
   }
 
   /* ── 응답 하단 액션(최상위 데이터셋 기준) ── */
@@ -331,6 +406,8 @@
     return '<div class="csx-msg__actions" data-top="' + top.id + '">' +
       '<button class="csx-act" data-act="detail"><i data-lucide="eye"></i>상세 보기</button>' +
       '<button class="csx-act" data-act="meta"><i data-lucide="file-text"></i>메타데이터 보기</button>' +
+      '<button class="csx-act" data-act="chart"><i data-lucide="bar-chart-2"></i>차트 보기</button>' +
+      '<button class="csx-act" data-act="map"><i data-lucide="map"></i>지도 보기</button>' +
       '<button class="csx-act" data-act="download"><i data-lucide="download"></i>다운로드</button>' +
       '<button class="csx-act csx-act--pri" data-act="api"><i data-lucide="cloud-upload"></i>API 신청</button>' +
       '</div>';
@@ -354,6 +431,8 @@
         if (act === 'detail')   openDetailDrawer(top);
         if (act === 'meta')     openMetaDrawer(top);
         if (act === 'download') openDownloadModal(top);
+        if (act === 'chart')    location.href = 'analysis-compare.html';
+        if (act === 'map')      location.href = 'mile-map.html';
         if (act === 'api')      location.href = 'catalog-access.html';
       });
     });
@@ -516,6 +595,50 @@
     var mdEdit = document.getElementById('mdEditBtn');
     if (mdEdit) mdEdit.addEventListener('click', function () { location.href = 'catalog-ai-meta.html'; });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeDrawer(); closeDownloadModal(); } });
+  }
+
+  function initGuideDrawer() {
+    var openBtn = document.getElementById('csGuideBtn');
+    if (openBtn) openBtn.addEventListener('click', function () { openDrawer('guideDrawer'); });
+    ['guideClose', 'guideCloseBtn'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('click', closeDrawer);
+    });
+    var startBtn = document.getElementById('guideStartBtn');
+    if (startBtn) startBtn.addEventListener('click', function () { guideAction('focus-search'); });
+    document.querySelectorAll('[data-guide-action]').forEach(function (btn) {
+      btn.addEventListener('click', function () { guideAction(this.dataset.guideAction); });
+    });
+  }
+
+  function guideAction(action) {
+    if (action === 'focus-search') {
+      closeDrawer();
+      var input = document.getElementById(state.active ? 'csInput' : 'csInputHero');
+      if (input) {
+        input.focus();
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+    if (action === 'ask-drt') {
+      closeDrawer();
+      submit('DRT 노선의 시간대별 운행 정보를 보여줘');
+      return;
+    }
+    if (action === 'ask-error') {
+      closeDrawer();
+      submit('오류가 많이 발생한 데이터를 찾아줘');
+      return;
+    }
+    if (action === 'open-meta') {
+      closeDrawer();
+      openMetaDrawer(DATASETS[0]);
+      return;
+    }
+    if (action === 'go-dataset') location.href = 'catalog-dataset.html';
+    if (action === 'go-ai-meta') location.href = 'catalog-ai-meta.html';
+    if (action === 'go-access') location.href = 'catalog-access.html';
   }
 
   function openDetailDrawer(ds) {

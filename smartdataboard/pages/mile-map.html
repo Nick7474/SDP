@@ -115,6 +115,10 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 19 8 17 18 7 18 5 8"/></svg>
               <span>영역선택</span>
             </button>
+            <button class="map-tool-btn2" id="btnDrawCircle" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="12" x2="21" y2="12"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
+              <span>반경선택</span>
+            </button>
             <button class="map-tool-btn2" id="btnClearSel" type="button">
               <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
               <span>선택해제</span>
@@ -131,24 +135,32 @@
         </div>
 
         <!-- 범례 (좌하단) -->
-        <div class="map-legend">
-          <p class="map-legend__title">시설 상태</p>
-          <div class="legend-item">
-            <span class="legend-dot" style="background:var(--status-success);"></span>
-            <span>정상</span>
+        <div class="map-legend js-gis-legend" id="mileMapLegend" data-legend-key="mile-map">
+          <div class="ce-legend-head">
+            <span class="ce-legend-head__title">범례</span>
+            <button class="ce-legend-toggle" type="button" aria-label="범례 접기" title="범례 접기">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+            </button>
           </div>
-          <div class="legend-item">
-            <span class="legend-dot" style="background:var(--status-warning);"></span>
-            <span>주의</span>
-          </div>
-          <div class="legend-item">
-            <span class="legend-dot" style="background:var(--status-danger);"></span>
-            <span>위험</span>
-          </div>
-          <div class="legend-divider"></div>
-          <div class="legend-item">
-            <span class="legend-ring"></span>
-            <span>레이어 지점</span>
+          <div class="ce-legend-body">
+            <p class="map-legend__title">시설 상태</p>
+            <div class="legend-item">
+              <span class="legend-dot" style="background:var(--status-success);"></span>
+              <span>정상</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background:var(--status-warning);"></span>
+              <span>주의</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background:var(--status-danger);"></span>
+              <span>위험</span>
+            </div>
+            <div class="legend-divider"></div>
+            <div class="legend-item">
+              <span class="legend-ring"></span>
+              <span>레이어 지점</span>
+            </div>
           </div>
         </div>
       </div>
@@ -502,6 +514,7 @@ window.GMSB_PAGE = {
 </script>
 <script src="../assets/js/nav.config.js"></script>
 <script src="../assets/js/shell.js"></script>
+<script src="../assets/js/gis-legend-toggle.js"></script>
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a6adc7984a1e98b757e7666da6ab377b"></script>
 <script src="../assets/js/page-mile-map.js"></script>
 </body>

@@ -49,9 +49,50 @@
 
     <!-- heatmap -->
     <section class="panel">
-      <div class="panel__hd">
-        <h2 class="panel__t">데이터 수집 모니터링</h2>
-        <p class="panel__d">미션·시스템별 데이터 수집 상태와 지연·장애·중지 현황을 시간대별로 확인합니다.</p>
+      <div class="panel__hd panel__hd--row">
+        <div>
+          <h2 class="panel__t">데이터 수집 모니터링</h2>
+          <p class="panel__d">미션·시스템별 데이터 수집 상태와 지연·장애·중지 현황을 시간대별로 확인합니다.</p>
+        </div>
+        <div class="hm-date-ctrl">
+          <!-- 퀵 버튼 -->
+          <div class="chip-group" id="hmDateChips">
+            <button class="chip on" data-day="0" type="button">오늘</button>
+            <button class="chip" data-day="1" type="button">어제</button>
+          </div>
+          <!-- 날짜 선택 트리거 -->
+          <div class="mc-group">
+            <span class="mc-label">날짜 선택</span>
+            <div class="mc-date-single" id="hmDateTrigger">
+              <i data-lucide="calendar" style="width:13px;height:13px;color:var(--fg-4);flex:none;"></i>
+              <span id="hmDateDisplay">—</span>
+              <!-- 캘린더 드롭다운 -->
+              <div class="date-picker-dropdown" id="hmDateDropdown">
+                <div class="cal-header">
+                  <button class="cal-nav-btn" id="hmCalPrev" type="button" aria-label="이전 달">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                  </button>
+                  <span class="cal-month-label" id="hmCalLabel"></span>
+                  <button class="cal-nav-btn" id="hmCalNext" type="button" aria-label="다음 달">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  </button>
+                </div>
+                <div class="cal-body">
+                  <div class="cal-grid" id="hmCalGrid"></div>
+                </div>
+                <div class="cal-footer">
+                  <span class="cal-selected-range" id="hmCalSelected">날짜를 선택하세요</span>
+                  <div class="cal-actions">
+                    <button class="btn btn--line" id="hmCalCancel" type="button">취소</button>
+                    <button class="btn btn--pri" id="hmCalApply" type="button">적용</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 기준 일시 -->
+          <span class="ph__upd">기준 일시 : <b id="hmBaseDate">—</b></span>
+        </div>
       </div>
       <div class="hm" id="heatmap">
         <div class="hm__h hm__h--first">시간</div>

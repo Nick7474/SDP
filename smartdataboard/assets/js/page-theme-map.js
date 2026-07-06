@@ -184,6 +184,7 @@
 
   function boot() {
     initMap();
+    initMapBoundsLock();
     initTree();
     initFavorites();
     initSpatialBtns();
@@ -208,6 +209,8 @@
       center: new kakao.maps.LatLng(37.444, 126.865),
       level: 7
     });
+    tmMap.setMinLevel(1);
+    tmMap.setMaxLevel(7);
     loadBoundary();
     addHeatmapCanvas();
 
@@ -241,6 +244,24 @@
     kakao.maps.event.addListener(tmMap, 'zoom_changed', function () { renderHeatmap(); hideHoverTip(); });
     kakao.maps.event.addListener(tmMap, 'center_changed', function () { renderHeatmap(); hideHoverTip(); });
     kakao.maps.event.addListener(tmMap, 'click', closePopup);
+  }
+
+  function initMapBoundsLock() {
+    var PAD = 0.03;
+    var LAT_MIN = GM_BOUNDS.south - PAD, LAT_MAX = GM_BOUNDS.north + PAD;
+    var LNG_MIN = GM_BOUNDS.west  - PAD, LNG_MAX = GM_BOUNDS.east  + PAD;
+    var _guard = false;
+    kakao.maps.event.addListener(tmMap, 'idle', function () {
+      if (_guard) return;
+      var c = tmMap.getCenter();
+      var lat = Math.max(LAT_MIN, Math.min(LAT_MAX, c.getLat()));
+      var lng = Math.max(LNG_MIN, Math.min(LNG_MAX, c.getLng()));
+      if (Math.abs(lat - c.getLat()) > 0.0001 || Math.abs(lng - c.getLng()) > 0.0001) {
+        _guard = true;
+        tmMap.setCenter(new kakao.maps.LatLng(lat, lng));
+        setTimeout(function () { _guard = false; }, 300);
+      }
+    });
   }
 
   function loadBoundary() {

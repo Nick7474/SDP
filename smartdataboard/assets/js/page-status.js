@@ -41,16 +41,21 @@
 
   /* ── 알림 목록 ── */
   var ALERTS = [
-    { time:'07:12', type:'warn', content:'CPU 사용률 72% 초과', service:'API 서비스', priority:'높음', status:'unread',
-      impact:'API 응답 속도 영향 가능', action:'자동 스케일링 트리거 확인, 원인 분석 권장', owner:'시스템운영팀' },
-    { time:'03:45', type:'warn', content:'API 평균 응답 시간 1.62초 초과', service:'API 서비스', priority:'높음', status:'unread',
-      impact:'일부 사용자 응답 지연', action:'DB 쿼리 최적화 또는 캐시 설정 확인 권장', owner:'시스템운영팀' },
-    { time:'02:00', type:'info', content:'정기 백업 완료', service:'DB 서비스', priority:'낮음', status:'done',
-      impact:'없음', action:'백업 파일 보관 주기 확인', owner:'system' },
-    { time:'00:30', type:'info', content:'스마트데이터보드 v1.3.2 배포 완료', service:'웹 서비스', priority:'낮음', status:'done',
-      impact:'없음', action:'배포 이력 확인', owner:'admin' },
-    { time:'00:00', type:'info', content:'일일 정기 점검 완료', service:'전체', priority:'낮음', status:'done',
-      impact:'없음', action:'다음 점검 일정 확인', owner:'system' }
+    { id:'cpu-high', time:'07:12', type:'warn', content:'CPU 사용률 72% 초과', service:'API 서비스', priority:'높음', status:'unread',
+      impact:'API 응답 속도 영향 가능', action:'자동 스케일링 트리거 확인, 원인 분석 권장', ownerDept:'시스템운영팀', owner:'미지정', due:'09:12',
+      logs:['07:12 알림 발생', '07:12 상단 알림 벨 및 상태 모니터링 등록'] },
+    { id:'api-response', time:'03:45', type:'warn', content:'API 평균 응답 시간 1.62초 초과', service:'API 서비스', priority:'높음', status:'assigned',
+      impact:'일부 사용자 응답 지연', action:'DB 쿼리 최적화 또는 캐시 설정 확인 권장', ownerDept:'시스템운영팀', owner:'이준호', due:'05:45',
+      logs:['03:45 알림 발생', '03:50 운영자 확인', '03:55 이준호 담당자 지정'] },
+    { id:'db-backup', time:'02:00', type:'info', content:'정기 백업 완료', service:'DB 서비스', priority:'낮음', status:'done',
+      impact:'없음', action:'백업 파일 보관 주기 확인', ownerDept:'시스템운영팀', owner:'system', due:'—',
+      memo:'정기 백업 정상 완료', logs:['02:00 알림 발생', '02:00 자동 완료 처리'] },
+    { id:'deploy-done', time:'00:30', type:'info', content:'스마트데이터보드 v1.3.2 배포 완료', service:'웹 서비스', priority:'낮음', status:'done',
+      impact:'없음', action:'배포 이력 확인', ownerDept:'시스템운영팀', owner:'admin', due:'—',
+      memo:'배포 이력 확인 완료', logs:['00:30 알림 발생', '00:35 관리자 완료 처리'] },
+    { id:'daily-check', time:'00:00', type:'info', content:'일일 정기 점검 완료', service:'전체', priority:'낮음', status:'done',
+      impact:'없음', action:'다음 점검 일정 확인', ownerDept:'시스템운영팀', owner:'system', due:'—',
+      memo:'일일 점검 정상 완료', logs:['00:00 알림 발생', '00:00 자동 완료 처리'] }
   ];
 
   /* ── 이벤트 막대 차트 (2시간 구간 × 12) ── */
@@ -486,7 +491,8 @@
   var TYPE_CLS = { warn:'st-type-warn', err:'st-type-err', info:'st-type-info' };
   var TYPE_LBL = { warn:'경고', err:'오류', info:'정보' };
   var TYPE_ORDER = ['err', 'warn', 'info'];
-  var ST_LBL   = { unread:'미확인', done:'완료' };
+  var ST_LBL   = { unread:'미확인', assigned:'담당자 지정', progress:'조치중', done:'완료' };
+  var ST_PILL  = { unread:'pill--delay', assigned:'pill--wait', progress:'pill--warn', done:'pill--ok' };
 
   function makeAlertRow(a) {
     var tr = document.createElement('tr');
@@ -497,7 +503,8 @@
       '<td><span class="' + (TYPE_CLS[a.type] || '') + '">' + (TYPE_LBL[a.type] || '정보') + '</span></td>' +
       '<td class="l" style="font-weight:' + (a.status === 'unread' ? '700' : '500') + '">' + a.content + '</td>' +
       '<td style="font-size:13px">' + a.service + '</td>' +
-      '<td><span class="pill ' + (a.status === 'unread' ? 'pill--delay' : 'pill--ok') + '">' + ST_LBL[a.status] + '</span></td>' +
+      '<td><span class="pill ' + (ST_PILL[a.status] || 'pill--stop') + '">' + (ST_LBL[a.status] || '기타') + '</span></td>' +
+      '<td style="font-size:13px;font-weight:700;color:' + (a.owner === '미지정' ? 'var(--status-warning)' : 'var(--fg-2)') + '">' + (a.owner || '미지정') + '</td>' +
       '<td style="text-align:center"><button class="tbtn tbtn--sm" type="button">보기</button></td>';
     tr.querySelector('.tbtn').addEventListener('click', function (ev) { ev.stopPropagation(); openDrawer(a); });
     tr.addEventListener('click', function () { openDrawer(a); });
@@ -519,7 +526,7 @@
         var hdrTr = document.createElement('tr');
         hdrTr.className = 'st-group-hd';
         var ico = t === 'err' ? 'triangle-alert' : t === 'warn' ? 'alert-circle' : 'info';
-        hdrTr.innerHTML = '<td colspan="6" style="padding:0"><div class="st-group-hd">' +
+        hdrTr.innerHTML = '<td colspan="7" style="padding:0"><div class="st-group-hd">' +
           '<i data-lucide="' + ico + '"></i>' + TYPE_LBL[t] +
           '<span class="st-group-cnt">' + group.length + '건</span></div></td>';
         body.appendChild(hdrTr);
@@ -533,7 +540,7 @@
     var start = (page - 1) * PAGE_SIZE;
     var slice = ALERTS.slice(start, start + PAGE_SIZE);
     if (!slice.length) {
-      body.innerHTML = '<tr class="tbl__empty"><td colspan="6"><i data-lucide="inbox"></i>알림이 없습니다.</td></tr>';
+      body.innerHTML = '<tr class="tbl__empty"><td colspan="7"><i data-lucide="inbox"></i>알림이 없습니다.</td></tr>';
       lucide.createIcons(); return;
     }
     slice.forEach(function (a) { body.appendChild(makeAlertRow(a)); });
@@ -576,8 +583,68 @@
   function setText(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; }
 
   function updateAlertBadge() {
-    var unread = ALERTS.filter(function (a) { return a.status === 'unread'; }).length;
+    var unread = ALERTS.filter(function (a) { return a.status !== 'done'; }).length;
     if (window.GMSB_SET_ALERT_COUNT) window.GMSB_SET_ALERT_COUNT(unread);
+  }
+
+  function addLog(a, text) {
+    var now = new Date();
+    var tm = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    if (!a.logs) a.logs = [];
+    a.logs.push(tm + ' ' + text);
+  }
+
+  function renderLog(a) {
+    var log = document.getElementById('dwLog');
+    if (!log) return;
+    var rows = a.logs || [a.time + ' 알림 발생'];
+    log.innerHTML = rows.map(function (item, idx) {
+      var split = item.indexOf(' ');
+      var tm = split > -1 ? item.slice(0, split) : item;
+      var ds = split > -1 ? item.slice(split + 1) : '';
+      var cls = idx === rows.length - 1 ? ' ok' : '';
+      return '<div class="log__it' + cls + '"><div class="log__tm">' + tm + '</div><div class="log__ds">' + ds + '</div></div>';
+    }).join('');
+  }
+
+  function renderProcessBanner(a) {
+    var banner = document.getElementById('dwProcessBanner');
+    var state = document.getElementById('dwProcessState');
+    var next = document.getElementById('dwProcessNext');
+    if (!banner || !state || !next) return;
+    var guide = {
+      unread: {
+        label: '현재 단계: 미확인',
+        next: '담당 부서와 담당자를 지정하세요.',
+        cls: ''
+      },
+      assigned: {
+        label: '현재 단계: 담당자 지정',
+        next: '담당자가 조치를 시작하면 조치중으로 전환하세요.',
+        cls: ''
+      },
+      progress: {
+        label: '현재 단계: 조치중',
+        next: '원인 유형과 조치 결과를 입력한 뒤 완료 처리하세요.',
+        cls: 'is-progress'
+      },
+      done: {
+        label: '현재 단계: 완료',
+        next: '처리 이력에서 조치 내용을 확인할 수 있습니다.',
+        cls: 'is-complete'
+      }
+    };
+    var info = guide[a.status] || guide.unread;
+    banner.className = 'st-process-banner' + (info.cls ? ' ' + info.cls : '');
+    state.textContent = info.label;
+    next.textContent = info.next;
+    var order = ['unread', 'assigned', 'progress', 'done'];
+    var currentIdx = Math.max(0, order.indexOf(a.status));
+    document.querySelectorAll('.st-process-step').forEach(function (step) {
+      var idx = order.indexOf(step.dataset.step);
+      step.classList.toggle('on', idx === currentIdx);
+      step.classList.toggle('done', idx > -1 && idx < currentIdx);
+    });
   }
 
   function openDrawer(a) {
@@ -588,28 +655,71 @@
     setText('f_priority', a.priority || '보통');
     setText('f_impact',   a.impact   || '—');
     setText('f_action',   a.action   || '—');
-    setText('f_owner',    a.owner    || '—');
+    setText('f_owner_dept', a.ownerDept || '—');
+    setText('f_owner',    a.owner    || '미지정');
+    setText('f_due',      a.due      || '—');
     setText('f_memo',     a.memo     || '없음');
     var fs = document.getElementById('f_status');
     if (fs) {
-      fs.innerHTML = '<span class="pill ' + (a.status === 'unread' ? 'pill--delay' : 'pill--ok') + '">' + ST_LBL[a.status] + '</span>';
+      fs.innerHTML = '<span class="pill ' + (ST_PILL[a.status] || 'pill--stop') + '">' + (ST_LBL[a.status] || '기타') + '</span>';
     }
-    /* 메모 입력창 초기화 */
+    var deptSelect = document.getElementById('dwOwnerDept');
+    var ownerSelect = document.getElementById('dwOwnerName');
+    var assignMemo = document.getElementById('dwAssignMemo');
+    var causeType = document.getElementById('dwCauseType');
+    var resultType = document.getElementById('dwResultType');
     var memoInput = document.getElementById('dwMemoInput');
+    if (deptSelect) deptSelect.value = a.ownerDept || '시스템운영팀';
+    if (ownerSelect) ownerSelect.value = a.owner || '미지정';
+    if (assignMemo) assignMemo.value = '';
+    if (causeType && a.cause) causeType.value = a.cause;
+    if (resultType && a.result) resultType.value = a.result;
     if (memoInput) memoInput.value = a.memo || '';
-    /* 이미 완료된 알림이면 입력칸 숨김 */
-    var memoSec = document.getElementById('dwMemoSec');
-    if (memoSec) memoSec.style.display = (a.status === 'done') ? 'none' : '';
+    renderLog(a);
+    renderProcessBanner(a);
+    var assignBtn = document.getElementById('dwAssignBtn');
+    if (assignBtn) {
+      assignBtn.disabled = (a.status === 'done');
+      assignBtn.onclick = function () {
+        var owner = ownerSelect ? ownerSelect.value : '미지정';
+        a.ownerDept = deptSelect ? deptSelect.value : a.ownerDept;
+        a.owner = owner;
+        a.status = owner === '미지정' ? 'unread' : 'assigned';
+        var memo = assignMemo ? assignMemo.value.trim() : '';
+        addLog(a, owner === '미지정' ? '담당자 미지정 상태 유지' : owner + ' 담당자 지정');
+        if (memo) addLog(a, '전달 메모: ' + memo);
+        openDrawer(a);
+        renderAlerts(currentPage);
+        renderTimeline();
+        updateAlertBadge();
+      };
+    }
+    var progressBtn = document.getElementById('dwProgressBtn');
+    if (progressBtn) {
+      progressBtn.disabled = (a.status === 'done');
+      progressBtn.onclick = function () {
+        a.status = 'progress';
+        addLog(a, '조치중 전환');
+        openDrawer(a);
+        renderAlerts(currentPage);
+        renderTimeline();
+        updateAlertBadge();
+      };
+    }
     var dwMark = document.getElementById('dwMarkBtn');
     if (dwMark) {
       dwMark.disabled = (a.status === 'done');
       dwMark.innerHTML = a.status === 'done'
         ? '<i data-lucide="check" class="gp-ico"></i>처리 완료'
-        : '<i data-lucide="check" class="gp-ico"></i>조치 완료 처리';
+        : '<i data-lucide="check" class="gp-ico"></i>조치 완료';
       dwMark.onclick = function () {
         var memo = memoInput ? memoInput.value.trim() : '';
         a.status = 'done';
+        a.cause = causeType ? causeType.value : '';
+        a.result = resultType ? resultType.value : '';
         if (memo) a.memo = memo;
+        addLog(a, '조치 완료: ' + (a.result || '정상 복구'));
+        if (a.cause) addLog(a, '원인 유형: ' + a.cause);
         renderAlerts(currentPage);
         renderTimeline();
         updateAlertBadge();
@@ -621,6 +731,24 @@
     drawer.setAttribute('aria-hidden', 'false');
     var closeBtn = document.getElementById('dwClose');
     if (closeBtn) closeBtn.focus();
+  }
+
+  function openAlertFromUrl() {
+    var params = new URLSearchParams(window.location.search || '');
+    var alertId = params.get('alert');
+    if (!alertId) return;
+    var target = ALERTS.filter(function (a) { return a.id === alertId; })[0];
+    if (!target) return;
+    if (target.status === 'unread') {
+      addLog(target, '운영자가 상단 알림 벨에서 상세 확인');
+    }
+    setTimeout(function () {
+      openDrawer(target);
+      var alertPanel = document.querySelector('.st-alert-panel');
+      if (alertPanel && alertPanel.scrollIntoView) {
+        alertPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 180);
   }
 
   function closeDrawer() {
@@ -638,7 +766,12 @@
   var markAllBtn = document.getElementById('markAllBtn');
   if (markAllBtn) {
     markAllBtn.addEventListener('click', function () {
-      ALERTS.forEach(function (a) { a.status = 'done'; });
+      ALERTS.forEach(function (a) {
+        if (a.status !== 'done') {
+          a.status = 'done';
+          addLog(a, '전체 확인으로 완료 처리');
+        }
+      });
       renderAlerts(currentPage);
       renderTimeline();
       updateAlertBadge();
@@ -677,6 +810,7 @@
   /* ─────────────────── 초기 렌더링 ─────────────────── */
   renderTimeline();
   renderAlerts(1);
+  openAlertFromUrl();
 
   setTimeout(function () {
     drawLineChart('cpu', -1);

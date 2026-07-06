@@ -122,6 +122,6 @@
 .ck-goal-row{display:flex;flex-direction:column;gap:5px;margin-bottom:16px;}
 .ck-goal-lbl{font:600 13px/1 var(--font-sans);color:var(--fg-2);}
 .ck-goal-input{height:40px;padding:0 12px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);font:400 14px/1 var(--font-sans);color:var(--fg-1);background:var(--surface-card);width:100%;box-sizing:border-box;}
-.ck-goal-input:focus{outline:none;border-color:var(--gp-point);box-shadow:0 0 0 3px var(--gp-point-soft);}
+.ck-goal-input:focus{outline:none;border-color:var(--gp-point);box-shadow:none;}
 .ck-goal-hint{font:400 12px/1.4 var(--font-sans);color:var(--fg-4);margin-top:3px;}
 .ck-goal-modal__ft{display:flex;gap:8px;justify-content:flex-end;margin-top:24px;}

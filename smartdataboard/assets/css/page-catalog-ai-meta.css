@@ -545,7 +545,7 @@
 }
 .am-form-input:focus, .am-form-select:focus {
   border-color: var(--gp-point);
-  box-shadow: 0 0 0 3px rgba(12,138,229,.10);
+  box-shadow: none;
 }
 .am-form-input[readonly] { background: var(--bg-subtle); color: var(--fg-3); cursor: default; }
 .am-form-textarea {
@@ -1008,7 +1008,7 @@
 .reg-search svg { position:absolute; left:22px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--fg-4); }
 .reg-search input { width:100%; height:36px; padding:0 12px 0 32px; border:1px solid var(--border-strong);
   border-radius:var(--radius-sm); font:400 13px/1 var(--font-sans); color:var(--fg-1); background:var(--surface-inset); outline:none; }
-.reg-search input:focus { border-color:var(--gp-point); background:#fff; box-shadow:0 0 0 3px rgba(12,138,229,.1); }
+.reg-search input:focus { border-color:var(--gp-point); background:#fff; box-shadow:none; }
 .reg-list__body { flex:1; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:8px; }
 .reg-item { text-align:left; border:1px solid var(--border-1); background:#fff; border-radius:var(--radius-md);
   padding:11px 12px; cursor:pointer; transition:border-color var(--dur-fast), box-shadow var(--dur-fast), background var(--dur-fast); }
@@ -1047,7 +1047,7 @@
 .reg-composer { padding:12px; border-top:1px solid var(--border-2); }
 .reg-inputbar { display:flex; align-items:flex-end; gap:8px; border:2px solid var(--border-strong);
   border-radius:14px; padding:7px 7px 7px 14px; transition:border-color var(--dur-fast), box-shadow var(--dur-fast); }
-.reg-inputbar:focus-within { border-color:var(--gp-point); box-shadow:0 0 0 3px rgba(12,138,229,.1); }
+.reg-inputbar:focus-within { border-color:var(--gp-point); box-shadow:none; }
 .reg-inputbar textarea { flex:1; border:none; outline:none; resize:none; background:transparent;
   font:400 14px/1.5 var(--font-sans); color:var(--fg-1); max-height:120px; padding:6px 0; }
 .reg-send { flex:none; width:36px; height:36px; border:none; border-radius:10px; background:var(--gp-point);
@@ -1068,7 +1068,7 @@
 .reg-fld input, .reg-fld textarea, .reg-fld select { width:100%; border:1px solid var(--border-strong); border-radius:var(--radius-sm);
   padding:7px 10px; font:400 13px/1.5 var(--font-sans); color:var(--fg-1); background:#fff; outline:none; }
 .reg-fld textarea { resize:vertical; min-height:58px; }
-.reg-fld input:focus, .reg-fld textarea:focus, .reg-fld select:focus { border-color:var(--gp-point); box-shadow:0 0 0 3px rgba(12,138,229,.1); }
+.reg-fld input:focus, .reg-fld textarea:focus, .reg-fld select:focus { border-color:var(--gp-point); box-shadow:none; }
 .reg-fld--auto input, .reg-fld--auto .reg-ro { background:var(--surface-inset); color:var(--fg-2); }
 .reg-ro { border:1px solid var(--border-1); border-radius:var(--radius-sm); padding:7px 10px; font:400 13px/1.4 var(--font-sans); color:var(--fg-2); }
 .reg-chips { display:flex; flex-wrap:wrap; gap:5px; }
@@ -1113,7 +1113,7 @@
 .reg-chip-f.on { background:var(--gp-primary); border-color:var(--gp-primary); color:#fff; }
 .reg-fselect { height:32px; border:1px solid var(--border-strong); border-radius:var(--radius-sm);
   padding:0 10px; font:500 12px/1 var(--font-sans); color:var(--fg-2); background:#fff; outline:none; cursor:pointer; }
-.reg-fselect:focus { border-color:var(--gp-point); box-shadow:0 0 0 3px rgba(12,138,229,.1); }
+.reg-fselect:focus { border-color:var(--gp-point); box-shadow:none; }
 
 .reg-fselects { display:flex; gap:6px; }
 .reg-fselects .reg-fselect { flex:1; min-width:0; }

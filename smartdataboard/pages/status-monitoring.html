@@ -167,6 +167,7 @@
               <th class="l">내용</th>
               <th>서비스</th>
               <th>상태</th>
+              <th>담당자</th>
               <th>상세</th>
             </tr>
           </thead>
@@ -192,6 +193,18 @@
       <i data-lucide="info" class="gp-ico"></i>
       <p>선택한 알림의 발생 원인, 영향 범위, 처리 상태를 확인합니다.</p>
     </div>
+    <div class="st-process-banner" id="dwProcessBanner">
+      <div class="st-process-banner__head">
+        <span id="dwProcessState">현재 단계: 미확인</span>
+        <b id="dwProcessNext">담당자를 지정하세요.</b>
+      </div>
+      <div class="st-process-steps" aria-label="알림 처리 단계">
+        <span class="st-process-step" data-step="unread">미확인</span>
+        <span class="st-process-step" data-step="assigned">담당자 지정</span>
+        <span class="st-process-step" data-step="progress">조치중</span>
+        <span class="st-process-step" data-step="done">완료</span>
+      </div>
+    </div>
     <div class="dw__sec">
       <h4><i data-lucide="bell" class="gp-ico"></i>알림 정보</h4>
       <dl class="dl">
@@ -208,20 +221,79 @@
       <dl class="dl">
         <div class="dl__r"><dt>영향 범위</dt><dd id="f_impact">—</dd></div>
         <div class="dl__r"><dt>권장 조치</dt><dd id="f_action">—</dd></div>
+        <div class="dl__r"><dt>담당 부서</dt><dd id="f_owner_dept">—</dd></div>
         <div class="dl__r"><dt>담당자</dt><dd id="f_owner">—</dd></div>
+        <div class="dl__r"><dt>처리 기한</dt><dd id="f_due">—</dd></div>
         <div class="dl__r"><dt>조치 메모</dt><dd id="f_memo" style="color:var(--fg-3);font-style:italic">없음</dd></div>
       </dl>
     </div>
-    <div class="dw__sec" id="dwMemoSec">
-      <h4><i data-lucide="pencil" class="gp-ico"></i>조치 완료 메모</h4>
-      <textarea id="dwMemoInput" class="st-memo-input" rows="3" placeholder="조치 내용을 입력하세요 (선택)"></textarea>
+    <div class="dw__sec" id="dwAssignSec">
+      <h4><i data-lucide="user-check" class="gp-ico"></i>담당자 지정</h4>
+      <div class="st-form-grid">
+        <label class="st-form-field">
+          <span>담당 부서</span>
+          <select id="dwOwnerDept" class="st-form-select">
+            <option>시스템운영팀</option>
+            <option>데이터운영팀</option>
+            <option>에너지관리팀</option>
+            <option>교통정책과</option>
+            <option>상황실</option>
+          </select>
+        </label>
+        <label class="st-form-field">
+          <span>담당자</span>
+          <select id="dwOwnerName" class="st-form-select">
+            <option>미지정</option>
+            <option>김민수</option>
+            <option>박서연</option>
+            <option>이준호</option>
+            <option>최지은</option>
+          </select>
+        </label>
+      </div>
+      <textarea id="dwAssignMemo" class="st-memo-input" rows="2" placeholder="담당자에게 전달할 요청 사항을 입력하세요."></textarea>
+    </div>
+    <div class="dw__sec" id="dwActionSec">
+      <h4><i data-lucide="clipboard-check" class="gp-ico"></i>조치 등록</h4>
+      <div class="st-form-grid">
+        <label class="st-form-field">
+          <span>원인 유형</span>
+          <select id="dwCauseType" class="st-form-select">
+            <option>리소스 임계치 초과</option>
+            <option>데이터 수집 오류</option>
+            <option>연계 API 오류</option>
+            <option>네트워크 오류</option>
+            <option>기타</option>
+          </select>
+        </label>
+        <label class="st-form-field">
+          <span>조치 결과</span>
+          <select id="dwResultType" class="st-form-select">
+            <option>정상 복구</option>
+            <option>임시 조치</option>
+            <option>추가 확인 필요</option>
+            <option>외부 기관 이관</option>
+          </select>
+        </label>
+      </div>
+      <textarea id="dwMemoInput" class="st-memo-input" rows="3" placeholder="원인, 수행한 조치, 재발 방지 내용을 입력하세요."></textarea>
+    </div>
+    <div class="dw__sec">
+      <h4><i data-lucide="history" class="gp-ico"></i>처리 이력</h4>
+      <div class="log" id="dwLog"></div>
     </div>
   </div>
-  <div class="dw__ft" style="display:flex;flex-direction:column;gap:8px;padding:14px 20px">
-    <button class="btn btn--pri" type="button" id="dwMarkBtn" style="width:100%">
-      <i data-lucide="check" class="gp-ico"></i>조치 완료 처리
-    </button>
-    <button class="btn btn--line" type="button" id="dwCloseFooter" style="width:100%">닫기</button>
+  <div class="dw__ft st-dw-ft">
+    <div class="st-dw-ft__row">
+      <button class="btn btn--line" type="button" id="dwAssignBtn">담당자 지정</button>
+      <button class="btn btn--line" type="button" id="dwProgressBtn">조치중 전환</button>
+    </div>
+    <div class="st-dw-ft__row">
+      <button class="btn btn--ghost" type="button" id="dwCloseFooter">닫기</button>
+      <button class="btn btn--pri" type="button" id="dwMarkBtn">
+        <i data-lucide="check" class="gp-ico"></i>조치 완료
+      </button>
+    </div>
   </div>
 </aside>
 

@@ -1,12 +1,20 @@
 /* =====================================================================
    광명 스마트데이터보드 · 데이터 모니터링
-   파트너사 7개 시스템 기준으로 데이터 정합성 반영 (2026-06-16)
    ===================================================================== */
 (function () {
   function __run() {
 
   var TIMES = ['00시','02시','04시','06시','08시','10시','12시','14시','16시','18시','20시','22시'];
   var STLABEL = { ok:'정상', delay:'지연', err:'장애', stop:'중지', wait:'수집 대기' };
+
+  /* ── 날짜 헬퍼 ── */
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function fmtDate(d) { return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+  function fmtTime(d) { return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()); }
+  function todayStr() { return fmtDate(new Date()); }
+  function dateByOffset(n) { var d = new Date(); d.setDate(d.getDate() - n); return fmtDate(d); }
+
+  var selectedDate = todayStr();
 
   /* ── 7개 파트너사 시스템 ── */
   var ROWS = [
@@ -102,47 +110,236 @@
     if (tooltip) tooltip.style.display = 'none';
   }
 
-  var hm = document.getElementById('heatmap');
-  ROWS.forEach(function (r) {
-    var rl = document.createElement('div');
-    rl.className = 'hm__rl'; rl.textContent = r.name; hm.appendChild(rl);
-    r.cells.forEach(function (c, i) {
-      var map = { o:'ok', d:'delay', e:'err', s:'stop', w:'wait' };
-      var st = map[c];
-      var cell = document.createElement('div'); cell.className = 'hm__cell';
-      var bar = document.createElement('button');
-      bar.className = 'hm__bar hm__bar--' + st;
-      bar.setAttribute('type','button');
-      bar.dataset.name    = r.name;
-      bar.dataset.type    = r.type;
-      bar.dataset.method  = r.method;
-      bar.dataset.partner = r.partner;
-      bar.dataset.time    = TIMES[i];
-      bar.dataset.status  = st;
-      bar.dataset.dept    = r.dept;
-      bar.dataset.last    = '2026-06-16 ' + TIMES[i].replace('시',':') + '00';
-      bar.setAttribute('aria-label', r.name + ' ' + TIMES[i] + ' ' + STLABEL[st]);
+  var stColor = { ok:'#4ade80', delay:'#fbbf24', err:'#f87171', stop:'#94a3b8', wait:'#94a3b8' };
 
-      /* 툴팁 */
-      bar.addEventListener('mouseenter', function (e) {
-        showTooltip(e,
-          '<b>' + r.name + '</b><br>' +
-          TIMES[i] + ' · <span style="color:' +
-            (st==='ok'?'#4ade80':st==='delay'?'#fbbf24':st==='err'?'#f87171':'#94a3b8') +
-          '">' + STLABEL[st] + '</span>');
+  function renderHeatmap(dateStr) {
+    var hm = document.getElementById('heatmap');
+    if (!hm) return;
+    var isToday = (dateStr === todayStr());
+    var now = new Date();
+    var curIdx = isToday ? Math.floor(now.getHours() / 2) : 12;
+
+    /* 기존 데이터 행 제거 (헤더 13개 유지) */
+    var kids = Array.prototype.slice.call(hm.children);
+    kids.slice(13).forEach(function (el) { if (!el.id) el.remove(); });
+
+    ROWS.forEach(function (r) {
+      var rl = document.createElement('div');
+      rl.className = 'hm__rl'; rl.textContent = r.name; hm.appendChild(rl);
+      r.cells.forEach(function (c, i) {
+        var map = { o:'ok', d:'delay', e:'err', s:'stop', w:'wait' };
+        var st = map[c] || 'ok';
+        var isFuture = isToday && (i > curIdx);
+
+        var cell = document.createElement('div'); cell.className = 'hm__cell';
+        var bar = document.createElement('button');
+        bar.className = 'hm__bar ' + (isFuture ? 'hm__bar--future' : 'hm__bar--' + st);
+        bar.setAttribute('type', 'button');
+        bar.dataset.name    = r.name;
+        bar.dataset.type    = r.type;
+        bar.dataset.method  = r.method;
+        bar.dataset.partner = r.partner;
+        bar.dataset.time    = TIMES[i];
+        bar.dataset.status  = isFuture ? 'future' : st;
+        bar.dataset.dept    = r.dept;
+        bar.dataset.last    = dateStr + ' ' + TIMES[i].replace('시', ':') + '00';
+        bar.setAttribute('aria-label', r.name + ' ' + TIMES[i] + (isFuture ? ' 미수집' : ' ' + STLABEL[st]));
+
+        if (isFuture) {
+          bar.addEventListener('mouseenter', function (e) {
+            showTooltip(e, '<b>' + r.name + '</b><br>' + TIMES[i] + ' · <span style="color:#94a3b8">아직 수집되지 않은 시간대입니다.</span>');
+          });
+        } else {
+          bar.addEventListener('mouseenter', function (e) {
+            showTooltip(e, '<b>' + r.name + '</b><br>' + TIMES[i] + ' · <span style="color:' + (stColor[st]||'#94a3b8') + '">' + STLABEL[st] + '</span>');
+          });
+          if (st !== 'ok') {
+            bar.classList.add('clk');
+            bar.addEventListener('click', function () { hideTooltip(); openDrawer(bar.dataset); });
+          } else {
+            bar.style.cursor = 'default';
+          }
+        }
+        bar.addEventListener('mousemove', posTooltip);
+        bar.addEventListener('mouseleave', hideTooltip);
+        cell.appendChild(bar); hm.appendChild(cell);
       });
-      bar.addEventListener('mousemove', posTooltip);
-      bar.addEventListener('mouseleave', hideTooltip);
-
-      if (st !== 'ok') {
-        bar.classList.add('clk');
-        bar.addEventListener('click', function () { hideTooltip(); openDrawer(bar.dataset); });
-      } else {
-        bar.style.cursor = 'default';
-      }
-      cell.appendChild(bar); hm.appendChild(cell);
     });
-  });
+
+    /* 기준 일시 텍스트 업데이트 */
+    var baseDateEl = document.getElementById('hmBaseDate');
+    if (baseDateEl) baseDateEl.textContent = dateStr + (isToday ? ' (오늘)' : '');
+
+    /* 현재 시간 기준선 */
+    renderNowLine(isToday);
+  }
+
+  /* ── 현재 시간 기준선 ── */
+  var nowLineTimer = null;
+
+  function renderNowLine(show) {
+    var hm = document.getElementById('heatmap');
+    if (!hm) return;
+    var line = document.getElementById('hmNowLine');
+
+    if (!show) {
+      if (line) line.style.display = 'none';
+      return;
+    }
+
+    if (!line) {
+      line = document.createElement('div');
+      line.id = 'hmNowLine';
+      line.className = 'hm__now-line';
+      line.innerHTML = '<span class="hm__now-chip" id="hmNowChip"></span>';
+      hm.appendChild(line);
+    }
+    line.style.display = '';
+
+    var now    = new Date();
+    var mins   = now.getHours() * 60 + now.getMinutes();
+    var ratio  = mins / 1440;
+    var headerH = (hm.querySelector('.hm__h') || {}).offsetHeight || 44;
+    var hmW    = hm.offsetWidth;
+    var leftPx = 140 + ratio * (hmW - 140);
+
+    line.style.left = leftPx + 'px';
+    line.style.top  = headerH + 'px';
+
+    var chip = document.getElementById('hmNowChip');
+    if (chip) chip.textContent = '지금 ' + pad(now.getHours()) + ':' + pad(now.getMinutes());
+  }
+
+  /* ── 단일 날짜 캘린더 피커 ── */
+  var _CAL_MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  var _CAL_DAYS   = ['일','월','화','수','목','금','토'];
+  var _hmCal = (function () {
+    var now = new Date();
+    return { viewYear: now.getFullYear(), viewMonth: now.getMonth(), selDate: new Date() };
+  }());
+
+  function _hmCalFmt(d) {
+    if (!d) return '—';
+    return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+  }
+  function _hmCalSame(a, b) {
+    return a && b && a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+  }
+
+  function _hmCalRender() {
+    var label = document.getElementById('hmCalLabel');
+    if (label) label.textContent = _hmCal.viewYear + '년 ' + _CAL_MONTHS[_hmCal.viewMonth];
+
+    var grid = document.getElementById('hmCalGrid');
+    if (!grid) return;
+    var today    = new Date();
+    var firstDow = new Date(_hmCal.viewYear, _hmCal.viewMonth, 1).getDay();
+    var daysInM  = new Date(_hmCal.viewYear, _hmCal.viewMonth + 1, 0).getDate();
+
+    var html = '<div class="cal-weekdays">';
+    _CAL_DAYS.forEach(function (d) { html += '<span>' + d + '</span>'; });
+    html += '</div><div class="cal-days">';
+    for (var e = 0; e < firstDow; e++) html += '<div class="cal-day cal-day--empty"></div>';
+    for (var d = 1; d <= daysInM; d++) {
+      var date = new Date(_hmCal.viewYear, _hmCal.viewMonth, d);
+      var cls  = 'cal-day';
+      if (_hmCalSame(date, today)) cls += ' cal-day--today';
+      if (_hmCalSame(date, _hmCal.selDate)) cls += ' cal-day--selected';
+      html += '<div class="' + cls + '" data-y="' + _hmCal.viewYear + '" data-m="' + _hmCal.viewMonth + '" data-d="' + d + '">' + d + '</div>';
+    }
+    html += '</div>';
+    grid.innerHTML = html;
+
+    /* 선택 텍스트 */
+    var selEl = document.getElementById('hmCalSelected');
+    if (selEl) selEl.textContent = _hmCal.selDate ? _hmCalFmt(_hmCal.selDate) : '날짜를 선택하세요';
+
+    /* 날짜 클릭 */
+    grid.querySelectorAll('.cal-day:not(.cal-day--empty)').forEach(function (el) {
+      el.addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        _hmCal.selDate = new Date(+el.dataset.y, +el.dataset.m, +el.dataset.d);
+        _hmCalRender();
+      });
+    });
+  }
+
+  function initDateFilter() {
+    var trigger  = document.getElementById('hmDateTrigger');
+    var dropdown = document.getElementById('hmDateDropdown');
+    var chips    = document.querySelectorAll('#hmDateChips .chip');
+
+    /* 퀵 칩 (오늘/어제) */
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        chips.forEach(function (c) { c.classList.remove('on'); });
+        chip.classList.add('on');
+        selectedDate = dateByOffset(parseInt(chip.dataset.day, 10));
+        _hmCal.selDate = new Date(selectedDate);
+        _hmCal.viewYear  = _hmCal.selDate.getFullYear();
+        _hmCal.viewMonth = _hmCal.selDate.getMonth();
+        document.getElementById('hmDateDisplay').textContent = selectedDate;
+        renderHeatmap(selectedDate);
+        renderHist(selectedDate);
+        if (nowLineTimer) clearInterval(nowLineTimer);
+        if (selectedDate === todayStr()) nowLineTimer = setInterval(function () { renderNowLine(true); }, 60000);
+      });
+    });
+
+    /* 트리거 클릭 → 드롭다운 토글 */
+    if (trigger && dropdown) {
+      trigger.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var isOpen = dropdown.classList.contains('open');
+        dropdown.classList.toggle('open');
+        if (!isOpen) _hmCalRender();
+      });
+
+      /* 이전/다음 달 */
+      var prev = document.getElementById('hmCalPrev');
+      var next = document.getElementById('hmCalNext');
+      if (prev) prev.addEventListener('click', function (e) {
+        e.stopPropagation();
+        _hmCal.viewMonth--;
+        if (_hmCal.viewMonth < 0) { _hmCal.viewMonth = 11; _hmCal.viewYear--; }
+        _hmCalRender();
+      });
+      if (next) next.addEventListener('click', function (e) {
+        e.stopPropagation();
+        _hmCal.viewMonth++;
+        if (_hmCal.viewMonth > 11) { _hmCal.viewMonth = 0; _hmCal.viewYear++; }
+        _hmCalRender();
+      });
+
+      /* 적용 */
+      var applyBtn = document.getElementById('hmCalApply');
+      if (applyBtn) applyBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        selectedDate = _hmCalFmt(_hmCal.selDate);
+        document.getElementById('hmDateDisplay').textContent = selectedDate;
+        chips.forEach(function (c) { c.classList.remove('on'); });
+        dropdown.classList.remove('open');
+        renderHeatmap(selectedDate);
+        renderHist(selectedDate);
+        if (nowLineTimer) clearInterval(nowLineTimer);
+        if (selectedDate === todayStr()) nowLineTimer = setInterval(function () { renderNowLine(true); }, 60000);
+      });
+
+      /* 취소 */
+      var cancelBtn = document.getElementById('hmCalCancel');
+      if (cancelBtn) cancelBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        dropdown.classList.remove('open');
+      });
+
+      /* 외부 클릭 닫기 */
+      document.addEventListener('click', function (e) {
+        if (dropdown && !trigger.contains(e.target)) dropdown.classList.remove('open');
+      });
+    }
+  }
+
+  initDateFilter();
 
   /* ═══════════════════════════════════════════════════════════════
      최근 수집 이력 + 상세 모달
@@ -157,27 +354,29 @@
     { tm:'14:20', name:'탄소감축 데이터',    type:'에너지',   method:'REST API', status:'ok',    cnt:'38건',    last:'14:20', dept:'환경과',     partner:'그리너리/후시파트너스' }
   ];
 
-  var histBody = document.getElementById('histBody');
-  HIST.forEach(function (h) {
-    var tr = document.createElement('tr');
-    tr.innerHTML =
-      '<td class="num">' + h.tm + '</td>' +
-      '<td class="l">' + h.name + '</td>' +
-      '<td>' + h.type + '</td>' +
-      '<td>' + h.method + '</td>' +
-      '<td><span class="pill ' + (pillCls[h.status]||'pill--stop') + '">' + STLABEL[h.status] + '</span></td>' +
-      '<td class="num">' + h.cnt + '</td>' +
-      '<td class="num">' + h.last + '</td>' +
-      '<td><button class="tbtn tbtn--sm" type="button">상세</button></td>';
-    var drawData = { name:h.name, type:h.type, method:h.method, partner:h.partner,
-      time:h.tm, status:h.status, dept:h.dept,
-      last:'2026-06-16 ' + h.last + ':00', cnt:h.cnt };
-    tr.style.cursor = 'pointer';
-    tr.addEventListener('click', function () {
-      openDrawer(drawData);
+  function renderHist(dateStr) {
+    var histBody = document.getElementById('histBody');
+    if (!histBody) return;
+    histBody.innerHTML = '';
+    HIST.forEach(function (h) {
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="num">' + h.tm + '</td>' +
+        '<td class="l">' + h.name + '</td>' +
+        '<td>' + h.type + '</td>' +
+        '<td>' + h.method + '</td>' +
+        '<td><span class="pill ' + (pillCls[h.status]||'pill--stop') + '">' + STLABEL[h.status] + '</span></td>' +
+        '<td class="num">' + h.cnt + '</td>' +
+        '<td class="num">' + h.last + '</td>' +
+        '<td><button class="tbtn tbtn--sm" type="button">상세</button></td>';
+      var drawData = { name:h.name, type:h.type, method:h.method, partner:h.partner,
+        time:h.tm, status:h.status, dept:h.dept,
+        last: dateStr + ' ' + h.last + ':00', cnt:h.cnt };
+      tr.style.cursor = 'pointer';
+      tr.addEventListener('click', function () { openDrawer(drawData); });
+      histBody.appendChild(tr);
     });
-    histBody.appendChild(tr);
-  });
+  }
 
   /* ── 수집 이력 상세 모달 ── */
   var histModalScrim = document.getElementById('histModalScrim');
@@ -195,12 +394,12 @@
     setText('hm_method',   h.method);
     setText('hm_dept',     h.dept);
     setText('hm_cnt',      h.cnt);
-    setText('hm_last',     '2026-06-16 ' + h.last + ':00');
+    setText('hm_last',     selectedDate + ' ' + h.last + ':00');
 
     var log = document.getElementById('hmModalLog');
     if (log) {
       var logRows = [
-        { t: '2026-06-16 ' + h.last + ':00', s: st,   d: CODE[st].msg + (h.cnt !== '0건' ? ' (' + h.cnt + ')' : '') },
+        { t: selectedDate + ' ' + h.last + ':00', s: st,   d: CODE[st].msg + (h.cnt !== '0건' ? ' (' + h.cnt + ')' : '') },
         { t: '직전 주기 (정상)',               s: 'ok', d: '정상 수집 완료' },
         { t: '2주기 전 (정상)',                s: 'ok', d: '정상 수집 완료' },
         { t: '3주기 전 (정상)',                s: 'ok', d: '정상 수집 완료' }
@@ -236,7 +435,7 @@
   function exportHistCsv(h) {
     var rows = [
       ['수집 시간','데이터명','구분','방식','제공기관','담당부서','상태','수집건수'],
-      ['2026-06-16 ' + h.tm, h.name, h.type, h.method, h.partner, h.dept, STLABEL[h.status], h.cnt]
+      [selectedDate + ' ' + h.tm, h.name, h.type, h.method, h.partner, h.dept, STLABEL[h.status], h.cnt]
     ];
     var csv = '﻿' + rows.map(function (r) { return r.map(function (v) { return '"' + v + '"'; }).join(','); }).join('\r\n');
     var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
@@ -389,7 +588,14 @@
   }
 
   /* ── 초기 실행 ── */
+  /* hmDateDisplay 초기값 */
+  var _dispEl = document.getElementById('hmDateDisplay');
+  if (_dispEl) _dispEl.textContent = selectedDate;
+
   renderAnomalies();
+  renderHeatmap(selectedDate);
+  renderHist(selectedDate);
+  nowLineTimer = setInterval(function () { renderNowLine(true); }, 60000);
 
   } /* __run */
 

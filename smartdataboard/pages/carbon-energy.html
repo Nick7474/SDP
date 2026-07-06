@@ -86,17 +86,17 @@
                 <div class="ce-criteria-row">
                   <span class="ce-criteria-lb">데이터 유형</span>
                   <select class="ce-select" id="carbonDataType">
-                    <option value="reduction">탄소배출·저감량</option>
                     <option value="emission">탄소배출량</option>
+                    <option value="reduction">탄소저감량</option>
                     <option value="both">배출·저감 비교</option>
                   </select>
                 </div>
               </div>
             </div>
 
-            <!-- 공간 레이어 -->
+            <!-- 저감 사업·시설 지점 -->
             <div class="gis-filter__sec">
-              <p class="gis-filter__sec-hd">공간 레이어</p>
+              <p class="gis-filter__sec-hd">저감 사업·시설 지점</p>
               <div class="layer-list" id="carbonLayerList"></div>
             </div>
 
@@ -244,16 +244,16 @@
       <div class="gis-pane on" id="pane-carbon">
         <div class="gis-kpi-strip">
           <div class="gis-kpi-item">
-            <div class="gis-kpi-ico" style="--ico-bg:#E4F6EC;--ico-color:#1AAA5E"><i data-lucide="leaf"></i></div>
-            <div class="gis-kpi__info"><div class="gis-kpi__lb">총 탄소저감량</div><div class="gis-kpi__vl" id="ckpi0">1,245.8<span class="u">tCO₂eq</span></div></div>
+            <div class="gis-kpi-ico" style="--ico-bg:#FCEAE8;--ico-color:#E0483D"><i data-lucide="factory"></i></div>
+            <div class="gis-kpi__info"><div class="gis-kpi__lb">총 탄소배출량</div><div class="gis-kpi__vl" id="ckpi0">15,400<span class="u">tCO₂eq</span></div></div>
           </div>
           <div class="gis-kpi-item">
-            <div class="gis-kpi-ico" style="--ico-bg:#E5EDF8;--ico-color:#044E9E"><i data-lucide="trending-up"></i></div>
-            <div class="gis-kpi__info"><div class="gis-kpi__lb">전월 대비</div><div class="gis-kpi__vl" id="ckpi1" style="color:var(--gp-primary);">+8.3<span class="u">%</span></div></div>
+            <div class="gis-kpi-ico" style="--ico-bg:#FCEAE8;--ico-color:#E0483D"><i data-lucide="trending-up"></i></div>
+            <div class="gis-kpi__info"><div class="gis-kpi__lb">전월 대비 배출 변화</div><div class="gis-kpi__vl" id="ckpi1" style="color:var(--status-danger);">+4.2<span class="u">%</span></div></div>
           </div>
           <div class="gis-kpi-item">
             <div class="gis-kpi-ico" style="--ico-bg:#ECEDFB;--ico-color:#6E74D6"><i data-lucide="pie-chart"></i></div>
-            <div class="gis-kpi__info"><div class="gis-kpi__lb">저감 기여도</div><div class="gis-kpi__vl" id="ckpi2">25.8<span class="u">%</span></div></div>
+            <div class="gis-kpi__info"><div class="gis-kpi__lb">배출 비중</div><div class="gis-kpi__vl" id="ckpi2">24.8<span class="u">%</span></div></div>
           </div>
           <div class="gis-kpi-item">
             <div class="gis-kpi-ico" style="--ico-bg:#E3F2FD;--ico-color:#0C8AE5"><i data-lucide="shield-check"></i></div>
@@ -271,7 +271,7 @@
         <div class="gis-charts">
           <div class="gis-chart-card">
             <div class="gis-chart-card__hd">
-              <p class="gis-chart-card__title">월별 탄소저감 추이</p><span class="gis-chart-card__sub">(tCO₂eq)</span>
+              <p class="gis-chart-card__title">월별 탄소배출 추이</p><span class="gis-chart-card__sub">(tCO₂eq)</span>
               <button class="chart-dl-btn" id="carbonLineDlBtn" type="button" title="CSV 다운로드"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
             </div>
             <div class="chart-canvas-wrap"><canvas id="carbonLineChart"></canvas></div>
@@ -279,7 +279,7 @@
           </div>
           <div class="gis-chart-card">
             <div class="gis-chart-card__hd">
-              <p class="gis-chart-card__title">분야별 저감 비중</p><span class="gis-chart-card__sub">(%)</span>
+              <p class="gis-chart-card__title">분야별 배출 비중</p><span class="gis-chart-card__sub">(%)</span>
               <button class="chart-dl-btn" id="carbonDonutDlBtn" type="button" title="CSV 다운로드"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
             </div>
             <div class="donut-wrap">
@@ -289,7 +289,7 @@
           </div>
           <div class="gis-chart-card">
             <div class="gis-chart-card__hd">
-              <p class="gis-chart-card__title">저감 효과 추이</p><span class="gis-chart-card__sub">(%)</span>
+              <p class="gis-chart-card__title">배출량 추이</p><span class="gis-chart-card__sub">(tCO₂eq)</span>
               <button class="chart-dl-btn" id="carbonBarDlBtn" type="button" title="CSV 다운로드"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
             </div>
             <div class="chart-canvas-wrap"><canvas id="carbonBarChart"></canvas></div>
@@ -302,7 +302,7 @@
     <!-- 행정동 집계 테이블 (탄소) -->
     <div class="ce-dongtbl-wrap" id="ceDongTblCarbon">
       <div class="ce-dongtbl__hd">
-        <h3 class="ce-dongtbl__title">행정동별 탄소배출·저감 집계</h3>
+        <h3 class="ce-dongtbl__title">행정동별 탄소배출량 집계</h3>
         <div class="ce-dongtbl__actions">
           <input type="search" id="dongSearchCarbon" class="ce-dongtbl__search" placeholder="행정동 검색" aria-label="행정동 검색">
           <button class="btn btn--line" id="dongCarbonCsvBtn" type="button">
@@ -314,10 +314,10 @@
         <thead>
           <tr>
             <th class="l">행정동</th>
-            <th>탄소저감량 (tCO₂eq)</th>
             <th>탄소배출량 (tCO₂eq)</th>
-            <th>저감 기여도</th>
+            <th>배출 비중(%)</th>
             <th>전년 대비</th>
+            <th>배출 등급</th>
             <th>상태</th>
             <th>상세</th>
           </tr>
@@ -484,11 +484,18 @@
       </button>
     </div>
     <div class="map-popup__bd">
+      <div class="ce-popup-metric" id="cePopupMetric">
+        <span class="ce-popup-metric__label" id="cePopupMetricLabel">저감 기여량</span>
+        <strong class="ce-popup-metric__value" id="cePopupMetricValue"></strong>
+        <span class="ce-popup-metric__desc" id="cePopupMetricDesc"></span>
+      </div>
       <div class="map-popup__dl">
-        <div class="map-popup__row"><span class="map-popup__dt">소재지</span><span class="map-popup__dd" id="cePopupAddr"></span></div>
+        <div class="map-popup__row"><span class="map-popup__dt" id="cePopupAddrLb">소재지</span><span class="map-popup__dd" id="cePopupAddr"></span></div>
+        <div class="map-popup__row" id="cePopupDongRow"><span class="map-popup__dt">관할 행정동</span><span class="map-popup__dd" id="cePopupDong"></span></div>
         <div class="map-popup__row"><span class="map-popup__dt" id="cePopupVal1Lb">저감량</span><span class="map-popup__dd" id="cePopupVal1"></span></div>
         <div class="map-popup__row"><span class="map-popup__dt" id="cePopupVal2Lb">상태</span><span class="map-popup__dd" id="cePopupVal2"></span></div>
         <div class="map-popup__row"><span class="map-popup__dt">최근 업데이트</span><span class="map-popup__dd" id="cePopupSync"></span></div>
+        <div class="map-popup__row" id="cePopupSourceRow"><span class="map-popup__dt">연계 데이터</span><span class="map-popup__dd" id="cePopupSource"></span></div>
       </div>
     </div>
     <div class="map-popup__ft" id="cePopupFt">
@@ -529,7 +536,7 @@
       <div class="ce-dd__legend">
         <span class="ce-dd__leg-item"><span class="ce-dd__leg-swatch" style="background:#36445A"></span>전체</span>
         <span class="ce-dd__leg-item"><span class="ce-dd__leg-swatch" style="background:#E0483D"></span>배출량</span>
-        <span class="ce-dd__leg-item"><span class="ce-dd__leg-swatch" style="background:#2b83bb"></span>흡수량(저장량)</span>
+        <span class="ce-dd__leg-item"><span class="ce-dd__leg-swatch" style="background:#1AAA5E"></span>저감·흡수량</span>
       </div>
     </div>
     <div class="dw__sec">
@@ -538,9 +545,9 @@
         <thead>
           <tr>
             <th>연도</th>
-            <th>전체</th>
-            <th>배출량</th>
-            <th>흡수량(저장량)</th>
+            <th>순 배출량</th>
+            <th>총 배출량</th>
+            <th>저감·흡수량</th>
           </tr>
         </thead>
         <tbody id="ceDdTableBody"></tbody>

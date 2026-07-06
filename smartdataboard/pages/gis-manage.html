@@ -275,15 +275,22 @@
         </div>
 
         <!-- 오버레이 범례 -->
-        <div class="gm-overlay-legend" id="gmOverlayLegend">
-          <div class="map-legend__title">범례</div>
-          <div class="gm-legend-list" id="gmLegendList">
-            <div class="gm-legend-item"><span class="gm-legend-dot" style="background:var(--status-success)"></span>공개 데이터</div>
-            <div class="gm-legend-item"><span class="gm-legend-dot" style="background:var(--status-warning)"></span>비공개 데이터</div>
-            <div class="gm-legend-item"><span class="gm-legend-dot" style="background:var(--status-pending)"></span>관리 데이터</div>
-            <div class="gm-legend-divider legend-divider"></div>
-            <div class="gm-legend-item"><span class="gm-legend-rect" style="background:rgba(12,138,229,.15);border:1.5px solid var(--gp-point)"></span>공개 범위</div>
-            <div class="gm-legend-item"><span class="gm-legend-dashed"></span>비공개 범위</div>
+        <div class="gm-overlay-legend js-gis-legend" id="gmOverlayLegend" data-legend-key="gis-manage">
+          <div class="ce-legend-head">
+            <span class="ce-legend-head__title">범례</span>
+            <button class="ce-legend-toggle" type="button" aria-label="범례 접기" title="범례 접기">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+            </button>
+          </div>
+          <div class="ce-legend-body">
+            <div class="gm-legend-list" id="gmLegendList">
+              <div class="gm-legend-item"><span class="gm-legend-dot" style="background:var(--status-success)"></span>공개 데이터</div>
+              <div class="gm-legend-item"><span class="gm-legend-dot" style="background:var(--status-warning)"></span>비공개 데이터</div>
+              <div class="gm-legend-item"><span class="gm-legend-dot" style="background:var(--status-pending)"></span>관리 데이터</div>
+              <div class="gm-legend-divider legend-divider"></div>
+              <div class="gm-legend-item"><span class="gm-legend-rect" style="background:rgba(12,138,229,.15);border:1.5px solid var(--gp-point)"></span>공개 범위</div>
+              <div class="gm-legend-item"><span class="gm-legend-dashed"></span>비공개 범위</div>
+            </div>
           </div>
         </div>
 
@@ -703,6 +710,7 @@ window.GMSB_PAGE = {
 </script>
 <script src="../assets/js/nav.config.js"></script>
 <script src="../assets/js/shell.js"></script>
+<script src="../assets/js/gis-legend-toggle.js"></script>
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a6adc7984a1e98b757e7666da6ab377b"></script>
 <script src="../assets/js/page-gis-manage.js"></script>
 </body>

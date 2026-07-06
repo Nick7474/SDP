@@ -358,6 +358,62 @@
   min-width: 140px;
 }
 
+.js-gis-legend {
+  padding: 0;
+  overflow: hidden;
+}
+
+.js-gis-legend.map-legend--collapsed {
+  min-width: 0;
+}
+
+.ce-legend-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 38px;
+  padding: 0 10px 0 13px;
+}
+
+.ce-legend-head__title {
+  font: 700 12px/1 var(--font-sans);
+  color: var(--fg-2);
+  white-space: nowrap;
+}
+
+.ce-legend-toggle {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-xs);
+  background: var(--surface-card);
+  color: var(--fg-3);
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background var(--dur-fast), color var(--dur-fast), border-color var(--dur-fast);
+}
+
+.ce-legend-toggle:hover {
+  background: var(--gp-primary-tint);
+  color: var(--gp-point);
+  border-color: var(--border-primary);
+}
+
+.map-legend--collapsed .ce-legend-toggle svg {
+  transform: rotate(180deg);
+}
+
+.ce-legend-body {
+  padding: 2px 14px 12px;
+  border-top: 1px solid var(--border-2);
+}
+
+.map-legend--collapsed .ce-legend-body {
+  display: none !important;
+}
+
 .map-legend__title {
   font: 700 11px/1 var(--font-sans);
   color: var(--fg-4);

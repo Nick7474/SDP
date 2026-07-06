@@ -59,7 +59,7 @@
   align-items: flex-end;
   gap: 10px;
   background: #fff;
-  border: 2px solid var(--border-strong);
+  border: 1px solid var(--border-strong);
   border-radius: 18px;
   padding: 10px 10px 10px 18px;
   box-shadow: var(--elev-2);
@@ -67,7 +67,7 @@
 }
 .csx-box:focus-within {
   border-color: var(--gp-point);
-  box-shadow: 0 0 0 4px rgba(12,138,229,.12);
+  box-shadow: var(--elev-2);
 }
 .csx-box__field {
   flex: 1;
@@ -77,9 +77,16 @@
   font: 400 16px/1.6 var(--font-sans);
   color: var(--fg-1);
   outline: none;
+  box-shadow: none;
+  appearance: none;
   padding: 10px 0;
   max-height: 168px;
   overflow-y: auto;
+}
+.csx-box__field:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 .csx-box__field::placeholder { color: var(--fg-4); }
 .csx-box__send {
@@ -393,6 +400,128 @@
 .dl-fmt-btn:hover { border-color: var(--border-strong); background: var(--bg-subtle); color: var(--fg-1); }
 .dl-fmt-btn.on { border-color: var(--gp-primary); background: var(--gp-primary-soft); color: var(--gp-primary); }
 .dl-fmt-btn svg { width: 22px; height: 22px; }
+
+/* ── AI 데이터 카탈로그 사용 가이드 ── */
+.cs-guide-drawer {
+  width: 480px;
+  max-width: 92vw;
+}
+
+.cs-guide-hero {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  background: var(--gp-primary-tint);
+  margin-bottom: 16px;
+}
+
+.cs-guide-hero svg {
+  width: 22px;
+  height: 22px;
+  color: var(--gp-point);
+  flex: none;
+}
+
+.cs-guide-hero strong {
+  display: block;
+  font: 700 15px/1.3 var(--font-sans);
+  color: var(--fg-1);
+  margin-bottom: 5px;
+}
+
+.cs-guide-hero p {
+  font: 400 13px/1.55 var(--font-sans);
+  color: var(--fg-2);
+  margin: 0;
+}
+
+.cs-guide-progress {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+  margin-bottom: 16px;
+}
+
+.cs-guide-progress span {
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--border-1);
+}
+
+.cs-guide-progress span.on,
+.cs-guide-progress span:first-child {
+  background: var(--gp-point);
+}
+
+.cs-guide-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cs-guide-step {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 12px;
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  padding: 14px;
+}
+
+.cs-guide-step.is-on {
+  border-color: var(--border-primary);
+  box-shadow: var(--elev-1);
+}
+
+.cs-guide-step__num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--gp-point);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font: 800 13px/1 var(--font-sans);
+}
+
+.cs-guide-step__body h4 {
+  font: 700 15px/1.35 var(--font-sans);
+  color: var(--fg-1);
+  margin: 2px 0 7px;
+}
+
+.cs-guide-step__body p {
+  font: 400 13px/1.55 var(--font-sans);
+  color: var(--fg-2);
+  margin: 0 0 9px;
+}
+
+.cs-guide-step__body ul {
+  margin: 0;
+  padding-left: 17px;
+}
+
+.cs-guide-step__body li {
+  font: 400 12px/1.55 var(--font-sans);
+  color: var(--fg-3);
+  margin: 3px 0;
+}
+
+.cs-guide-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.cs-guide-actions .btn {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 12px;
+}
 
 /* ── 반응형 ── */
 @media (max-width: 920px) {

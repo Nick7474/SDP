@@ -10,18 +10,18 @@
     svgW:  391, svgH: 561
   };
 
-  /* 행정구역별 choropleth 범례 (Section_Map.svg 컬러 기준) */
+  /* 행정구역별 choropleth 범례 (탄소배출량 기준 — 높을수록 빨강) */
   var CE_CHOROPLETH_LEGEND = [
-    { color:'#d72027', range:'41,318 ~ 7,858,490' },
-    { color:'#ef7c49', range:'27,303 ~ 41,318' },
-    { color:'#feca80', range:'15,765 ~ 27,303' },
-    { color:'#fcf7c1', range:'6,962 ~ 15,765' },
-    { color:'#c8e2ad', range:'1,569 ~ 6,962' },
-    { color:'#80bfab', range:'-1,291 ~ 1,569' },
-    { color:'#2b83bb', range:'-8,038 ~ -1,291' }
+    { color:'#d72027', range:'50,000 이상' },
+    { color:'#ef7c49', range:'35,000 ~ 50,000' },
+    { color:'#feca80', range:'22,000 ~ 35,000' },
+    { color:'#fcf7c1', range:'12,000 ~ 22,000' },
+    { color:'#c8e2ad', range:'7,000 ~ 12,000' },
+    { color:'#80bfab', range:'3,000 ~ 7,000' },
+    { color:'#2b83bb', range:'3,000 미만' }
   ];
 
-  /* 행정동별 데모 데이터 (SVG path 순서와 1:1 대응) */
+  /* 행정동별 탄소배출량 데이터 (tCO₂eq, 높을수록 빨강) */
   var DONG_DEMO_DATA = [
     { name:'철산1동',  value: 29800 },
     { name:'철산2동',  value: 11900 },
@@ -31,35 +31,35 @@
     { name:'광명2동',  value: 21300 },
     { name:'광명3동',  value: 18200 },
     { name:'광명4동',  value:  3280 },
-    { name:'광명5동',  value: -2900 },
+    { name:'광명5동',  value:  4200 },
     { name:'광명6동',  value: 44800 },
-    { name:'광명7동',  value:   820 },
+    { name:'광명7동',  value:  1800 },
     { name:'하안1동',  value: 52480 },
     { name:'하안2동',  value:  9700 },
-    { name:'소하1동',  value: -4900 },
+    { name:'소하1동',  value:  3800 },
     { name:'소하2동',  value: 16800 },
     { name:'학온동',   value:  4850 },
-    { name:'일직동',   value: -5500 }
+    { name:'일직동',   value:  2500 }
   ];
 
   function tco2ToColor(v) {
-    if (v >= 41318) return '#d72027';
-    if (v >= 27303) return '#ef7c49';
-    if (v >= 15765) return '#feca80';
-    if (v >= 6962)  return '#fcf7c1';
-    if (v >= 1569)  return '#c8e2ad';
-    if (v >= -1291) return '#80bfab';
+    if (v >= 50000) return '#d72027';
+    if (v >= 35000) return '#ef7c49';
+    if (v >= 22000) return '#feca80';
+    if (v >= 12000) return '#fcf7c1';
+    if (v >= 7000)  return '#c8e2ad';
+    if (v >= 3000)  return '#80bfab';
     return '#2b83bb';
   }
 
   /* ── 탄소저감 시설 목업 데이터 ── */
   var CARBON_PINS = [
-    { id:'c1', tab:'carbon', sector:'renew',     name:'광명역 태양광 발전소',   type:'신재생에너지', lat:37.4218, lng:126.8648, value:48.7,  unit:'tCO₂eq', status:'ok',   sync:'2026-05-26 14:30', addr:'경기도 광명시 일직동 346' },
-    { id:'c2', tab:'carbon', sector:'building',  name:'철산동 건물에너지 절감', type:'건물광·업무빌딩',lat:37.4742, lng:126.8822, value:32.1,  unit:'tCO₂eq', status:'ok',   sync:'2026-05-26 14:20', addr:'경기도 광명시 철산동 12-4' },
-    { id:'c3', tab:'carbon', sector:'transport', name:'소하동 친환경 이동거점', type:'교통시설·효율화',lat:37.4392, lng:126.8755, value:21.4,  unit:'tCO₂eq', status:'ok',   sync:'2026-05-26 14:30', addr:'경기도 광명시 소하동 134-2' },
-    { id:'c4', tab:'carbon', sector:'citizen',   name:'광명동 시민참여센터',    type:'시민참여·활동', lat:37.4552, lng:126.8692, value:14.2,  unit:'tCO₂eq', status:'warn', sync:'2026-05-26 13:45', addr:'경기도 광명시 광명동 행정타운' },
-    { id:'c5', tab:'carbon', sector:'renew',     name:'하안동 풍력발전',        type:'신재생에너지',  lat:37.4518, lng:126.8748, value:38.9,  unit:'tCO₂eq', status:'ok',   sync:'2026-05-26 14:25', addr:'경기도 광명시 하안동 320' },
-    { id:'c6', tab:'carbon', sector:'building',  name:'일직동 스마트빌딩',      type:'건물광·업무빌딩',lat:37.4265, lng:126.8598, value:27.3,  unit:'tCO₂eq', status:'ok',   sync:'2026-05-26 14:10', addr:'경기도 광명시 일직동 산12' }
+    { id:'c1', tab:'carbon', sector:'renew',     name:'광명역 태양광 발전소',     type:'신재생에너지', lat:37.4218, lng:126.8648, value:48.7, unit:'tCO₂eq', status:'ok',   sync:'2026-05-26 14:30', addr:'경기도 광명시 일직동 346',       dong:'일직동', source:'건축물에너지정보플랫폼', summary:'공공부지 태양광 발전량을 탄소저감량으로 환산한 지점입니다.' },
+    { id:'c2', tab:'carbon', sector:'building',  name:'철산동 건물에너지 절감',   type:'건물 절감',     lat:37.4742, lng:126.8822, value:32.1, unit:'tCO₂eq', status:'ok',   sync:'2026-05-26 14:20', addr:'경기도 광명시 철산동 12-4',      dong:'철산동', source:'공공건물 에너지관리시스템', summary:'업무시설 전력 사용량 개선 효과를 저감 기여량으로 산정합니다.' },
+    { id:'c3', tab:'carbon', sector:'transport', name:'소하동 친환경 이동거점',   type:'교통 효율화',   lat:37.4392, lng:126.8755, value:21.4, unit:'tCO₂eq', status:'ok',   sync:'2026-05-26 14:30', addr:'경기도 광명시 소하동 134-2',     dong:'소하동', source:'친환경 교통 운영 데이터',   summary:'친환경 이동수단 이용 전환에 따른 탄소저감 효과를 집계합니다.' },
+    { id:'c4', tab:'carbon', sector:'citizen',   name:'광명동 시민참여센터',      type:'시민참여 활동', lat:37.4552, lng:126.8692, value:14.2, unit:'tCO₂eq', status:'warn', sync:'2026-05-26 13:45', addr:'경기도 광명시 광명동 행정타운', dong:'광명동', source:'탄소중립 시민참여 플랫폼', summary:'시민참여 캠페인과 활동 실적을 저감량으로 환산한 지점입니다.' },
+    { id:'c5', tab:'carbon', sector:'renew',     name:'하안동 재생에너지 거점',   type:'신재생에너지', lat:37.4518, lng:126.8748, value:38.9, unit:'tCO₂eq', status:'ok',   sync:'2026-05-26 14:25', addr:'경기도 광명시 하안동 320',       dong:'하안동', source:'재생에너지 발전량 수집 API', summary:'분산형 재생에너지 생산량을 기준으로 저감 기여량을 산정합니다.' },
+    { id:'c6', tab:'carbon', sector:'building',  name:'일직동 스마트빌딩',        type:'건물 절감',     lat:37.4265, lng:126.8598, value:27.3, unit:'tCO₂eq', status:'ok',   sync:'2026-05-26 14:10', addr:'경기도 광명시 일직동 산12',      dong:'일직동', source:'스마트빌딩 에너지 데이터',   summary:'건물 자동제어와 효율 개선으로 절감된 에너지 사용량을 추적합니다.' }
   ];
 
   /* ── 에너지 시설 목업 데이터 ── */
@@ -92,10 +92,10 @@
   /* 히트맵 색상 팔레트 */
   var HEAT_PALETTE = {
     carbon: [
-      { stop: 0.0, r:200, g:245, b:218 },
-      { stop: 0.4, r: 26, g:170, b: 94 },
-      { stop: 0.7, r:  4, g: 78, b:158 },
-      { stop: 1.0, r:  2, g: 43, b: 87 }
+      { stop: 0.0, r:200, g:230, b:200 },
+      { stop: 0.4, r:254, g:202, b:128 },
+      { stop: 0.7, r:239, g:124, b: 73 },
+      { stop: 1.0, r:215, g: 32, b: 39 }
     ],
     energy: [
       { stop: 0.0, r:255, g:249, b:196 },
@@ -107,9 +107,9 @@
 
   var CARBON_LAYERS = [
     { key:'renew',     label:'신재생에너지 지점',  count:'38개',  color:'#0C8AE5' },
-    { key:'building',  label:'건물 절감 구역',     count:'124개', color:'#1AAA5E' },
+    { key:'building',  label:'건물 절감 사업',     count:'124개', color:'#1AAA5E' },
     { key:'transport', label:'교통 효율화 거점',   count:'52개',  color:'#ED8B16' },
-    { key:'citizen',   label:'시민참여 활동 지점', count:'89개',  color:'#6E74D6' }
+    { key:'citizen',   label:'시민참여 활동',      count:'89개',  color:'#6E74D6' }
   ];
 
   var ENERGY_LAYERS = [
@@ -122,14 +122,14 @@
   /* ── 차트 목업 데이터 ── */
   var CHART_DATA = {
     carbon: {
-      line:  { labels:['1월','2월','3월','4월','5월'], values:[850.2,950.4,1050.7,1150.3,1245.8], color:'#1AAA5E', unit:'tCO₂eq' },
-      donut: { total:1245.8, unit:'tCO₂eq', segments:[
-        { label:'모빌리티', value:40, color:'#1AAA5E' },
-        { label:'에너지',   value:30, color:'#0C8AE5' },
-        { label:'공공시설', value:20, color:'#ED8B16' },
-        { label:'시민참여', value:10, color:'#6E74D6' }
+      line:  { labels:['1월','2월','3월','4월','5월'], values:[13850,14200,13650,14800,15400], color:'#E0483D', unit:'tCO₂eq' },
+      donut: { total:15400, unit:'tCO₂eq', segments:[
+        { label:'건물',   value:38, color:'#E0483D' },
+        { label:'교통',   value:32, color:'#ED8B16' },
+        { label:'산업',   value:18, color:'#6E74D6' },
+        { label:'공공',   value:12, color:'#0C8AE5' }
       ]},
-      bar:   { labels:['1월','2월','3월','4월','5월'], values:[10,20,30,36,42], color:'#1AAA5E', unit:'%' }
+      bar:   { labels:['1월','2월','3월','4월','5월'], values:[13850,14200,13650,14800,15400], color:'#E0483D', unit:'tCO₂eq' }
     },
     energy: {
       line:  { labels:['2026.01','2026.02','2026.03','2026.04','2026.05'], values:[100,180,260,360,432], color:'#0C8AE5', unit:'MWh' },
@@ -153,11 +153,11 @@
   /* ── KPI 기준값 ── */
   var KPI_BASE = {
     carbon: [
-      { num:1245.8, unit:'tCO₂eq', dec:1, scalable:true  },
-      { prefix:'+', num:8.3, unit:'%', dec:1, scalable:false, color:'var(--gp-primary)' },
-      { num:25.8,   unit:'%',      dec:1, scalable:false },
+      { num:15400, unit:'tCO₂eq', dec:0, scalable:true  },
+      { prefix:'+', num:4.2, unit:'%', dec:1, scalable:false, color:'var(--status-danger)' },
+      { num:24.8,  unit:'%',      dec:1, scalable:false },
       { text:'정상', color:'var(--status-success)' },
-      { num:2,      unit:'곳',     dec:0, scalable:false },
+      { num:2,     unit:'곳',     dec:0, scalable:false },
       { text:'15:07', color:'var(--fg-1)' }
     ],
     energy: [
@@ -178,7 +178,11 @@
   var heatCanvas         = null;
   var choroplethSvg      = null;
   var choroplethFillPaths = [];
+  var PIN_Z_INDEX        = 1200;
+  var LEGEND_STORAGE_KEY = 'gmsb:carbon-energy:legend-collapsed';
+  var pinLayer           = null;
   var markerRefs         = [];
+  var legendCollapsed    = false;
   var boundaryPolygon    = null;
 
   var _ceFilter = {
@@ -212,7 +216,9 @@
   }
 
   function boot() {
+    loadLegendState();
     initMap();
+    initMapBoundsLock();
     initTabs();
     initFilters();
     initSearch();
@@ -242,9 +248,28 @@
       level: 7
     });
     ceMap.setMinLevel(1);
-    ceMap.setMaxLevel(12);
+    ceMap.setMaxLevel(7);
     addHeatmapCanvas();
     loadChoroplethMap();
+    ensurePinLayer();
+  }
+
+  function initMapBoundsLock() {
+    var PAD = 0.03;
+    var LAT_MIN = GM_BOUNDS.south - PAD, LAT_MAX = GM_BOUNDS.north + PAD;
+    var LNG_MIN = GM_BOUNDS.west  - PAD, LNG_MAX = GM_BOUNDS.east  + PAD;
+    var _guard = false;
+    kakao.maps.event.addListener(ceMap, 'idle', function () {
+      if (_guard) return;
+      var c = ceMap.getCenter();
+      var lat = Math.max(LAT_MIN, Math.min(LAT_MAX, c.getLat()));
+      var lng = Math.max(LNG_MIN, Math.min(LNG_MAX, c.getLng()));
+      if (Math.abs(lat - c.getLat()) > 0.0001 || Math.abs(lng - c.getLng()) > 0.0001) {
+        _guard = true;
+        ceMap.setCenter(new kakao.maps.LatLng(lat, lng));
+        setTimeout(function () { _guard = false; }, 300);
+      }
+    });
   }
 
   function addHeatmapCanvas() {
@@ -320,7 +345,10 @@
     mapEl.appendChild(svgEl);
     choroplethSvg = svgEl;
     positionChoroplethSvg();
-    kakao.maps.event.addListener(ceMap, 'tilesloaded', positionChoroplethSvg);
+    kakao.maps.event.addListener(ceMap, 'tilesloaded', function() {
+      positionChoroplethSvg();
+      positionPinLayer();
+    });
   }
 
   /* 외부에서 실제 데이터로 choropleth 갱신할 때 호출 */
@@ -345,29 +373,90 @@
     choroplethSvg.style.height = (se.y - nw.y) + 'px';
   }
 
+  function ensurePinLayer() {
+    if (pinLayer) return;
+    var mapEl = document.getElementById('ceMap');
+    pinLayer = document.createElement('div');
+    pinLayer.id = 'cePinLayer';
+    pinLayer.style.cssText = 'position:absolute;inset:0;z-index:' + PIN_Z_INDEX + ';pointer-events:none;';
+    mapEl.appendChild(pinLayer);
+  }
+
+  function positionPinLayer() {
+    if (!pinLayer || !ceMap) return;
+    var proj = ceMap.getProjection();
+    markerRefs.forEach(function(ref) {
+      var pt = proj.containerPointFromCoords(ref.latLng);
+      ref.el.style.left = pt.x + 'px';
+      ref.el.style.top  = pt.y + 'px';
+    });
+  }
+
   function renderLegend(tab) {
     var el = document.getElementById('ceLegend');
     if (!el) return;
+    el.classList.toggle('map-legend--collapsed', legendCollapsed);
+    var head = '<div class="ce-legend-head">'
+      + '<span class="ce-legend-head__title">범례</span>'
+      + '<button class="ce-legend-toggle" id="ceLegendToggle" type="button" aria-label="' + (legendCollapsed ? '범례 펼치기' : '범례 접기') + '" title="' + (legendCollapsed ? '범례 펼치기' : '범례 접기') + '">'
+      + '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>'
+      + '</button></div>';
+    var body = '';
     if (tab === 'carbon') {
       el.classList.add('map-legend--choropleth');
-      var html = '<p class="map-legend__title">탄소저감량 (tCO₂eq)</p><div class="ce-legend-steps">';
+      body = '<p class="map-legend__title">탄소배출량 (tCO₂eq)</p><div class="ce-legend-steps">';
       CE_CHOROPLETH_LEGEND.forEach(function(item) {
-        html += '<div class="ce-legend-step">'
+        body += '<div class="ce-legend-step">'
           + '<span class="ce-legend-step__swatch" style="background:' + item.color + '"></span>'
           + '<span class="ce-legend-step__label">' + item.range + '</span>'
           + '</div>';
       });
-      html += '</div><p class="ce-legend-unit">단위 : tonCO₂eq</p>';
-      el.innerHTML = html;
+      body += '</div><p class="ce-legend-unit">단위 : tonCO₂eq</p>'
+        + '<div class="ce-legend-divider"></div>'
+        + '<p class="map-legend__title">저감 사업·시설 지점</p>'
+        + '<div class="ce-pin-legend">';
+      CARBON_LAYERS.forEach(function(item) {
+        body += '<div class="ce-pin-legend__item">'
+          + '<span class="ce-pin-legend__pin" style="--pin-color:' + item.color + '"></span>'
+          + '<span>' + item.label + '</span>'
+          + '</div>';
+      });
+      body += '</div>';
     } else {
       el.classList.remove('map-legend--choropleth');
-      el.innerHTML = '<p class="map-legend__title">에너지 사용 수준 (kWh)</p>'
+      body = '<p class="map-legend__title">에너지 사용 수준 (kWh)</p>'
         + '<div class="ce-legend-gradient">'
         + '<span class="ce-legend-low">낮음</span>'
         + '<div class="ce-legend-bar ce-legend-bar--energy"></div>'
         + '<span class="ce-legend-high">매우 높음</span>'
         + '</div>';
     }
+    el.innerHTML = head + '<div class="ce-legend-body">' + body + '</div>';
+    bindLegendToggle();
+  }
+
+  function loadLegendState() {
+    try {
+      legendCollapsed = localStorage.getItem(LEGEND_STORAGE_KEY) === '1';
+    } catch (e) {
+      legendCollapsed = false;
+    }
+  }
+
+  function saveLegendState() {
+    try {
+      localStorage.setItem(LEGEND_STORAGE_KEY, legendCollapsed ? '1' : '0');
+    } catch (e) {}
+  }
+
+  function bindLegendToggle() {
+    var btn = document.getElementById('ceLegendToggle');
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      legendCollapsed = !legendCollapsed;
+      saveLegendState();
+      renderLegend(activeTab);
+    });
   }
 
   function loadBoundary() {
@@ -447,7 +536,7 @@
     }
     var legTitle = document.querySelector('.map-legend .map-legend__title');
     if (legTitle) {
-      legTitle.textContent = tab === 'carbon' ? '저감 수준 (tCO₂eq)' : '에너지 사용 수준 (kWh)';
+      legTitle.textContent = tab === 'carbon' ? '배출 수준 (tCO₂eq)' : '에너지 사용 수준 (kWh)';
     }
   }
 
@@ -456,10 +545,12 @@
     kakao.maps.event.addListener(ceMap, 'zoom_changed', function() {
       if (activeTab === 'energy') renderHeatmap('energy');
       else positionChoroplethSvg();
+      positionPinLayer();
     });
     kakao.maps.event.addListener(ceMap, 'center_changed', function() {
       if (activeTab === 'energy') renderHeatmap('energy');
       else positionChoroplethSvg();
+      positionPinLayer();
     });
   }
 
@@ -475,7 +566,7 @@
     var base = window.GMSB_BASE || '../';
     var mile = pin.tab === 'carbon' ? (SECTOR_TO_MILE[pin.sector] || 'energy') : (ETYPE_TO_MILE[pin.etype] || 'energy');
     var el = document.createElement('div');
-    el.style.cssText = 'position:relative;width:50px;height:60px;cursor:pointer;transition:transform .15s;';
+    el.style.cssText = 'position:absolute;z-index:' + PIN_Z_INDEX + ';width:50px;height:60px;margin-left:-25px;margin-top:-50px;cursor:pointer;pointer-events:auto;transition:transform .15s;';
     var img = document.createElement('img');
     img.src = base + 'assets/img/pin-' + mile + '.svg';
     img.style.cssText = 'width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 8px rgba(0,0,0,.25));pointer-events:none;';
@@ -491,19 +582,21 @@
   }
 
   function applyMarkers(tab) {
-    markerRefs.forEach(function(ref){ ref.overlay.setMap(null); });
+    ensurePinLayer();
+    markerRefs.forEach(function(ref){
+      if (ref.el && ref.el.parentNode) ref.el.parentNode.removeChild(ref.el);
+      if (ref.overlay) ref.overlay.setMap(null);
+    });
     markerRefs = [];
     var pins = tab === 'carbon' ? CARBON_PINS : ENERGY_PINS;
     pins.forEach(function(pin) {
       var el = buildPinEl(pin);
       el.addEventListener('click', function(){ openPopup(pin); });
-      var overlay = new kakao.maps.CustomOverlay({
-        position: new kakao.maps.LatLng(pin.lat, pin.lng),
-        content: el, map: ceMap,
-        xAnchor: 0.5, yAnchor: 0.83, zIndex: 10
-      });
-      markerRefs.push({ pin: pin, overlay: overlay });
+      pinLayer.appendChild(el);
+      markerRefs.push({ pin: pin, el: el, latLng: new kakao.maps.LatLng(pin.lat, pin.lng) });
     });
+    positionPinLayer();
+    applyLayerVisibility(tab);
   }
 
   /* ════════════════════════════════════════════════════════
@@ -529,7 +622,7 @@
     });
     document.getElementById('filterCarbon').style.display = tab === 'carbon' ? 'block' : 'none';
     document.getElementById('filterEnergy').style.display = tab === 'energy'  ? 'block' : 'none';
-    document.getElementById('ceFilterTitle').textContent  = tab === 'carbon' ? '탄소배출·저감 데이터' : '에너지 사용 공간 데이터';
+    document.getElementById('ceFilterTitle').textContent  = tab === 'carbon' ? '탄소배출 분포 · 저감 사업 지점' : '에너지 사용 공간 데이터';
     document.getElementById('detailCarbon').style.display = tab === 'carbon' ? 'block' : 'none';
     document.getElementById('detailEnergy').style.display = tab === 'energy'  ? 'block' : 'none';
     var cTbl = document.getElementById('ceDongTblCarbon');
@@ -552,6 +645,8 @@
     var layers = tab === 'carbon' ? CARBON_LAYERS : ENERGY_LAYERS;
     var el = document.getElementById(tab === 'carbon' ? 'carbonLayerList' : 'energyLayerList');
     if (!el) return;
+    var title = tab === 'carbon' ? document.getElementById('ceFilterTitle') : null;
+    if (tab === 'carbon' && title) title.textContent = '탄소배출 분포 · 저감 사업 지점';
     el.innerHTML = layers.map(function(l) {
       return '<label class="layer-item">'
         + '<input type="checkbox" checked data-layer="' + l.key + '">'
@@ -560,6 +655,30 @@
         + (l.count ? '<span class="layer-item__count">' + l.count + '</span>' : '')
         + '</label>';
     }).join('');
+    el.querySelectorAll('input[type="checkbox"]').forEach(function(input) {
+      input.addEventListener('change', function() { applyLayerVisibility(tab); });
+    });
+  }
+
+  function getCheckedLayerKeys(tab) {
+    var el = document.getElementById(tab === 'carbon' ? 'carbonLayerList' : 'energyLayerList');
+    if (!el) return null;
+    return Array.prototype.slice.call(el.querySelectorAll('input[type="checkbox"]:checked')).map(function(input) {
+      return input.getAttribute('data-layer');
+    });
+  }
+
+  function applyLayerVisibility(tab) {
+    var checked = getCheckedLayerKeys(tab);
+    if (!checked) return;
+    var energyTypeEl = document.getElementById('energyType');
+    var energyType = energyTypeEl ? energyTypeEl.value : 'all';
+    markerRefs.forEach(function(ref) {
+      var key = tab === 'carbon' ? ref.pin.sector : ref.pin.etype;
+      var show = checked.indexOf(key) > -1;
+      if (tab === 'energy' && energyType !== 'all') show = show && key === energyType;
+      ref.el.style.display = show ? '' : 'none';
+    });
   }
 
   /* ════════════════════════════════════════════════════════
@@ -589,11 +708,7 @@
 
   function applyEnergyTypeFilter(type) {
     /* 에너지 유형 필터: 해당 etype 마커만 표시 */
-    if (type === 'all') { applyMarkers('energy'); return; }
-    markerRefs.forEach(function(ref) {
-      var show = ref.pin.etype === type;
-      ref.overlay.setMap(show ? ceMap : null);
-    });
+    applyLayerVisibility('energy');
   }
 
   /* ════════════════════════════════════════════════════════
@@ -672,21 +787,35 @@
     var mile = isCarbon ? (SECTOR_TO_MILE[pin.sector] || 'energy') : (ETYPE_TO_MILE[pin.etype] || 'energy');
     badge.innerHTML = '<img src="' + (window.GMSB_BASE||'../') + 'assets/img/mile-' + mile + '.svg" style="width:38px;height:38px;display:block;" alt="">';
     document.getElementById('cePopupTitle').textContent  = pin.name;
-    document.getElementById('cePopupType').textContent   = pin.type;
+    document.getElementById('cePopupType').textContent   = isCarbon ? pin.type + ' · 저감 사업·시설 지점' : pin.type + ' · 에너지 계측 지점';
+    document.getElementById('cePopupMetric').style.display = '';
+    document.getElementById('cePopupMetricLabel').textContent = isCarbon ? '저감 기여량' : '오늘 사용량';
+    document.getElementById('cePopupMetricValue').innerHTML = pin.value + '<span>' + pin.unit + '</span>';
+    document.getElementById('cePopupMetricDesc').textContent = isCarbon
+      ? (pin.summary || '저감 사업 운영 데이터를 기반으로 산정한 기여량입니다.')
+      : '실시간 계측 데이터를 기준으로 집계한 에너지 사용량입니다.';
+    document.getElementById('cePopupMetric').style.borderColor = color;
+    document.getElementById('cePopupMetric').style.borderLeftColor = color;
+    document.getElementById('cePopupMetricValue').style.color = color;
+    document.getElementById('cePopupAddrLb').textContent = '주소';
     document.getElementById('cePopupAddr').textContent   = pin.addr;
-    document.getElementById('cePopupVal1Lb').textContent = isCarbon ? '저감량 (tCO₂eq)' : '오늘 사용량';
+    document.getElementById('cePopupDongRow').style.display = isCarbon ? '' : 'none';
+    document.getElementById('cePopupDong').textContent = pin.dong || '-';
+    document.getElementById('cePopupVal1Lb').textContent = isCarbon ? '저감 기여량 (tCO₂eq)' : '오늘 사용량';
     document.getElementById('cePopupVal1').textContent   = pin.value + ' ' + pin.unit;
     document.getElementById('cePopupVal2Lb').textContent = '상태';
     var statusMap   = { ok:'정상', warn:'주의', danger:'위험' };
     var statusColor = { ok:'var(--status-success)', warn:'var(--status-warning)', danger:'var(--status-danger)' };
     document.getElementById('cePopupVal2').innerHTML = '<span style="color:' + statusColor[pin.status] + ';font-weight:700;">● ' + statusMap[pin.status] + '</span>';
     document.getElementById('cePopupSync').textContent = pin.sync;
+    document.getElementById('cePopupSourceRow').style.display = isCarbon ? '' : 'none';
+    document.getElementById('cePopupSource').textContent = pin.source || '-';
     /* 팝업 버튼 교체 */
     var ft = document.getElementById('cePopupFt');
     if (isCarbon) {
-      ft.innerHTML = '<button class="btn btn--line" type="button" onclick="cePage.closePopup()">상세 보기</button>'
-        + '<button class="btn btn--line" type="button" onclick="cePage.closePopup()">데이터 보기</button>'
-        + '<button class="btn btn--pri" type="button" onclick="cePage.closePopup()">주변 분석</button>';
+      ft.innerHTML = '<button class="btn btn--line" type="button" onclick="cePage.closePopup()">상세 분석</button>'
+        + '<button class="btn btn--line" type="button" onclick="cePage.closePopup()">주변 배출</button>'
+        + '<button class="btn btn--pri" type="button" onclick="cePage.closePopup()">닫기</button>';
     } else {
       ft.innerHTML = '<button class="btn btn--line" type="button" onclick="cePage.closePopup()">상세 보기</button>'
         + '<button class="btn btn--line" type="button" onclick="cePage.closePopup()">데이터 보기</button>'
@@ -1174,14 +1303,25 @@
       + '<path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>';
 
     document.getElementById('cePopupTitle').textContent  = name;
-    document.getElementById('cePopupType').textContent   = '탄소배출·저감 현황';
+    document.getElementById('cePopupType').textContent   = '탄소배출 현황';
+    document.getElementById('cePopupMetric').style.display = '';
+    document.getElementById('cePopupMetric').style.borderColor = color;
+    document.getElementById('cePopupMetric').style.borderLeftColor = color;
+    document.getElementById('cePopupMetricLabel').textContent = '행정동 탄소배출량';
+    document.getElementById('cePopupMetricValue').innerHTML = value.toLocaleString() + '<span>tCO₂eq</span>';
+    document.getElementById('cePopupMetricValue').style.color = color;
+    document.getElementById('cePopupMetricDesc').textContent = '행정동 단위 배출량 분포를 기준으로 한 면 데이터입니다.';
+    document.getElementById('cePopupAddrLb').textContent = '행정동';
     document.getElementById('cePopupAddr').textContent   = '경기도 광명시 ' + name;
-    document.getElementById('cePopupVal1Lb').textContent = '탄소저감량 (tCO₂eq)';
+    document.getElementById('cePopupDongRow').style.display = 'none';
+    document.getElementById('cePopupVal1Lb').textContent = '탄소배출량 (tCO₂eq)';
     document.getElementById('cePopupVal1').textContent   = value.toLocaleString();
-    document.getElementById('cePopupVal2Lb').textContent = '탄소배출량 (tCO₂eq)';
-    var emission = Math.round((value + Math.round(Math.abs(value) * 0.017 * 100) / 100) * 100) / 100;
-    document.getElementById('cePopupVal2').textContent   = emission.toLocaleString();
+    document.getElementById('cePopupVal2Lb').textContent = '배출 수준';
+    var emLevel = value >= 50000 ? '매우 높음' : value >= 22000 ? '높음' : value >= 7000 ? '보통' : '낮음';
+    var emColor = value >= 50000 ? 'var(--status-danger)' : value >= 22000 ? 'var(--status-warning)' : value >= 7000 ? 'var(--status-info)' : 'var(--status-success)';
+    document.getElementById('cePopupVal2').innerHTML = '<span style="color:' + emColor + ';font-weight:700;">● ' + emLevel + '</span>';
     document.getElementById('cePopupSync').textContent   = '2023년 기준';
+    document.getElementById('cePopupSourceRow').style.display = 'none';
 
     var ft = document.getElementById('cePopupFt');
     ft.innerHTML =
@@ -1228,7 +1368,7 @@
         + '<td>' + d.year + '</td>'
         + '<td>' + fmtTco2(d.total) + '</td>'
         + '<td>' + fmtTco2(d.emission) + '</td>'
-        + '<td style="color:var(--status-info)">' + fmtTco2(d.absorption) + '</td>'
+        + '<td style="color:var(--status-success)">' + fmtTco2(d.absorption) + '</td>'
         + '</tr>';
     }).join('');
 
@@ -1308,7 +1448,7 @@
     var SERIES = [
       { key: 'total',      color: '#36445A' },
       { key: 'emission',   color: '#E0483D' },
-      { key: 'absorption', color: '#2b83bb' }
+      { key: 'absorption', color: '#1AAA5E' }
     ];
 
     yearly.forEach(function(d, gi) {
@@ -1336,11 +1476,13 @@
      행정동 집계 테이블
   ════════════════════════════════════════════════════════ */
   var DONG_TABLE_DATA = DONG_DEMO_DATA.map(function(d) {
-    var emission  = Math.round((Math.abs(d.value) * 1.017) * 100) / 100;
-    var contrib   = Math.round(Math.abs(d.value) / 157800 * 1000) / 10;
-    var yoyDelta  = +(Math.random() * 16 - 6).toFixed(1);
-    var status    = d.value > 20000 ? 'warn' : 'ok';
-    return { name:d.name, reduction:d.value, emission:emission, contrib:contrib, yoy:yoyDelta, status:status };
+    var totalCity = 332650;
+    var contrib   = Math.round(d.value / totalCity * 1000) / 10;
+    var seed = d.name.charCodeAt(0) * 3 + (d.name.charCodeAt(1)||0);
+    var yoyDelta  = +((((seed % 17) - 6) * 0.9).toFixed(1));
+    var status    = d.value > 30000 ? 'warn' : 'ok';
+    var grade     = d.value >= 50000 ? 'D' : d.value >= 30000 ? 'C' : d.value >= 12000 ? 'B' : 'A';
+    return { name:d.name, emission:d.value, contrib:contrib, yoy:yoyDelta, status:status, grade:grade };
   });
 
   var ENERGY_DONG_DATA = [
@@ -1373,17 +1515,18 @@
       var tbody = document.getElementById('dongBodyCarbon');
       if (!tbody) return;
       tbody.innerHTML = rows.map(function(d) {
-        var yoyHtml = '<span style="color:' + (d.yoy > 0 ? 'var(--status-success)' : d.yoy < 0 ? 'var(--status-danger)' : 'var(--fg-3)') + ';font-weight:700;">'
-          + (d.yoy > 0 ? '+' : '') + d.yoy + '%</span>';
+        var yoyHtml = '<span style="color:' + (d.yoy > 0 ? 'var(--status-danger)' : d.yoy < 0 ? 'var(--status-success)' : 'var(--fg-3)') + ';font-weight:700;">'
+          + (d.yoy > 0 ? '▲ +' : d.yoy < 0 ? '▼ ' : '') + d.yoy + '%</span>';
         var stHtml = d.status === 'warn'
-          ? '<span style="color:var(--status-warning);font-weight:700;">● 주의</span>'
-          : '<span style="color:var(--status-success);font-weight:700;">● 정상</span>';
+          ? '<span style="color:var(--status-danger);font-weight:700;">● 높음</span>'
+          : '<span style="color:var(--status-success);font-weight:700;">● 양호</span>';
+        var gradeColor = { A:'var(--status-success)', B:'var(--status-info)', C:'var(--status-warning)', D:'var(--status-danger)' };
         return '<tr style="cursor:pointer" onclick="cePage.openDongDrawerByName(\'' + d.name + '\')">'
           + '<td class="l" style="font-weight:600">' + d.name + '</td>'
-          + '<td class="num">' + d.reduction.toLocaleString() + '</td>'
           + '<td class="num">' + d.emission.toLocaleString() + '</td>'
           + '<td class="num">' + d.contrib + '%</td>'
           + '<td class="num">' + yoyHtml + '</td>'
+          + '<td class="num" style="font-weight:700;color:' + gradeColor[d.grade] + '">' + d.grade + '</td>'
           + '<td>' + stHtml + '</td>'
           + '<td><button class="tbtn" type="button" onclick="event.stopPropagation();cePage.openDongDrawerByName(\'' + d.name + '\')">상세</button></td>'
           + '</tr>';
@@ -1429,11 +1572,11 @@
   function exportDongCsv(tab) {
     var rows, headers, filename;
     if (tab === 'carbon') {
-      headers = ['행정동','탄소저감량(tCO₂eq)','탄소배출량(tCO₂eq)','저감기여도(%)','전년대비(%)','상태'];
+      headers = ['행정동','탄소배출량(tCO₂eq)','배출비중(%)','전년대비(%)','배출등급','상태'];
       rows = DONG_TABLE_DATA.map(function(d) {
-        return [d.name, d.reduction, d.emission, d.contrib, d.yoy, d.status === 'ok' ? '정상' : '주의'].join(',');
+        return [d.name, d.emission, d.contrib, d.yoy, d.grade, d.status === 'ok' ? '양호' : '높음'].join(',');
       });
-      filename = '광명시_행정동_탄소배출저감_' + new Date().toISOString().slice(0,10) + '.csv';
+      filename = '광명시_행정동_탄소배출량_' + new Date().toISOString().slice(0,10) + '.csv';
     } else {
       headers = ['행정동','오늘사용량(kWh)','누적사용량(MWh)','태양광발전(kWh)','자급률(%)','전일대비(%)'];
       rows = ENERGY_DONG_DATA.map(function(d) {
@@ -1472,13 +1615,13 @@
     var d = CHART_DATA[tab];
     var lines, filename;
     if (chart === 'line') {
-      lines = ['﻿기간,' + (tab === 'carbon' ? '탄소저감량(tCO₂eq)' : '에너지사용량(MWh)')];
+      lines = ['﻿기간,' + (tab === 'carbon' ? '탄소배출량(tCO₂eq)' : '에너지사용량(MWh)')];
       d.line.labels.forEach(function(l, i) { lines.push(l + ',' + d.line.values[i]); });
-      filename = (tab === 'carbon' ? '월별탄소저감추이' : '에너지사용량추이') + '_' + new Date().toISOString().slice(0,10) + '.csv';
+      filename = (tab === 'carbon' ? '월별탄소배출추이' : '에너지사용량추이') + '_' + new Date().toISOString().slice(0,10) + '.csv';
     } else if (chart === 'donut') {
       lines = ['﻿항목,비중(%)'];
       d.donut.segments.forEach(function(s) { lines.push(s.label + ',' + s.value); });
-      filename = (tab === 'carbon' ? '분야별저감비중' : '에너지유형비중') + '_' + new Date().toISOString().slice(0,10) + '.csv';
+      filename = (tab === 'carbon' ? '분야별배출비중' : '에너지유형비중') + '_' + new Date().toISOString().slice(0,10) + '.csv';
     } else {
       if (tab === 'carbon') {
         lines = ['﻿기간,저감효과(%)'];
@@ -1492,7 +1635,7 @@
           lines.push(row);
         });
       }
-      filename = (tab === 'carbon' ? '저감효과추이' : '발전량대비사용량') + '_' + new Date().toISOString().slice(0,10) + '.csv';
+      filename = (tab === 'carbon' ? '배출량추이' : '발전량대비사용량') + '_' + new Date().toISOString().slice(0,10) + '.csv';
     }
     var csv = lines.join('\n');
     var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });

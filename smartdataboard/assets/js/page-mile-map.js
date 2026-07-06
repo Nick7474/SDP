@@ -156,6 +156,20 @@
     dots:      []       /* kakao.maps.CustomOverlay[] (꼭짓점 마커) */
   };
 
+  /* ── 원형 드로우 상태 ── */
+  var _circle = {
+    active:        false,
+    phase:         0,       /* 0=중심 대기, 1=반경 대기 */
+    center:        null,    /* kakao.maps.LatLng */
+    radius:        0,       /* 미터 */
+    previewCircle: null,    /* kakao.maps.Circle (드래그 중 미리보기) */
+    finalCircle:   null,    /* kakao.maps.Circle (확정 원) */
+    centerDot:     null,    /* CustomOverlay (중심 마커) */
+    radiusLabel:   null,    /* CustomOverlay (반경 라벨) */
+    _clickListener: null,
+    _moveListener:  null
+  };
+
   /* ── 지역별 배율 ── */
   var REGION_SCALE = { all:1.00, cheolsan:0.62, haan:0.48, soha:0.36, iljik:0.54, area:1.00 };
 
@@ -218,6 +232,7 @@
 
   function boot() {
     initMap();
+    initMapBoundsLock();
     initRelatedMarkers();
     renderLayerLists(activeMile);
     applyMarkerFilter();
@@ -314,10 +329,32 @@
       level: 7
     });
     map.setMinLevel(1);
-    map.setMaxLevel(12);
+    map.setMaxLevel(7);
 
     PINS.forEach(function (pin) { addMarker(pin); });
     loadBoundaryFromSVG();
+  }
+
+  function initMapBoundsLock() {
+    /* 광명시 경계 ± 약 3km 패딩으로 중심점 허용 범위 설정 */
+    var PAD = 0.03; /* 위경도 약 0.03° ≈ 3.3km */
+    var LAT_MIN = GM_BOUNDS.south - PAD;
+    var LAT_MAX = GM_BOUNDS.north + PAD;
+    var LNG_MIN = GM_BOUNDS.west  - PAD;
+    var LNG_MAX = GM_BOUNDS.east  + PAD;
+    var _boundsGuard = false;
+
+    kakao.maps.event.addListener(map, 'idle', function () {
+      if (_boundsGuard) return;
+      var c   = map.getCenter();
+      var lat = Math.max(LAT_MIN, Math.min(LAT_MAX, c.getLat()));
+      var lng = Math.max(LNG_MIN, Math.min(LNG_MAX, c.getLng()));
+      if (Math.abs(lat - c.getLat()) > 0.0001 || Math.abs(lng - c.getLng()) > 0.0001) {
+        _boundsGuard = true;
+        map.setCenter(new kakao.maps.LatLng(lat, lng));
+        setTimeout(function () { _boundsGuard = false; }, 300);
+      }
+    });
   }
 
   function loadBoundaryFromSVG() {
@@ -460,7 +497,8 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
         closePopup();
-        if (_draw.active) clearDrawing();
+        if (_draw.active)   clearDrawing();
+        if (_circle.active) clearCircleDraw();
         closeAreaModal();
       }
     });
@@ -505,9 +543,13 @@
     document.getElementById('btnDrawArea').addEventListener('click', function () {
       if (_draw.active) { clearDrawing(); } else { startDrawing(); }
     });
+    document.getElementById('btnDrawCircle').addEventListener('click', function () {
+      if (_circle.active) { clearCircleDraw(); } else { startCircleDraw(); }
+    });
     document.getElementById('btnClearSel').addEventListener('click', function () {
       closePopup();
       clearDrawing();
+      clearCircleDraw();
       closeAreaModal();
       var si = document.getElementById('gisSearchInput');
       if (si) { si.value = ''; closeDropdown(); }
@@ -659,8 +701,12 @@
     var sel = document.getElementById('regionSelect');
     if (!sel) return;
     sel.addEventListener('change', function () {
-      /* 폴리곤이 그려진 상태에서 일반 지역 선택 시 → 폴리곤 지우기 */
+      /* 폴리곤/원형이 그려진 상태에서 일반 지역 선택 시 → 선택 지우기 */
       if (this.value !== 'area') {
+        if (_circle.active)      stopCircleDraw();
+        if (_circle.finalCircle) { _circle.finalCircle.setMap(null); _circle.finalCircle = null; }
+        if (_circle.centerDot)   { _circle.centerDot.setMap(null);   _circle.centerDot = null; }
+        _circle.center = null; _circle.radius = 0;
         if (_draw.polygon) { _draw.polygon.setMap(null); _draw.polygon = null; }
         _draw.polylines.forEach(function(pl){ pl.setMap(null); }); _draw.polylines = [];
         _draw.dots.forEach(function(d){ d.setMap(null); }); _draw.dots = [];
@@ -1125,11 +1171,14 @@
 
   function startDrawing() {
     if (!map) return;
+    clearCircleDraw(); /* 기존 원형 선택 초기화 */
     _draw.active = true;
     _draw.points = [];
     document.querySelector('.gis-map-area').classList.add('draw-mode');
     document.getElementById('btnDrawArea').classList.add('active');
     map.setCursor('crosshair');
+    var hint = document.getElementById('drawHint');
+    if (hint) hint.textContent = '지도를 클릭해 영역을 그리세요 · 더블클릭으로 완료 · ESC 취소';
 
     _draw._clickListener   = kakao.maps.event.addListener(map, 'click',    _drawClick);
     _draw._moveListener    = kakao.maps.event.addListener(map, 'mousemove', _drawMouseMove);
@@ -1263,10 +1312,180 @@
   }
 
   /* ═══════════════════════════════════════════════════════════
+     원형 반경 선택 기능
+  ═══════════════════════════════════════════════════════════ */
+
+  /* Haversine 거리 (미터) */
+  function _haversineDistance(lat1, lng1, lat2, lng2) {
+    var R    = 6371000;
+    var phi1 = lat1 * Math.PI / 180;
+    var phi2 = lat2 * Math.PI / 180;
+    var dphi = (lat2 - lat1) * Math.PI / 180;
+    var dlam = (lng2 - lng1) * Math.PI / 180;
+    var a = Math.sin(dphi/2)*Math.sin(dphi/2)
+          + Math.cos(phi1)*Math.cos(phi2)*Math.sin(dlam/2)*Math.sin(dlam/2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  }
+
+  function _pointInCircle(pin, center, radius) {
+    return _haversineDistance(pin.lat, pin.lng, center.getLat(), center.getLng()) <= radius;
+  }
+
+  function _fmtRadius(m) {
+    return m >= 1000 ? (m / 1000).toFixed(1) + ' km' : Math.round(m) + ' m';
+  }
+
+  /* center에서 bearingDeg 방향으로 distM 미터 이동한 LatLng */
+  function _destinationPoint(center, distM, bearingDeg) {
+    var R    = 6371000;
+    var brng = bearingDeg * Math.PI / 180;
+    var d    = distM / R;
+    var lat1 = center.getLat() * Math.PI / 180;
+    var lng1 = center.getLng() * Math.PI / 180;
+    var lat2 = Math.asin(Math.sin(lat1)*Math.cos(d) + Math.cos(lat1)*Math.sin(d)*Math.cos(brng));
+    var lng2 = lng1 + Math.atan2(Math.sin(brng)*Math.sin(d)*Math.cos(lat1), Math.cos(d) - Math.sin(lat1)*Math.sin(lat2));
+    return new kakao.maps.LatLng(lat2 * 180/Math.PI, lng2 * 180/Math.PI);
+  }
+
+  function startCircleDraw() {
+    if (!map) return;
+    clearDrawing(); /* 기존 다각형 선택 초기화 */
+    _circle.active = true;
+    _circle.phase  = 0;
+    document.querySelector('.gis-map-area').classList.add('draw-mode');
+    document.getElementById('btnDrawCircle').classList.add('active');
+    map.setCursor('crosshair');
+    var hint = document.getElementById('drawHint');
+    if (hint) hint.textContent = '지도를 클릭해 중심점을 설정하세요 · ESC 취소';
+    _circle._clickListener = kakao.maps.event.addListener(map, 'click',     _circleClick);
+    _circle._moveListener  = kakao.maps.event.addListener(map, 'mousemove', _circleMouseMove);
+  }
+
+  function stopCircleDraw() {
+    if (_circle._clickListener) kakao.maps.event.removeListener(map, 'click',     _circle._clickListener);
+    if (_circle._moveListener)  kakao.maps.event.removeListener(map, 'mousemove', _circle._moveListener);
+    _circle._clickListener = null;
+    _circle._moveListener  = null;
+    _circle.active = false;
+    _circle.phase  = 0;
+    document.querySelector('.gis-map-area').classList.remove('draw-mode');
+    var btn = document.getElementById('btnDrawCircle');
+    if (btn) btn.classList.remove('active');
+    map.setCursor('');
+    if (_circle.previewCircle) { _circle.previewCircle.setMap(null); _circle.previewCircle = null; }
+    if (_circle.radiusLabel)   { _circle.radiusLabel.setMap(null);   _circle.radiusLabel   = null; }
+  }
+
+  function clearCircleDraw() {
+    stopCircleDraw();
+    if (_circle.centerDot)   { _circle.centerDot.setMap(null);   _circle.centerDot   = null; }
+    if (_circle.finalCircle) { _circle.finalCircle.setMap(null); _circle.finalCircle = null; }
+    _circle.center = null;
+    _circle.radius = 0;
+    _filter.areaScale = 1.0;
+    _deselectAreaOption();
+    refreshDisplay(activeMile);
+  }
+
+  function _circleClick(mouseEvent) {
+    var latlng = mouseEvent.latLng;
+    if (_circle.phase === 0) {
+      /* 1차 클릭: 중심점 설정 */
+      _circle.center = latlng;
+      _circle.phase  = 1;
+      var dotEl = document.createElement('div');
+      dotEl.style.cssText = 'width:10px;height:10px;border-radius:50%;background:#044E9E;'
+        + 'border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4);pointer-events:none;';
+      _circle.centerDot = new kakao.maps.CustomOverlay({
+        position: latlng, content: dotEl, map: map,
+        xAnchor: 0.5, yAnchor: 0.5, zIndex: 10
+      });
+      var hint = document.getElementById('drawHint');
+      if (hint) hint.textContent = '클릭해 반경을 확정하세요 · ESC 취소';
+    } else {
+      /* 2차 클릭: 반경 확정 */
+      var dist = _haversineDistance(
+        _circle.center.getLat(), _circle.center.getLng(),
+        latlng.getLat(), latlng.getLng()
+      );
+      if (dist < 10) return; /* 너무 작으면 무시 */
+      _circle.radius = dist;
+      finishCircle();
+    }
+  }
+
+  function _circleMouseMove(mouseEvent) {
+    if (!_circle.active || _circle.phase !== 1 || !_circle.center) return;
+    var latlng = mouseEvent.latLng;
+    var dist = _haversineDistance(
+      _circle.center.getLat(), _circle.center.getLng(),
+      latlng.getLat(), latlng.getLng()
+    );
+    if (dist < 1) return;
+    _circle.radius = dist;
+
+    /* 미리보기 원 업데이트 */
+    if (_circle.previewCircle) {
+      _circle.previewCircle.setRadius(dist);
+    } else {
+      _circle.previewCircle = new kakao.maps.Circle({
+        map: map, center: _circle.center, radius: dist,
+        strokeColor: '#044E9E', strokeOpacity: 0.75, strokeWeight: 2, strokeStyle: 'dashed',
+        fillColor: '#044E9E', fillOpacity: 0.09
+      });
+    }
+
+    /* 반경 라벨 (원의 동쪽 끝 위치) */
+    var edgePt = _destinationPoint(_circle.center, dist, 90);
+    var labelHtml = '<div style="background:rgba(4,78,158,.88);color:#fff;'
+      + 'font:600 11px/1 Pretendard,sans-serif;padding:4px 9px;border-radius:20px;'
+      + 'white-space:nowrap;pointer-events:none;margin-left:6px;">반경 ' + _fmtRadius(dist) + '</div>';
+    if (_circle.radiusLabel) {
+      _circle.radiusLabel.setPosition(edgePt);
+      _circle.radiusLabel.setContent(labelHtml);
+    } else {
+      _circle.radiusLabel = new kakao.maps.CustomOverlay({
+        map: map, position: edgePt, content: labelHtml,
+        xAnchor: 0, yAnchor: 0.5, zIndex: 12
+      });
+    }
+  }
+
+  function finishCircle() {
+    var center = _circle.center;
+    var radius = _circle.radius;
+    stopCircleDraw(); /* 리스너 + 미리보기 제거 (centerDot은 유지) */
+
+    /* 확정 원 */
+    _circle.finalCircle = new kakao.maps.Circle({
+      map: map, center: center, radius: radius,
+      strokeColor: '#044E9E', strokeOpacity: 0.9, strokeWeight: 2, strokeStyle: 'solid',
+      fillColor: '#044E9E', fillOpacity: 0.12
+    });
+
+    /* 중심 마커 복원 (stopCircleDraw 후 null이 되지 않음 — centerDot은 stopCircleDraw에서 건드리지 않음) */
+
+    /* 핀 탐색 */
+    var foundPins = PINS.filter(function (pin) {
+      return _pointInCircle(pin, center, radius);
+    });
+
+    var totalPinCount = PINS.filter(function (p) { return p.mile === activeMile; }).length;
+    var matchedCount  = foundPins.filter(function (p) { return p.mile === activeMile; }).length;
+    _filter.areaScale = totalPinCount > 0
+      ? Math.max(0.05, matchedCount / totalPinCount)
+      : 1.0;
+
+    _selectAreaOption();
+    refreshDisplay(activeMile);
+    showAreaModal(foundPins, '반경 ' + _fmtRadius(radius));
+  }
+
+  /* ═══════════════════════════════════════════════════════════
      영역 선택 결과 모달
   ═══════════════════════════════════════════════════════════ */
 
-  function showAreaModal(foundPins) {
+  function showAreaModal(foundPins, areaDesc) {
     var modal  = document.getElementById('areaModal');
     var bd     = document.getElementById('areaModalBd');
     if (!modal || !bd) return;
@@ -1322,9 +1541,13 @@
         }).join('')
       : '<span style="font:400 12px/1 var(--font-sans);color:var(--fg-4);">선택 영역 내 시설물이 없습니다</span>';
 
+    var pinsHd = mileLabels[activeMile] + ' 마일';
+    if (areaDesc) pinsHd += ' · ' + areaDesc;
+    pinsHd += ' · 시설 ' + filteredPins.length + '개소';
+
     bd.innerHTML = kpiCards
       + '<div class="area-modal__pins">'
-      + '<div class="area-modal__pins-hd">' + mileLabels[activeMile] + ' 마일 시설 · ' + filteredPins.length + '개소 포함</div>'
+      + '<div class="area-modal__pins-hd">' + pinsHd + '</div>'
       + '<div class="area-modal__pin-list">' + pinChips + '</div>'
       + '</div>';
 

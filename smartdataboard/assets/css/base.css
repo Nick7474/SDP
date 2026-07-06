@@ -15,6 +15,12 @@ a{color:var(--c-link);}
 
 /* WCAG 2.2 focus */
 :focus-visible{outline:none;box-shadow:var(--focus-ring-shadow);border-radius:var(--radius-xs);}
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]):focus,
+textarea:focus,
+select:focus{border-color:var(--gp-point);}
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]):focus-visible,
+textarea:focus-visible,
+select:focus-visible{box-shadow:none;}
 .gp-skip-link{position:absolute;left:16px;top:-60px;z-index:var(--z-toast);
   background:var(--gp-primary);color:#fff;padding:12px 20px;border-radius:var(--radius-sm);
   font:var(--type-label-m);transition:top var(--dur-base) var(--ease-out);}
@@ -211,7 +217,7 @@ a{color:var(--c-link);}
 .gp-searchfield input{width:100%;height:56px;padding:0 52px 0 20px;font:var(--type-body-m);color:var(--fg-1);
   background:#fff;border:1.5px solid var(--border-strong);border-radius:var(--radius-sm);}
 .gp-searchfield input::placeholder{color:var(--fg-4);}
-.gp-searchfield input:focus{outline:none;border-color:var(--gp-primary);box-shadow:0 0 0 3px var(--gp-primary-soft);}
+.gp-searchfield input:focus{outline:none;border-color:var(--gp-point);box-shadow:none;}
 
 /* =====================================================================
    FORM CONTROLS
@@ -225,8 +231,8 @@ a{color:var(--c-link);}
 .gp-textarea{padding:14px 16px;min-height:120px;line-height:1.6;resize:vertical;}
 .gp-input::placeholder,.gp-textarea::placeholder{color:var(--fg-4);}
 .gp-input:hover,.gp-select:hover,.gp-textarea:hover{border-color:var(--gp-point);}
-.gp-input:focus,.gp-select:focus,.gp-textarea:focus{outline:none;border-color:var(--gp-primary);box-shadow:0 0 0 3px var(--gp-primary-soft);}
-.gp-input[aria-invalid="true"]{border-color:var(--status-danger);box-shadow:0 0 0 3px var(--status-danger-soft);}
+.gp-input:focus,.gp-select:focus,.gp-textarea:focus{outline:none;border-color:var(--gp-point);box-shadow:none;}
+.gp-input[aria-invalid="true"]{border-color:var(--status-danger);box-shadow:none;}
 .gp-help{font:var(--type-body-s);color:var(--fg-3);}
 .gp-help--error{color:var(--status-danger);}
 .gp-select{appearance:none;padding-right:42px;

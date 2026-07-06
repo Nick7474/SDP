@@ -210,6 +210,14 @@
   box-shadow: var(--elev-2);
 }
 
+.gm-overlay-legend.js-gis-legend {
+  padding: 0;
+}
+
+.gm-overlay-legend.map-legend--collapsed {
+  min-width: 0;
+}
+
 .gm-legend-list { display: flex; flex-direction: column; gap: 4px; }
 
 .gm-legend-item {
@@ -495,7 +503,7 @@
 
 .gm-form-input:focus {
   border-color: var(--gp-primary);
-  box-shadow: 0 0 0 3px rgba(4,78,158,.08);
+  box-shadow: none;
 }
 
 .gm-form-select {

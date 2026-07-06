@@ -456,14 +456,14 @@
 .cdreg-f label .req { color:var(--status-danger); }
 .cdreg-f input, .cdreg-f textarea, .cdreg-f select { width:100%; border:1px solid var(--border-strong); border-radius:var(--radius-sm); padding:8px 10px; font:400 13px/1.4 var(--font-sans); color:var(--fg-1); background:#fff; outline:none; }
 .cdreg-f textarea { resize:vertical; min-height:64px; }
-.cdreg-f input:focus, .cdreg-f textarea:focus, .cdreg-f select:focus { border-color:var(--gp-point); box-shadow:0 0 0 3px rgba(12,138,229,.1); }
+.cdreg-f input:focus, .cdreg-f textarea:focus, .cdreg-f select:focus { border-color:var(--gp-point); box-shadow:none; }
 .cdreg-row { display:flex; gap:10px; }
 .cdreg-row .cdreg-f { flex:1; min-width:0; }
 .cdreg-note { font:500 11px/1 var(--font-sans); color:var(--fg-4); margin-left:4px; }
 .cdreg-maprows { display:flex; flex-direction:column; gap:7px; margin-bottom:8px; }
 .cdreg-maprow { display:flex; gap:6px; align-items:center; }
 .cdreg-maprow input { flex:1; min-width:0; border:1px solid var(--border-strong); border-radius:var(--radius-sm); padding:7px 9px; font:400 12.5px/1 var(--font-sans); outline:none; }
-.cdreg-maprow input:focus { border-color:var(--gp-point); box-shadow:0 0 0 3px rgba(12,138,229,.1); }
+.cdreg-maprow input:focus { border-color:var(--gp-point); box-shadow:none; }
 .cdreg-del { width:30px; height:30px; flex:none; border:1px solid var(--border-1); border-radius:var(--radius-sm); background:#fff; color:var(--fg-4); cursor:pointer; display:grid; place-items:center; }
 .cdreg-del:hover { color:var(--status-danger); border-color:var(--border-strong); }
 .cdreg-del svg { width:13px; height:13px; }

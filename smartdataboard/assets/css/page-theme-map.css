@@ -225,6 +225,21 @@
   min-width: 0;
 }
 
+.tm-overlay-legend.js-gis-legend {
+  display: block;
+  padding: 0;
+}
+
+.tm-overlay-legend.map-legend--collapsed {
+  min-width: 0;
+}
+
+.tm-legend-body {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
 .tm-overlay-section { min-width: 0; }
 
 .tm-overlay-section__title {

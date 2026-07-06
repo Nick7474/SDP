@@ -55,11 +55,11 @@
 
   /* ============ 알림 데이터 (프로토타입용 샘플) ============ */
   var NOTIFS = [
-    { type: 'warn',    icon: 'alert-triangle',  title: '연계 시스템 응답 지연 감지',    time: '15분 전',  read: false, href: 'pages/linkage-monitoring.html'   },
-    { type: 'info',    icon: 'database',         title: '에너지 데이터 수집 완료',        time: '1시간 전', read: false, href: 'pages/operation-monitoring.html' },
-    { type: 'success', icon: 'check-circle-2',   title: 'GIS 배치 처리 완료',             time: '3시간 전', read: true,  href: 'pages/gis-manage.html'           },
-    { type: 'danger',  icon: 'alert-circle',     title: '스마트 센서 오류 감지 (3건)',    time: '어제',     read: true,  href: 'pages/status-monitoring.html'    },
-    { type: 'info',    icon: 'file-text',        title: '탄소중립 월간 보고서 업데이트', time: '어제',     read: true,  href: 'pages/carbon-summary.html'       }
+    { type: 'warn',    icon: 'alert-triangle',  title: 'CPU 사용률 72% 초과',             time: '15분 전',  read: false, href: 'pages/status-monitoring.html?alert=cpu-high' },
+    { type: 'warn',    icon: 'timer',           title: 'API 평균 응답 시간 1.62초 초과',  time: '1시간 전', read: false, href: 'pages/status-monitoring.html?alert=api-response' },
+    { type: 'info',    icon: 'database',        title: '정기 백업 완료',                  time: '3시간 전', read: true,  href: 'pages/status-monitoring.html?alert=db-backup' },
+    { type: 'success', icon: 'check-circle-2',  title: '스마트데이터보드 배포 완료',       time: '어제',     read: true,  href: 'pages/status-monitoring.html?alert=deploy-done' },
+    { type: 'info',    icon: 'clipboard-check', title: '일일 정기 점검 완료',              time: '어제',     read: true,  href: 'pages/status-monitoring.html?alert=daily-check' }
   ];
 
   /* ============ TOP BAR ============ */

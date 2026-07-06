@@ -90,7 +90,7 @@
 
   /* Focus ring — WCAG 2.2 (2.4.11 / 2.4.13) */
   --focus-ring:          #1587E1;
-  --focus-ring-shadow:   0 0 0 3px rgba(21,135,225,0.35), 0 0 0 1px var(--gp-primary);
+  --focus-ring-shadow:   0 0 0 2px rgba(21,135,225,0.35);
 
   /* ============================================================
      6. TYPOGRAPHY  (KRDS 본문체계 · 대시민 가독 스케일)

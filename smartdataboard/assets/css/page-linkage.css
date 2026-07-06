@@ -54,7 +54,7 @@
   font:500 12px/1 var(--font-sans);
   box-sizing:border-box;}
 .search-box input:focus{
-  outline:2px solid var(--gp-point);outline-offset:2px;
+  outline:none;
   border-color:var(--gp-point);}
 .search-box input::placeholder{color:#8a949e;}
 
