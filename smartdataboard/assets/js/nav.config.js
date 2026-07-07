@@ -64,5 +64,5 @@ window.GMSB_BRAND = {
 };
 
 /* 스마트데이터포털 배포 URL — 계정 메뉴 "포털 관리자 콘솔" 링크 대상.
-   로컬: http://localhost:3000 / 배포 시 Vercel 주소로 교체 (예: https://xxx.vercel.app) */
-window.GMSB_PORTAL_URL = 'http://localhost:3000';
+   배포: Vercel(sdp-zeta-pearl) / 로컬 테스트 시 'http://localhost:3000'으로 변경 */
+window.GMSB_PORTAL_URL = 'https://sdp-zeta-pearl.vercel.app';
