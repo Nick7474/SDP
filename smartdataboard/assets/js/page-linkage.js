@@ -31,8 +31,8 @@
       resTime:'0.343', resTimeDisp:'0.343초', throughput:'1.12MB', lastCheck:'2026-06-16 15:07',
       calls:'5,840건', errors:'0건', dept:'교통과', lastError:'없음', status:'ok', fixStatus:'na' },
 
-    { name:'Flood Sensor API',    desc:'맨홀·지표면 수위 LoRa 수신', type:'Sensor', endpoint:'/iot/v1/deviceData',
-      method:'POST',  proto:'LoRa Gateway',   auth:'내부',    fmt:'JSON',
+    { name:'Flood Sensor API',    desc:'맨홀·지표면 수위 API 수신', type:'Sensor', endpoint:'/iot/v1/deviceData',
+      method:'GET',   proto:'REST API',   auth:'내부',    fmt:'JSON',
       category:'데이터',   division:'외부', cycle:'10분',
       resTime:'0.422', resTimeDisp:'0.422초', throughput:'1.31MB', lastCheck:'2026-06-17 09:20',
       calls:'8,640건', errors:'0건', dept:'안전총괄과', lastError:'없음', status:'ok', fixStatus:'na' },
@@ -55,8 +55,8 @@
       resTime:'—', resTimeDisp:'—', throughput:'0MB', lastCheck:'2026-06-16 14:50',
       calls:'0건', errors:'0건', dept:'안전총괄과', lastError:'없음', status:'stop', fixStatus:'na' },
 
-    { name:'대기질 측정 API',     desc:'미세먼지·기상·토양 MQTT 수신', type:'Sensor', endpoint:'publish/from/{id}/sensing',
-      method:'PUSH',  proto:'MQTT',           auth:'내부',    fmt:'JSON',
+    { name:'대기질 측정 API',     desc:'미세먼지·기상·토양 API 수신', type:'Sensor', endpoint:'/yjt/api/airquality',
+      method:'GET',   proto:'REST API',           auth:'내부',    fmt:'JSON',
       category:'API/데이터', division:'외부', cycle:'실시간',
       resTime:'0.312', resTimeDisp:'0.312초', throughput:'0.95MB', lastCheck:'2026-06-17 09:30',
       calls:'17,280건', errors:'0건', dept:'안전총괄과', lastError:'없음', status:'ok', fixStatus:'na' },

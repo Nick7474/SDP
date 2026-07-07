@@ -1,0 +1,108 @@
+/* =====================================================================
+   수집 관리 (수집원 관리 / 수동 데이터 입력) 전용 스타일
+   공용: kpis·kpi, tbl, btn, drawer·dw__, gp-badge (page-shared/base/shell)
+   ===================================================================== */
+
+/* ---- 탭 (연계 모니터링 통합) ---- */
+.hub-tabs{display:flex;gap:4px;border-bottom:2px solid #E5EBF3;margin:6px 0 4px;}
+.hub-tab{position:relative;height:44px;padding:0 20px;border:none;background:transparent;
+  font:700 15px/1 var(--font-sans);color:#7A8699;cursor:pointer;display:inline-flex;align-items:center;gap:7px;}
+.hub-tab svg{width:17px;height:17px;}
+.hub-tab:hover{color:var(--gp-primary);}
+.hub-tab.on{color:var(--gp-primary);}
+.hub-tab.on::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:3px;border-radius:3px 3px 0 0;background:var(--gp-primary);}
+.tabpane{display:none;}
+.tabpane.on{display:block;animation:fadeup .18s ease;}
+@keyframes fadeup{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+/* ---- 필터 툴바 ---- */
+.cl-filter{background:#fff;border:1px solid var(--border-1,#E5EBF3);border-radius:12px;
+  padding:14px 16px;margin:14px 0;display:flex;flex-direction:column;gap:12px;}
+.cl-frow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.cl-lbl{font:700 13px/1 var(--font-sans);color:#5A6B85;white-space:nowrap;}
+.cl-chips{display:inline-flex;gap:6px;flex-wrap:wrap;}
+.cl-chip{height:32px;padding:0 14px;border:1px solid #D9E1EC;background:#fff;border-radius:999px;
+  font:600 13px/1 var(--font-sans);color:#3A465C;cursor:pointer;display:inline-flex;align-items:center;}
+.cl-chip:hover{border-color:var(--gp-primary);color:var(--gp-primary);}
+.cl-chip.on{background:var(--gp-primary);border-color:var(--gp-primary);color:#fff;}
+.cl-divider{width:1px;height:22px;background:#E5EBF3;margin:0 4px;}
+.cl-search{margin-left:auto;position:relative;display:inline-flex;align-items:center;}
+.cl-search svg{position:absolute;left:11px;width:15px;height:15px;color:#9AA7BC;}
+.cl-search input{height:38px;width:260px;border:1px solid #D9E1EC;border-radius:9px;
+  padding:0 12px 0 34px;font:500 14px/1 var(--font-sans);color:#1A2942;}
+.cl-search input:focus{outline:none;border-color:var(--gp-primary);}
+
+/* ---- 테이블 카드 ---- */
+.cl-card{background:#fff;border:1px solid var(--border-1,#E5EBF3);border-radius:14px;overflow:hidden;}
+.cl-card-hd{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid #EEF2F7;}
+.cl-card-hd .t{font:800 16px/1 var(--font-sans);color:#1A2942;display:inline-flex;align-items:center;gap:8px;}
+.cl-card-hd .t b{color:var(--gp-primary);}
+.cl-card-hd .acts{display:inline-flex;gap:8px;}
+.cl-wrap{padding:6px 6px 2px;}
+.tbl td .mono{font-family:var(--font-mono,monospace);font-size:13px;color:#5A6B85;}
+
+/* ---- 배지 (구간/방식/상태) ---- */
+.zb,.mb,.sb{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 10px;border-radius:6px;
+  font:700 12px/1 var(--font-sans);white-space:nowrap;}
+.zb--dmz{background:#FDECEC;color:#C0392B;}          /* DMZ(외부망) */
+.zb--int{background:#EAF3FF;color:#1F6FE5;}          /* 내부망 */
+.zb--man{background:#F1F3F7;color:#6B7688;}          /* 수동 */
+.mb--api{background:#E8F5EC;color:#1E8E4E;}          /* OpenAPI/REST */
+.mb--db{background:#EEE9FB;color:#6C4BD6;}           /* DB */
+.mb--push{background:#FFF3E0;color:#D9822B;}         /* PUSH */
+.mb--file{background:#E9F1F6;color:#3B7EA1;}         /* 파일 */
+.mb--man{background:#F1F3F7;color:#6B7688;}          /* 수기 */
+.sb--on{background:#E8F5EC;color:#1E8E4E;}
+.sb--on::before{content:"";width:7px;height:7px;border-radius:50%;background:#25A55B;}
+.sb--stop{background:#F1F3F7;color:#6B7688;}
+.sb--stop::before{content:"";width:7px;height:7px;border-radius:50%;background:#9AA7BC;}
+.sb--err{background:#FDECEC;color:#C0392B;}
+.sb--err::before{content:"";width:7px;height:7px;border-radius:50%;background:#E1523D;}
+
+/* ---- 행 관리 버튼 ---- */
+.rbtn{height:30px;padding:0 10px;border:1px solid #D9E1EC;background:#fff;border-radius:7px;
+  font:600 12px/1 var(--font-sans);color:#3A465C;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+.rbtn:hover{border-color:var(--gp-primary);color:var(--gp-primary);}
+.rbtn svg{width:13px;height:13px;}
+
+/* ---- 드로어 폼 ---- */
+.frm{display:flex;flex-direction:column;gap:15px;}
+.frm .fg{display:flex;flex-direction:column;gap:6px;}
+.frm label{font:700 13px/1 var(--font-sans);color:#3A465C;}
+.frm label .req{color:#E1523D;margin-left:3px;}
+.frm input,.frm select,.frm textarea{height:40px;border:1px solid #D9E1EC;border-radius:8px;padding:0 12px;
+  font:500 14px/1.4 var(--font-sans);color:#1A2942;background:#fff;}
+.frm textarea{height:auto;min-height:70px;padding:10px 12px;resize:vertical;}
+.frm input:focus,.frm select:focus,.frm textarea:focus{outline:none;border-color:var(--gp-primary);}
+.frm .frow{display:flex;gap:12px;}
+.frm .frow .fg{flex:1;}
+.frm .hint{font:500 12px/1.5 var(--font-sans);color:#8A96A8;}
+
+/* ---- 수동 입력: 데이터셋 선택 리스트 ---- */
+.ml-grid{display:grid;grid-template-columns:320px 1fr;gap:16px;margin-top:14px;}
+.ml-list{background:#fff;border:1px solid var(--border-1,#E5EBF3);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;max-height:640px;}
+.ml-list-hd{padding:13px 15px;border-bottom:1px solid #EEF2F7;font:800 14px/1 var(--font-sans);color:#1A2942;display:flex;justify-content:space-between;align-items:center;}
+.ml-list-hd .c{font:700 12px/1 var(--font-sans);color:#8A96A8;}
+.ml-items{overflow:auto;}
+.ml-it{padding:12px 15px;border-bottom:1px solid #F2F5F9;cursor:pointer;display:flex;flex-direction:column;gap:5px;}
+.ml-it:hover{background:#F8FBFE;}
+.ml-it.on{background:#EAF3FF;box-shadow:inset 3px 0 0 var(--gp-primary);}
+.ml-it .nm{font:700 14px/1.3 var(--font-sans);color:#1A2942;}
+.ml-it .mt{font:500 12px/1 var(--font-sans);color:#8A96A8;display:flex;gap:8px;align-items:center;}
+.ml-panel{background:#fff;border:1px solid var(--border-1,#E5EBF3);border-radius:14px;padding:20px 22px;}
+.ml-panel .ph{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid #EEF2F7;padding-bottom:14px;margin-bottom:16px;}
+.ml-panel .ph h3{font:800 18px/1.3 var(--font-sans);color:#1A2942;margin:0 0 4px;}
+.ml-panel .ph .sub{font:500 13px/1.4 var(--font-sans);color:#8A96A8;}
+.ml-tabs{display:inline-flex;background:#F1F5FA;border-radius:9px;padding:3px;margin-bottom:16px;}
+.ml-tab{height:34px;padding:0 16px;border:none;background:transparent;border-radius:7px;font:700 13px/1 var(--font-sans);color:#5A6B85;cursor:pointer;}
+.ml-tab.on{background:#fff;color:var(--gp-primary);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.ml-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:420px;color:#9AA7BC;text-align:center;}
+.ml-empty svg{width:52px;height:52px;color:#C9D3E0;}
+.ml-empty .t{font:700 15px/1.5 var(--font-sans);color:#7A8699;}
+
+/* ---- 업로드 드롭존 ---- */
+.upz{border:2px dashed #C9D6E8;border-radius:12px;padding:34px;text-align:center;color:#7A8699;cursor:pointer;transition:.15s;}
+.upz:hover{border-color:var(--gp-primary);background:#F6FAFF;}
+.upz svg{width:40px;height:40px;color:#9AA7BC;margin-bottom:8px;}
+.upz .t{font:700 15px/1.4 var(--font-sans);color:#3A465C;}
+.upz .s{font:500 12px/1.5 var(--font-sans);color:#9AA7BC;margin-top:4px;}

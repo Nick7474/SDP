@@ -20,9 +20,9 @@
   var ROWS = [
     { name:'신재생에너지 가상거래', type:'에너지',   method:'REST API', dept:'에너지과',   partner:'케빈랩',
       cells:['o','o','o','o','o','o','o','o','o','o','o','o'] },
-    { name:'IoT 그린배리어',        type:'세이프티', method:'MQTT',     dept:'안전총괄과', partner:'영진기술',
+    { name:'IoT 그린배리어',        type:'세이프티', method:'REST API',     dept:'안전총괄과', partner:'영진기술',
       cells:['o','o','o','o','o','o','o','d','o','o','o','o'] },
-    { name:'AIoT 침수홍수',         type:'세이프티', method:'LoRa',     dept:'안전총괄과', partner:'스파이어',
+    { name:'AIoT 침수홍수',         type:'세이프티', method:'REST API',     dept:'안전총괄과', partner:'스파이어',
       cells:['o','o','o','o','o','o','o','o','o','d','o','o'] },
     { name:'친환경 배달',           type:'모빌리티', method:'API',      dept:'교통과',     partner:'우아한형제들',
       cells:['o','o','o','o','o','o','o','o','o','o','w','w'] },
@@ -30,7 +30,7 @@
       cells:['o','o','o','o','o','o','o','o','o','o','o','o'] },
     { name:'친환경 DRT',            type:'모빌리티', method:'REST API', dept:'교통과',     partner:'현대',
       cells:['o','o','o','o','o','o','o','o','e','o','o','o'] },
-    { name:'탄소거래플랫폼',        type:'에너지',   method:'REST API', dept:'환경과',     partner:'그리너리/후시파트너스',
+    { name:'탄소거래플랫폼',        type:'데이터',   method:'REST API', dept:'환경과',     partner:'그리너리/후시파트너스',
       cells:['o','o','o','o','o','o','o','o','o','o','o','o'] }
   ];
 
@@ -346,12 +346,12 @@
      ═══════════════════════════════════════════════════════════════ */
   var HIST = [
     { tm:'15:07', name:'신재생 발전량',      type:'에너지',   method:'REST API', status:'ok',    cnt:'24건',    last:'15:07', dept:'에너지과',   partner:'케빈랩' },
-    { tm:'15:02', name:'침수·수위 데이터',   type:'세이프티', method:'LoRa',     status:'delay', cnt:'1,240건', last:'14:48', dept:'안전총괄과', partner:'스파이어' },
-    { tm:'14:58', name:'대기질 측정',        type:'세이프티', method:'MQTT',     status:'ok',    cnt:'3,600건', last:'14:58', dept:'안전총괄과', partner:'영진기술' },
+    { tm:'15:02', name:'침수·수위 데이터',   type:'세이프티', method:'REST API',     status:'delay', cnt:'1,240건', last:'14:48', dept:'안전총괄과', partner:'스파이어' },
+    { tm:'14:58', name:'대기질 측정',        type:'세이프티', method:'REST API',     status:'ok',    cnt:'3,600건', last:'14:58', dept:'안전총괄과', partner:'영진기술' },
     { tm:'14:51', name:'친환경 배달 현황',   type:'모빌리티', method:'API',      status:'ok',    cnt:'1,284건', last:'14:51', dept:'교통과',     partner:'우아한형제들' },
     { tm:'14:40', name:'카셰어링 이용 현황', type:'모빌리티', method:'REST API', status:'ok',    cnt:'247건',   last:'14:40', dept:'교통과',     partner:'기아' },
     { tm:'14:32', name:'DRT 운행 데이터',    type:'모빌리티', method:'REST API', status:'err',   cnt:'0건',     last:'13:15', dept:'교통과',     partner:'현대' },
-    { tm:'14:20', name:'탄소감축 데이터',    type:'에너지',   method:'REST API', status:'ok',    cnt:'38건',    last:'14:20', dept:'환경과',     partner:'그리너리/후시파트너스' }
+    { tm:'14:20', name:'탄소감축 데이터',    type:'데이터',   method:'REST API', status:'ok',    cnt:'38건',    last:'14:20', dept:'환경과',     partner:'그리너리/후시파트너스' }
   ];
 
   function renderHist(dateStr) {
