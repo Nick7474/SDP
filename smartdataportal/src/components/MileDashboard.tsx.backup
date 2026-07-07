@@ -1,0 +1,359 @@
+import { useState } from 'react';
+import { Calendar, ChevronDown, Search, Download, Sun, Zap, BarChart2, Leaf, ShieldCheck, TrendingUp } from 'lucide-react';
+
+interface MileDashboardProps {
+  onShowToast: (msg: string) => void;
+}
+
+export default function MileDashboard({ onShowToast }: MileDashboardProps) {
+  const [activeTab, setActiveTab] = useState('energy');
+
+  const tabs = [
+    { id: 'energy', label: 'Energy Mile' },
+    { id: 'mobility', label: 'Mobility Mile' },
+    { id: 'safety', label: 'Safety Mile' },
+    { id: 'data', label: 'Data Mile' },
+  ];
+
+  return (
+    <div className="max-w-[1440px] mx-auto mt-[40px] mb-20 px-0 select-none font-pretendard-gov text-[var(--fg-2)]">
+      {/* Dashboard Header */}
+      <div className="mb-[40px] flex flex-col gap-[8px]">
+        <h2 className="text-[28px] font-bold text-[var(--fg-1)]">마일별 상세 데이터</h2>
+        <p className="text-[16px] text-[var(--fg-3)]">선택한 마일의 주요 지표와 원천 데이터를 확인할 수 있습니다.</p>
+      </div>
+
+      {/* Tab Menu & Filters */}
+      <div className="flex items-center justify-between mb-[32px]">
+        {/* Tabs Container */}
+        <div className="flex border border-[var(--border-1)] rounded-[8px] bg-white">
+          {tabs.map((tab, index) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center justify-center w-[160px] h-[56px] transition-colors border-r border-[var(--border-1)] last:border-r-0 ${
+                  isActive 
+                    ? 'bg-[var(--gp-primary)] text-white font-bold text-[16px]' 
+                    : 'bg-white text-[var(--fg-4)] font-normal text-[16px] hover:bg-[var(--bg-subtle)]'
+                } ${index === 0 ? 'rounded-l-[8px]' : ''} ${index === tabs.length - 1 ? 'rounded-r-[8px]' : ''} font-pretendard-gov`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Filters */}
+        <div className="flex items-center gap-[40px] relative">
+          <div className="flex items-center gap-[12px]">
+            <span className="text-[14px] font-medium text-[var(--fg-2)]">기간 선택</span>
+            <button className="gp-select-btn gp-select-btn--h48 w-[260px]">
+              <span className="text-[14px]">2026-10-10 &nbsp;-&nbsp; 2026-11-10</span>
+              <Calendar size={18} className="text-[var(--fg-4)]" />
+            </button>
+          </div>
+          <div className="flex items-center gap-[12px]">
+            <span className="text-[14px] font-medium text-[var(--fg-2)]">지역 선택</span>
+            <button className="gp-select-btn gp-select-btn--h48 w-[140px]">
+              <span className="text-[14px]">광명역세권</span>
+              <ChevronDown size={18} className="text-[var(--fg-4)]" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* KPI Cards Row */}
+      <div className="w-full h-[120px] bg-white border border-[var(--border-light)] rounded-[12px] mb-6 flex items-center justify-between px-[40px] shadow-none">
+        {/* KPI 1 */}
+        <div className="flex items-center gap-4">
+            <img src="/icons/ic_dash_gen.svg" alt="총 발전량" className="w-[48px] h-[48px] shrink-0" />
+          <div className="flex flex-col">
+            <span className="text-[14px] font-medium text-[var(--fg-3)] leading-tight mb-1">총 발전량</span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-[28px] font-bold text-[var(--fg-1)] leading-none">350</span>
+              <span className="text-[14px] font-medium text-[var(--fg-4)] leading-none">MWh</span>
+            </div>
+          </div>
+        </div>
+        <div className="h-[28px] w-[1px] bg-[var(--border-1)] shrink-0" />
+        {/* KPI 2 */}
+        <div className="flex items-center gap-4">
+            <img src="/icons/ic_dash_output.svg" alt="현재 출력" className="w-[48px] h-[48px] shrink-0" />
+          <div className="flex flex-col">
+            <span className="text-[14px] font-medium text-[var(--fg-3)] leading-tight mb-1">현재 출력</span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-[28px] font-bold text-[var(--fg-1)] leading-none">168</span>
+              <span className="text-[14px] font-medium text-[var(--fg-4)] leading-none">MWh</span>
+            </div>
+          </div>
+        </div>
+        <div className="h-[28px] w-[1px] bg-[var(--border-1)] shrink-0" />
+        {/* KPI 3 */}
+        <div className="flex items-center gap-4">
+            <img src="/icons/ic_dash_totalgen.svg" alt="누적발전량" className="w-[48px] h-[48px] shrink-0" />
+          <div className="flex flex-col">
+            <span className="text-[14px] font-medium text-[var(--fg-3)] leading-tight mb-1">누적발전량</span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-[28px] font-bold text-[var(--fg-1)] leading-none">1,268</span>
+              <span className="text-[14px] font-medium text-[var(--fg-4)] leading-none">MWh</span>
+            </div>
+          </div>
+        </div>
+        <div className="h-[28px] w-[1px] bg-[var(--border-1)] shrink-0" />
+        {/* KPI 4 */}
+        <div className="flex items-center gap-4">
+            <img src="/icons/ic_dash_carbon.svg" alt="탄소저감량" className="w-[48px] h-[48px] shrink-0" />
+          <div className="flex flex-col">
+            <span className="text-[14px] font-medium text-[var(--fg-3)] leading-tight mb-1">탄소저감량</span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-[28px] font-bold text-[var(--fg-1)] leading-none">156.15</span>
+              <span className="text-[14px] font-medium text-[var(--fg-4)] leading-none">tCO₂eq</span>
+            </div>
+          </div>
+        </div>
+        <div className="h-[28px] w-[1px] bg-[var(--border-1)] shrink-0" />
+        {/* KPI 5 */}
+        <div className="flex items-center gap-4">
+            <img src="/icons/ic_dash_status.svg" alt="운영상태" className="w-[48px] h-[48px] shrink-0" />
+          <div className="flex flex-col">
+            <span className="text-[14px] font-medium text-[var(--fg-3)] leading-tight mb-1">운영상태</span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-[28px] font-bold text-[var(--status-success)] leading-none">정상</span>
+            </div>
+          </div>
+        </div>
+        <div className="h-[28px] w-[1px] bg-[var(--border-1)] shrink-0" />
+        {/* KPI 6 */}
+        <div className="flex items-center gap-4">
+            <img src="/icons/ic_dash_rising.svg" alt="전월 대비" className="w-[48px] h-[48px] shrink-0" />
+          <div className="flex flex-col">
+            <span className="text-[14px] font-medium text-[var(--fg-3)] leading-tight mb-1">전월 대비</span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-[28px] font-bold text-[var(--gp-primary)] leading-none">+12.3</span>
+              <span className="text-[14px] font-medium text-[var(--fg-4)] leading-none">%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Charts Row */}
+      <div className="flex gap-6 mb-12">
+        {/* Chart 1: 월별 발전량 추이 (Line Chart) */}
+        <div className="flex-1 h-[320px] bg-white border border-[var(--border-light)] rounded-[12px] p-6 flex flex-col shadow-none">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="font-pretendard-gov font-bold text-[18px] text-[var(--fg-1)]">월별 발전량 추이</h3>
+            <span className="text-[13px] font-normal text-[var(--fg-4)]">2026.01~2026.05</span>
+          </div>
+          <div className="flex-1 relative w-full h-full mt-2">
+            <svg viewBox="-40 0 460 220" className="w-full h-full">
+              {[0, 100, 200, 300, 400].map((val, idx) => {
+                const y = 180 - (idx * 40);
+                return (
+                  <g key={val}>
+                    <text x="-10" y={y + 4} textAnchor="end" fontSize="12" fill="#464C53">{val}</text>
+                    <line x1="0" y1={y} x2="410" y2={y} stroke="var(--border-1)" strokeWidth="1" />
+                  </g>
+                );
+              })}
+              <text x="-10" y="10" textAnchor="end" fontSize="12" fill="#464C53">(MWh)</text>
+              {['2026.01', '2026.02', '2026.03', '2026.04', '2026.05'].map((label, idx) => (
+                <text key={label} x={35 + idx * 85} y="206" textAnchor="middle" fontSize="12" fill="#464C53">{label}</text>
+              ))}
+              <path d="M 35 140 L 120 120 L 205 85 L 290 75 L 375 45" fill="none" stroke="var(--light-primary-500)" strokeWidth="2" />
+              {[
+                { val: '100', y: 140 },
+                { val: '150', y: 120 },
+                { val: '240', y: 85 },
+                { val: '260', y: 75 },
+                { val: '340', y: 45 }
+              ].map((item, idx) => (
+                <g key={idx}>
+                  <circle cx={35 + idx * 85} cy={item.y} r="4" fill="var(--light-primary-500)" />
+                  <circle cx={35 + idx * 85} cy={item.y} r="2" fill="#fff" />
+                </g>
+              ))}
+            </svg>
+          </div>
+        </div>
+
+        {/* Chart 2: 발전소별 생산량 비교 (Bar Chart) */}
+        <div className="flex-1 h-[320px] bg-white border border-[var(--border-light)] rounded-[12px] p-6 flex flex-col shadow-none">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="font-pretendard-gov font-bold text-[18px] text-[var(--fg-1)]">발전소별 생산량 비교</h3>
+            <span className="text-[13px] font-normal text-[var(--fg-4)]">2026.05 기준</span>
+          </div>
+          <div className="flex-1 relative w-full h-full mt-2">
+            <svg viewBox="-40 0 460 230" className="w-full h-full">
+              {[0, 50, 100, 150, 200, 250].map((val, idx) => {
+                const y = 180 - (idx * 32);
+                return (
+                  <g key={val}>
+                    <text x="-10" y={y + 4} textAnchor="end" fontSize="12" fill="#464C53">{val}</text>
+                    <line x1="0" y1={y} x2="410" y2={y} stroke="var(--border-1)" strokeWidth="1" />
+                  </g>
+                );
+              })}
+              {[
+                { label: '광명역 태양광', val: '170', height: 110 },
+                { label: '광명스카이돔 태양광', val: '110', height: 70 },
+                { label: '철산동 태양광', val: '130', height: 85 },
+                { label: '소하동 태양광', val: '110', height: 70 },
+                { label: '일직동 태양광', val: '150', height: 100 }
+              ].map((item, idx) => {
+                const x = 45 + (idx * 80);
+                const h = (item.val / 250) * 160;
+                const y = 180 - h;
+                const lines = item.label.split(' ');
+                return (
+                  <g key={item.label}>
+                    <rect x={x - 15} y={y} width="30" height={h} fill="var(--gp-point)" rx="2" />
+                    <text x={x} y={y - 8} textAnchor="middle" fontSize="11" fill="var(--fg-1)" fontWeight="600">{item.val}</text>
+                    <text x={x} y="204" textAnchor="middle" fontSize="12" fill="#464C53">{lines[0]}</text>
+                    <text x={x} y="222" textAnchor="middle" fontSize="12" fill="#464C53">{lines[1]}</text>
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
+        </div>
+
+        {/* Chart 3: 상계/거래 비율 (Donut Chart) */}
+        <div className="flex-1 h-[320px] bg-white border border-[var(--border-light)] rounded-[12px] p-6 flex flex-col shadow-none">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="font-pretendard-gov font-bold text-[18px] text-[var(--fg-1)]">상계/거래 비율</h3>
+            <span className="text-[13px] font-normal text-[var(--fg-4)]">2026.05 기준</span>
+          </div>
+          <div className="flex-1 flex items-center justify-center relative mt-2">
+            <div className="relative w-[200px] h-[200px]">
+              <svg viewBox="-1 -1 102 102" className="w-full h-full transform -rotate-90">
+                <circle cx="50" cy="50" r="35" fill="none" stroke="#FFAE1A" strokeWidth="30" strokeDasharray="83.57 219.91" />
+                <circle cx="50" cy="50" r="35" fill="none" stroke="var(--gp-primary)" strokeWidth="30" strokeDasharray="136.34 219.91" transform="rotate(136.8 50 50)" />
+                <line x1="50" y1="50" x2="100" y2="50" stroke="white" strokeWidth="1" transform="rotate(0 50 50)" />
+                <line x1="50" y1="50" x2="100" y2="50" stroke="white" strokeWidth="1" transform="rotate(136.8 50 50)" />
+                <circle cx="50" cy="50" r="20.5" fill="white" />
+              </svg>
+              <span className="absolute text-white font-normal text-[16px] -translate-x-1/2 -translate-y-1/2" style={{ left: '165px', top: '74px' }}>38%</span>
+              <span className="absolute text-white font-normal text-[16px] -translate-x-1/2 -translate-y-1/2" style={{ left: '35px', top: '126px' }}>62%</span>
+            </div>
+            <div className="flex flex-col gap-3 ml-8">
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-[var(--gp-primary)] rounded-[2px]" />
+                <span className="ml-[8px] text-[13px] font-medium text-[var(--fg-2)]">상계</span>
+                <span className="ml-[6px] text-[14px] font-bold text-[var(--fg-1)]">62%</span>
+                <span className="ml-[6px] text-[12px] text-[var(--fg-4)]">(217 MWh)</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-[#FFAE1A] rounded-[2px]" />
+                <span className="ml-[8px] text-[13px] font-medium text-[var(--fg-2)]">거래</span>
+                <span className="ml-[6px] text-[14px] font-bold text-[var(--fg-1)]">38%</span>
+                <span className="ml-[6px] text-[12px] text-[var(--fg-4)]">(135 MWh)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Data Table Section */}
+      <div className="flex flex-col gap-[16px] w-full shrink-0 mb-[24px]">
+        <div className="flex items-end justify-between w-full">
+          <div className="flex flex-col gap-[40px] text-left">
+            <h2 className="font-pretendard-gov text-[24px] font-bold text-[#16243B] leading-none">
+              원천 데이터
+            </h2>
+            <span className="font-pretendard-gov text-[16px] text-[#7C8896] font-normal leading-none mb-1">
+              총 242건
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            {/* Search Input using .gp-searchfield */}
+            <div className="gp-searchfield w-[320px]">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--fg-4)]" size={20} />
+              <input type="text" placeholder="검색어를 입력하세요" className="gp-input !pl-[48px]" />
+            </div>
+            {/* Search Button */}
+            <button className="gp-btn gp-btn--primary gp-btn--h48 ml-1 w-[80px]">
+              검색
+            </button>
+            {/* Sort Select */}
+            <button className="gp-select-btn gp-select-btn--h48 w-[120px] ml-2">
+              <span className="text-[14px]">최신순</span>
+              <ChevronDown size={16} className="text-[var(--fg-4)]" />
+            </button>
+          </div>
+        </div>
+
+        {/* Table using DS classes */}
+        <div className="gp-table-container overflow-x-auto">
+        <table className="gp-table w-full whitespace-nowrap min-w-[1200px]">
+          <thead>
+            <tr>
+              <th className="w-[80px] !text-center">번호</th>
+              <th className="text-left w-[240px]">데이터명</th>
+              <th className="w-[120px] !text-center">마일</th>
+              <th className="w-[240px] text-left">솔루션</th>
+              <th className="w-[160px] text-left">데이터 항목</th>
+              <th className="w-[100px] !text-center">형식</th>
+              <th className="w-[140px] !text-center">기준일</th>
+              <th className="w-[100px] !text-center">상세</th>
+              <th className="w-[140px] !text-center">다운로드</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...Array(10)].map((_, idx) => (
+              <tr key={idx}>
+                <td className="!text-center text-[var(--fg-4)]">{99 - idx}</td>
+                <td className="text-left"><span className="ttl">광명역 태양광 발전량 데이터</span></td>
+                <td className="!text-center">에너지</td>
+                <td className="text-left">신재생 에너지 자원 발전소</td>
+                <td className="text-left">발전량</td>
+                <td className="!text-center">CSV</td>
+                <td className="!text-center text-[var(--fg-3)]">2026-06-26</td>
+                <td className="!text-center">
+                  <div className="flex justify-center">
+                    <button 
+                      onClick={() => onShowToast("데이터 상세 보기 팝업이 열립니다.")}
+                      className="gp-btn gp-btn--secondary gp-btn--sm"
+                    >
+                      보기
+                    </button>
+                  </div>
+                </td>
+                <td className="!text-center">
+                  <div className="flex justify-center">
+                    <button 
+                      onClick={() => onShowToast("'광명역_태양광_발전량_데이터.csv' 파일이 다운로드 되었습니다.")}
+                      className="gp-btn gp-btn--secondary gp-btn--sm gap-1 mx-auto"
+                    >
+                      <Download size={14} /> 다운로드
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+      {/* Pagination using DS classes */}
+      <div className="gp-pager mt-8">
+        <button className="nav text-[13px] w-auto px-3 border-none hover:bg-transparent hover:text-[var(--gp-primary)]">&lt; 이전</button>
+        <button aria-current="true">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>7</button>
+        <button>8</button>
+        <button>9</button>
+        <button className="nav border-none hover:bg-transparent cursor-default" disabled>...</button>
+        <button>120</button>
+        <button className="nav text-[13px] w-auto px-3 border-none hover:bg-transparent hover:text-[var(--gp-primary)]">다음 &gt;</button>
+      </div>
+
+    </div>
+  );
+}

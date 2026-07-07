@@ -1,0 +1,6 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 1000003166">
+<circle id="Ellipse 1483" cx="20" cy="20" r="19.5" fill="var(--fill-0, white)" stroke="var(--stroke-0, #CDD1D5)"/>
+<path id="Arrow 3" d="M12 19C11.4477 19 11 19.4477 11 20C11 20.5523 11.4477 21 12 21V20V19ZM29.2071 20.7071C29.5976 20.3166 29.5976 19.6834 29.2071 19.2929L22.8431 12.9289C22.4526 12.5384 21.8195 12.5384 21.4289 12.9289C21.0384 13.3195 21.0384 13.9526 21.4289 14.3431L27.0858 20L21.4289 25.6569C21.0384 26.0474 21.0384 26.6805 21.4289 27.0711C21.8195 27.4616 22.4526 27.4616 22.8431 27.0711L29.2071 20.7071ZM12 20V21H28.5V20V19H12V20Z" fill="var(--stroke-0, #06A85B)"/>
+</g>
+</svg>

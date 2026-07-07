@@ -1,0 +1,6 @@
+{
+  "name": "광명 스마트데이터포털",
+  "description": "광명시 강소형 스마트도시 조성사업 및 10대 솔루션 소개 포털",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

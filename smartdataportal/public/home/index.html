@@ -1,0 +1,1650 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>광명 스마트데이터포털 ECOVIEW</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" href="./css/style.css?v=42" />
+    <link rel="stylesheet" href="./css/gm2.css?v=2" />
+    <link rel="stylesheet" href="./css/mapGuide.css?v=11" />
+  </head>
+  <body>
+    <div class="home-page">
+      <header class="site-header" data-component="site-header">
+        <a class="site-logo" href="#" aria-label="광명 스마트데이터포털 홈">
+          <img class="site-logo__mark" src="./img/GM_Logo.png" alt="" aria-hidden="true" />
+          <span class="site-logo__text">
+            <strong>광명 스마트데이터포털</strong>
+            <em>ECOVIEW</em>
+          </span>
+        </a>
+
+        <nav class="site-nav" aria-label="주요 메뉴">
+          <a href="#carbon-city">강소형스마트도시 광명</a>
+          <a href="#city-index">데이터 지도</a>
+          <a href="#data">데이터목록</a>
+          <a href="#activity">시민탄소저감활동</a>
+          <a href="#platform">연관플랫폼</a>
+          <a href="#citizen">공지사항</a>
+          <a href="#guide">관리자</a>
+        </nav>
+
+        <div class="site-actions" aria-label="사용자 메뉴">
+          <button type="button" aria-label="내 계정" class="site-actions__user">
+            <img src="./img/user-profile-01.svg" alt="" aria-hidden="true" />
+            홍길동
+          </button>
+          <button type="button" aria-label="알림 1건" class="site-actions__alarm">
+            <img src="./img/alram.svg" alt="" aria-hidden="true" />
+            <i>1</i>
+          </button>
+        </div>
+      </header>
+
+      <main class="landing" data-page="home">
+        <section class="map-stage" aria-label="광명 스마트데이터포털 메인 지도">
+          <img class="map-stage__bg" src="./img/Home 3D_Graphic.jpg" alt="광명시 3D 도시 지도" />
+          <img id="hover-img-energy" class="bldg-hover-img" src="./images/img_3.png"
+               style="left:44.30%; top:10.80%; width:13.00%; height:10.00%; object-fit:fill;" alt="" />
+          <img id="hover-img-mobility" class="bldg-hover-img" src="./images/lotte_mall_holo.png"
+               style="left:58.0%; top:33.4%; width:13.9%; height:5.91%; filter:saturate(1.7) contrast(1.1) brightness(0.93);" alt="" />
+          <img id="hover-img-safety" class="bldg-hover-img" src="./images/img_1.png"
+               style="left:27.2%; top:40.5%; width:19.3%; height:9.9%;" alt="" />
+          <img id="hover-img-data" class="bldg-hover-img" src="./images/data_holo_clean.png?v=7"
+               style="left:59.11%; top:41.63%; width:25.26%; height:9.46%; object-fit:fill; filter:saturate(1.08) brightness(1.06);" alt="" />
+          <div id="lottie-bg" class="map-stage__bg" style="z-index: 2;"></div>
+
+          <!-- Energy Building Hitbox + Hover Image -->
+          <div class="bldg-zone" data-building="energy" 
+               style="position:absolute; z-index:5; cursor:pointer;
+                      left:42.5%; top:9.6%; width:16.5%; height:12.5%;">
+          </div>
+
+          <!-- Mobility Building Hitbox + Hover Image -->
+          <div class="bldg-zone" data-building="mobility" 
+               style="position:absolute; z-index:5; cursor:pointer;
+                      left:55.6%; top:calc(32.2% + 2px); width:13.2%; height:7.1%;">
+          </div>
+
+          <!-- Safety Building Hitbox + Hover Image -->
+          <div class="bldg-zone" data-building="safety" 
+               style="position:absolute; z-index:5; cursor:pointer;
+                      left:24.0%; top:37.8%; width:25.5%; height:15.0%;">
+          </div>
+
+          <!-- Data Building Hitbox + Hover Image -->
+          <div class="bldg-zone" data-building="data"
+               style="position:absolute; z-index:5; cursor:pointer;
+                      left:59.8%; top:calc(42.0% + 2px); width:17.8%; height:12.8%;">
+          </div>
+
+
+          <div class="hero-copy" data-component="hero-copy">
+            <h1>
+              <span>광명</span>
+              <span>스마트데이터포털</span>
+            </h1>
+            <p class="hero-copy__en">Gwangmyeong Smart Data Portal</p>
+            <p>
+              광명시는 스마트 도시의 도약을 위해 도시의 다양한 데이터를 통합, 분석,<br />
+              개방하는 혁신적인 광명 스마트데이터포털을 구축했습니다.
+            </p>
+            <p>
+              <strong>교통, 환경, 주거, 경제 등 다양한 분야의 데이터</strong>를 한데 모아<br />
+              시민들의 니즈를 반영한 스마트 도시 인프라입니다.
+            </p>
+            <span class="hero-copy__hint">
+              <span class="scroll-mouse" aria-hidden="true">
+                <img src="./img/Mouse1.svg" alt="" />
+                <i></i>
+              </span>
+              스크롤하거나 우측 퀵메뉴를 선택하세요
+            </span>
+          </div>
+
+          <nav class="quick-menu" data-component="quick-menu" aria-label="4대 마일 퀵 메뉴">
+            <span class="quick-menu__rail" aria-hidden="true"></span>
+            <button class="quick-menu__item is-active" type="button" data-mile-target="energy">
+              <span>에너지 마일</span>
+              <i class="mile-icon" aria-hidden="true">
+                <img src="./img/Property 1=00_EN_ON.svg" alt="" data-icon-on="./img/Property 1=00_EN_ON.svg" data-icon-off="./img/Property 1=01_EN_OFF.svg" />
+              </i>
+            </button>
+            <button class="quick-menu__item" type="button" data-mile-target="mobility">
+              <span>모빌리티 마일</span>
+              <i class="mile-icon" aria-hidden="true">
+                <img src="./img/Property 1=11_MO_OFF.svg" alt="" data-icon-on="./img/Property 1=10_MO_ON.svg" data-icon-off="./img/Property 1=11_MO_OFF.svg" />
+              </i>
+            </button>
+            <button class="quick-menu__item" type="button" data-mile-target="safety">
+              <span>세이프티 마일</span>
+              <i class="mile-icon" aria-hidden="true">
+                <img src="./img/Property 1=21_SF_OFF.svg" alt="" data-icon-on="./img/Property 1=20_SF_ON.svg" data-icon-off="./img/Property 1=21_SF_OFF.svg" />
+              </i>
+            </button>
+            <button class="quick-menu__item" type="button" data-mile-target="data">
+              <span>데이터 마일</span>
+              <i class="mile-icon" aria-hidden="true">
+                <img src="./img/Property 1=30_DM_OFF.svg" alt="" data-icon-on="./img/Property 1=31_DM_ON.svg" data-icon-off="./img/Property 1=30_DM_OFF.svg" />
+              </i>
+            </button>
+          </nav>
+
+
+          <div class="modal-layer" data-component="modal-layer">
+            <!-- =================================================================== -->
+                  <!-- ENERGY MILE — BLUE                                                   -->
+                  <!-- =================================================================== -->
+                  <div id="energy" class="modal modal--energy" data-component="mile-card" data-mile="energy" aria-label="에너지 마일" data-color="blue" data-interval="8000">
+                    <div class="m-header">
+                      <div class="m-logo">
+                        <img src="./img/00_E_O.svg" alt="" />
+                      </div>
+                      <div class="m-titlewrap">
+                        <div class="m-title">에너지 마일</div>
+                        <div class="m-subtitle">신재생에너지 생산 · 가상거래 현황</div>
+                      </div>
+                      <button class="m-info-btn" type="button" aria-label="에너지 마일 설명" data-mile-info="energy">
+                        <img src="./img/ic_info.svg" width="24" height="24" alt="" />
+                      </button>
+                      <div class="m-controls">
+                        <div class="m-dots">
+                          <button class="m-dot active" data-i="0" aria-label="1"></button>
+                          <button class="m-dot" data-i="1" aria-label="2"></button>
+                        </div>
+                        <button class="m-playbtn" aria-label="일시정지">
+                          <svg class="icn-pause" width="9" height="9" viewBox="0 0 10 10"><rect x="2" y="1.5" width="2" height="7" rx=".5" fill="currentColor"/><rect x="6" y="1.5" width="2" height="7" rx=".5" fill="currentColor"/></svg>
+                          <svg class="icn-play" width="9" height="9" viewBox="0 0 10 10"><path d="M2.5 1.4 L8.4 5 L2.5 8.6 Z" fill="currentColor"/></svg>
+                          <svg class="m-ring" viewBox="0 0 26 26"><circle cx="13" cy="13" r="11.5" fill="none" stroke="#E1E5EB" stroke-width="1.5"/><circle class="m-ring-fg" cx="13" cy="13" r="11.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="72.26" stroke-dashoffset="72.26" transform="rotate(-90 13 13)"/></svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="m-body">
+                      <section class="m-slide active" data-slide="0">
+                        <div class="stat-row">
+                          <div class="stat-card">
+                            <div class="ic">
+                              <img src="./img/Property 1=E_M_IC1.svg" alt="" />
+                            </div>
+                            <div class="meta">
+                              <span class="stat-label">누적발전량</span>
+                              <span class="stat-value">1,284.2<span class="unit">kWh</span></span>
+                            </div>
+                          </div>
+                          <div class="stat-card">
+                            <div class="ic">
+                              <img src="./img/Property 1=E_M_IC2.svg" alt="" />
+                            </div>
+                            <div class="meta">
+                              <span class="stat-label">AI 예측 발전량</span>
+                              <span class="stat-value">1,248<span class="unit">kWh</span></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="sect-row"><span class="sect-title">월간 전력 흐름</span><span class="sect-unit">단위: kWh</span></div>
+                        <div class="chart-area">
+                          <div class="chart-y"><span>0</span><span>2,000</span><span>4,000</span><span>6,000</span><span>8,000</span><span>10,000</span></div>
+                          <div class="chart-grid"><div class="chart-grid-line"></div><div class="chart-grid-line"></div><div class="chart-grid-line"></div><div class="chart-grid-line"></div><div class="chart-grid-line"></div><div class="chart-grid-line"></div></div>
+                          <div class="chart-bars">
+                            <div class="bar-col"><span class="bar-val">7,860</span><div class="bar" style="height:78.6%"></div><span class="bar-label">소비 전력량</span></div>
+                            <div class="bar-col"><span class="bar-val">8,420</span><div class="bar" style="height:84.2%;animation-delay:80ms"></div><span class="bar-label">발전 전력량</span></div>
+                            <div class="bar-col"><span class="bar-val">4,120</span><div class="bar" style="height:41.2%;animation-delay:160ms"></div><span class="bar-label">상계량</span></div>
+                            <div class="bar-col"><span class="bar-val">680</span><div class="bar" style="height:6.8%;animation-delay:240ms"></div><span class="bar-label">수혜 전력량</span></div>
+                          </div>
+                        </div>
+                      </section>
+                      <section class="m-slide" data-slide="1">
+                        <div class="sect-title" style="margin-top:6px">가상거래 상세</div>
+                        <div class="detail-list">
+                          <div class="detail-row">
+                            <div class="ic-sm"><img src="./img/E_M_IC3.svg" alt="" /></div>
+                            <div class="lbl">소비 전력량</div>
+                            <div class="val">7,860<span class="u">kWh</span></div>
+                          </div>
+                          <div class="detail-row">
+                            <div class="ic-sm"><img src="./img/E_M_IC4.svg" alt="" /></div>
+                            <div class="lbl">발전 전력량</div>
+                            <div class="val">8,420<span class="u">kWh</span></div>
+                          </div>
+                          <div class="detail-row">
+                            <div class="ic-sm"><img src="./img/E_M_IC5.svg" alt="" /></div>
+                            <div class="lbl">상계량</div>
+                            <div class="val">4,120<span class="u">kWh</span></div>
+                          </div>
+                          <div class="detail-row">
+                            <div class="ic-sm"><img src="./img/E_M_IC6.svg" alt="" /></div>
+                            <div class="lbl">수혜 전력량</div>
+                            <div class="val">680<span class="u">kWh</span></div>
+                          </div>
+                        </div>
+                        <div class="detail-foot">
+                          <div class="foot-link">
+                            <img src="./img/E_M_IC7.svg" alt="" />
+                            <span>광명역세권 신재생 가상거래 연계 · 케빈랩</span>
+                          </div>
+                          <button class="foot-btn">상세보기 <svg width="9" height="9" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+            
+                  <!-- =================================================================== -->
+                  <!-- MOBILITY MILE — GREEN                                                -->
+                  <!-- =================================================================== -->
+                  <div id="mobility" class="modal modal--mobility" data-component="mile-card" data-mile="mobility" aria-label="모빌리티 마일" data-color="green" data-interval="10000">
+                    <div class="m-header">
+                      <div class="m-logo">
+                        <img src="./img/01_M_O.svg" alt="" />
+                      </div>
+                      <div class="m-titlewrap">
+                        <div class="m-title">모빌리티 마일</div>
+                        <div class="m-subtitle">친환경 이동 서비스 통합 운영 현황</div>
+                      </div>
+                      <button class="m-info-btn" type="button" aria-label="모빌리티 마일 설명" data-mile-info="mobility">
+                        <img src="./img/ic_info.svg" width="24" height="24" alt="" />
+                      </button>
+                      <div class="m-controls">
+                        <div class="m-dots">
+                          <button class="m-dot active" data-i="0"></button>
+                          <button class="m-dot" data-i="1"></button>
+                          <button class="m-dot" data-i="2"></button>
+                        </div>
+                        <button class="m-playbtn" aria-label="일시정지">
+                          <svg class="icn-pause" width="9" height="9" viewBox="0 0 10 10"><rect x="2" y="1.5" width="2" height="7" rx=".5" fill="currentColor"/><rect x="6" y="1.5" width="2" height="7" rx=".5" fill="currentColor"/></svg>
+                          <svg class="icn-play" width="9" height="9" viewBox="0 0 10 10"><path d="M2.5 1.4 L8.4 5 L2.5 8.6 Z" fill="currentColor"/></svg>
+                          <svg class="m-ring" viewBox="0 0 26 26"><circle cx="13" cy="13" r="11.5" fill="none" stroke="#E1E5EB" stroke-width="1.5"/><circle class="m-ring-fg" cx="13" cy="13" r="11.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="72.26" stroke-dashoffset="72.26" transform="rotate(-90 13 13)"/></svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="m-body">
+                      <section class="m-slide active" data-slide="0">
+                        <div class="stat-row">
+                          <div class="stat-card">
+                            <div class="ic">
+                              <img src="./img/00_MM.svg" alt="" />
+                            </div>
+                            <div class="meta">
+                              <span class="stat-label">친환경 이동거리</span>
+                              <span class="stat-value">18,420<span class="unit">km</span></span>
+                              <span class="stat-foot">전기이륜차 + DRT 기준</span>
+                            </div>
+                          </div>
+                          <div class="stat-card">
+                            <div class="ic">
+                              <img src="./img/01_MM.svg" alt="" />
+                            </div>
+                            <div class="meta">
+                              <span class="stat-label">주간 이용자수</span>
+                              <span class="stat-value">1,284<span class="unit">명</span></span>
+                              <span class="stat-foot">카셰어링 기준</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="sect-title" style="margin-top:10px">친환경 배달문화 밸류체인 (우아한형제들)</div>
+                        <div class="svc-box">
+                          <div class="svc-head">
+                            <div class="svc-ic">
+                              <img src="./img/02_MM_IC.svg" alt="" />
+                            </div>
+                            <div class="svc-name">전기이륜차 · 다회용기 통합 운영</div>
+                          </div>
+                          <div class="svc-grid">
+                            <div class="svc-cell"><span class="l">전기이륜차 라이더수</span><span class="v">68<span class="u">명</span></span></div>
+                            <div class="svc-cell"><span class="l">전기이륜차 이동거리</span><span class="v">9,240<span class="u">km</span></span></div>
+                            <div class="svc-cell"><span class="l">전기이륜차 배달건수</span><span class="v">3,186<span class="u">건</span></span></div>
+                            <div class="svc-cell"><span class="l">다회용 식당 수</span><span class="v">24<span class="u">개</span></span></div>
+                            <div class="svc-cell"><span class="l">다회용기 배달 주문 수</span><span class="v">842<span class="u">건</span></span></div>
+                            <div class="svc-cell"><span class="l">충전 전력량</span><span class="v">428<span class="u">kWh</span></span></div>
+                          </div>
+                        </div>
+                      </section>
+                      <section class="m-slide" data-slide="1">
+                        <div class="sect-title" style="margin-top:6px">전기차 기반 모빌리티 서비스</div>
+                        <div class="svc-box">
+                          <div class="svc-head">
+                            <div class="svc-ic">
+                              <img src="./img/03_MM_IC.svg?v=2" alt="" />
+                            </div>
+                            <div class="svc-name">전기차기반 커뮤니티 카셰어링</div>
+                          </div>
+                          <div class="svc-grid">
+                            <div class="svc-cell"><span class="l">운영 차량 대수</span><span class="v">12<span class="u">대</span></span></div>
+                            <div class="svc-cell"><span class="l">업무용 이용 건수</span><span class="v">126<span class="u">건</span></span></div>
+                            <div class="svc-cell"><span class="l">개인용 이용 건수</span><span class="v">94<span class="u">건</span></span></div>
+                            <div class="svc-cell"><span class="l">이용자수</span><span class="v">218<span class="u">명</span></span></div>
+                          </div>
+                        </div>
+                        <div class="drt-box">
+                          <div class="svc-ic">
+                            <img src="./img/09_MM_IC.svg" alt="" />
+                          </div>
+                          <div class="drt-meta">
+                            <div class="drt-title">전기버스기반 친환경 DRT</div>
+                            <div class="drt-stats">
+                              <div class="svc-cell"><span class="l">전기차 누적주행거리</span><span class="v">9,180<span class="u">km</span></span></div>
+                              <div class="svc-cell"><span class="l">전기차 충전량</span><span class="v">612<span class="u">kW</span></span></div>
+                              <div class="svc-cell"><span class="l">평균 차량운행시간</span><span class="v">7.2<span class="u">시간</span></span></div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                      <section class="m-slide" data-slide="2">
+                        <div class="sect-title" style="margin-top:6px">주요 상세 지표</div>
+                        <div class="detail-list">
+                          <div class="detail-row">
+                            <div class="ic-sm"><img src="./img/04_MM_IC.svg" alt="" /></div>
+                            <div class="lbl">전기이륜차 배달건수</div>
+                            <div class="val">3,186<span class="u">건</span></div>
+                            <div class="chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2"/></svg></div>
+                          </div>
+                          <div class="detail-row">
+                            <div class="ic-sm"><img src="./img/05_MM_IC.svg" alt="" /></div>
+                            <div class="lbl">다회용기 배달 주문 수</div>
+                            <div class="val">842<span class="u">건</span></div>
+                            <div class="chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2"/></svg></div>
+                          </div>
+                          <div class="detail-row">
+                            <div class="ic-sm"><img src="./img/06_MM_IC.svg" alt="" /></div>
+                            <div class="lbl">운영 차량 대수</div>
+                            <div class="val">12<span class="u">대</span></div>
+                            <div class="chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2"/></svg></div>
+                          </div>
+                          <div class="detail-row">
+                            <div class="ic-sm"><img src="./img/07_MM_IC.svg" alt="" /></div>
+                            <div class="lbl">평균 차량운행시간</div>
+                            <div class="val">7.2<span class="u">시간</span></div>
+                            <div class="chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2"/></svg></div>
+                          </div>
+                        </div>
+                        <div class="detail-foot">
+                          <div class="foot-link">
+                            <img src="./img/08_MM_IC.svg" alt="" />
+                            <span>광명역세권 모빌리티 서비스 연계 · 우아한형제들</span>
+                          </div>
+                          <button class="foot-btn">상세보기 <svg width="9" height="9" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2"/></svg></button>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+            
+                  <!-- =================================================================== -->
+                  <!-- SAFETY MILE — ORANGE                                                 -->
+                  <!-- =================================================================== -->
+                  <div id="safety" class="modal modal--safety" data-component="mile-card" data-mile="safety" aria-label="세이프티 마일" data-color="orange" data-interval="7000">
+                    <div class="m-header">
+                      <div class="m-logo">
+                        <img src="./img/02_S_O.svg" alt="" />
+                      </div>
+                      <div class="m-titlewrap">
+                        <div class="m-title">세이프티 마일</div>
+                        <div class="m-subtitle">AIoT 침수·홍수 통합관제 현황</div>
+                      </div>
+                      <button class="m-info-btn" type="button" aria-label="세이프티 마일 설명" data-mile-info="safety">
+                        <img src="./img/ic_info.svg" width="24" height="24" alt="" />
+                      </button>
+                      <div class="m-controls">
+                        <div class="m-dots">
+                          <button class="m-dot active" data-i="0"></button>
+                          <button class="m-dot" data-i="1"></button>
+                        </div>
+                        <button class="m-playbtn" aria-label="일시정지">
+                          <svg class="icn-pause" width="9" height="9" viewBox="0 0 10 10"><rect x="2" y="1.5" width="2" height="7" rx=".5" fill="currentColor"/><rect x="6" y="1.5" width="2" height="7" rx=".5" fill="currentColor"/></svg>
+                          <svg class="icn-play" width="9" height="9" viewBox="0 0 10 10"><path d="M2.5 1.4 L8.4 5 L2.5 8.6 Z" fill="currentColor"/></svg>
+                          <svg class="m-ring" viewBox="0 0 26 26"><circle cx="13" cy="13" r="11.5" fill="none" stroke="#E1E5EB" stroke-width="1.5"/><circle class="m-ring-fg" cx="13" cy="13" r="11.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="72.26" stroke-dashoffset="72.26" transform="rotate(-90 13 13)"/></svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="m-body">
+                      <section class="m-slide active" data-slide="0">
+                        <div class="level-row">
+                          <div class="level-card">
+                            <div class="ic-big">
+                              <img src="./img/30_SM.svg" alt="" />
+                            </div>
+                            <div class="level-card__text">
+                              <span class="l">맨홀 수위 레벨</span>
+                              <span class="v v--normal">정상</span>
+                              <span class="sub">현재 상태 안정</span>
+                            </div>
+                          </div>
+                          <div class="level-card">
+                            <div class="ic-big">
+                              <img src="./img/31_SM.svg" alt="" />
+                            </div>
+                            <div class="level-card__text">
+                              <span class="l">경보등급</span>
+                              <span class="v v--caution">관심</span>
+                              <span class="sub">사전 모니터링 단계</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="sect-title" style="margin-bottom:8px">현재 수위 현황</div>
+                        <div class="water-row">
+                          <div class="water-cell">
+                            <div class="ic"><img src="./img/32_SM.svg" alt="" /></div>
+                            <div class="water-cell__text">
+                              <span class="l">맨홀 수위</span>
+                              <span class="v alt v--orange">18 <small>cm</small></span>
+                            </div>
+                          </div>
+                          <div class="water-cell">
+                            <div class="ic"><img src="./img/33_SM.svg" alt="" /></div>
+                            <div class="water-cell__text">
+                              <span class="l">지표면수위</span>
+                              <span class="v alt v--blue">6 <small>cm</small></span>
+                            </div>
+                          </div>
+                          <div class="water-cell">
+                            <div class="ic"><img src="./img/34_SM.svg" alt="" /></div>
+                            <div class="water-cell__text">
+                              <span class="l">홍수구분</span>
+                              <span class="v alt v--blue v--text">도시침수</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="sect-title" style="margin:8px 0">위험 단계 기준</div>
+                        <div class="stepper">
+                          <div class="stepper-line" id="stepperLine"></div>
+                          <div class="step done">
+                            <div class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3 L20 6 V12 C20 17 16 20 12 21 C8 20 4 17 4 12 V6 Z" stroke="currentColor" stroke-width="1.6"/></svg></div>
+                            <span class="lbl">정상</span>
+                          </div>
+                          <div class="step active">
+                            <div class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 4 L22 20 H2 Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><line x1="12" y1="10" x2="12" y2="15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17.5" r="1" fill="currentColor"/></svg></div>
+                            <span class="lbl">관심</span>
+                          </div>
+                          <div class="step">
+                            <div class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 4 L22 20 H2 Z" stroke="currentColor" stroke-width="1.6"/></svg></div>
+                            <span class="lbl">주의</span>
+                          </div>
+                          <div class="step">
+                            <div class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12 L12 5 L19 12 V20 H5 Z" stroke="currentColor" stroke-width="1.6"/></svg></div>
+                            <span class="lbl">경계</span>
+                          </div>
+                          <div class="step">
+                            <div class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="14" r="6" stroke="currentColor" stroke-width="1.6"/><line x1="12" y1="4" x2="12" y2="8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+                            <span class="lbl">심각</span>
+                          </div>
+                        </div>
+                        <div class="info-box">
+                          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><line x1="12" y1="11" x2="12" y2="16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="8.5" r="1" fill="currentColor"/></svg></div>
+                          <div class="body">
+                            <div class="h">현재 상태</div>
+                            <div class="p">맨홀 수위는 정상 범위이며, 도시침수 가능성은 관심 단계로 모니터링 중입니다.</div>
+                            <div class="meta">기준 데이터: 맨홀 수위 · 지표면수위 · 홍수구분 · 경보등급</div>
+                          </div>
+                        </div>
+                      </section>
+                      <section class="m-slide" data-slide="1">
+                        <div class="sect-row" style="margin-top:6px"><span class="sect-title">맨홀·지표면 수위 변화</span><span class="sect-unit">단위: cm</span></div>
+                        <svg class="line-chart" viewBox="0 0 430 170" preserveAspectRatio="none">
+                          <!-- y axis labels & grid -->
+                          <g font-family="Pretendard" font-size="9" fill="#9AA1AC">
+                            <text x="22" y="22" text-anchor="end">40</text>
+                            <text x="22" y="52" text-anchor="end">30</text>
+                            <text x="22" y="82" text-anchor="end">20</text>
+                            <text x="22" y="112" text-anchor="end">10</text>
+                            <text x="22" y="142" text-anchor="end">0</text>
+                          </g>
+                          <g stroke="#EEF1F5" stroke-width="1">
+                            <line x1="28" y1="20" x2="426" y2="20"/>
+                            <line x1="28" y1="50" x2="426" y2="50"/>
+                            <line x1="28" y1="80" x2="426" y2="80"/>
+                            <line x1="28" y1="110" x2="426" y2="110"/>
+                            <line x1="28" y1="140" x2="426" y2="140"/>
+                          </g>
+                          <!-- x labels -->
+                          <g font-family="Pretendard" font-size="9" fill="#9AA1AC" text-anchor="middle">
+                            <text x="60"  y="156">06</text>
+                            <text x="135" y="156">09</text>
+                            <text x="210" y="156">12</text>
+                            <text x="285" y="156">15</text>
+                            <text x="360" y="156">18</text>
+                            <text x="425" y="156">21</text>
+                          </g>
+                          <!-- 맨홀 수위 (orange) values: 12, 18, 25, 20, 16, 12 -->
+                          <polyline fill="none" stroke="#EC8913" stroke-width="1.8" stroke-linejoin="round"
+                            points="60,104 135,86 210,65 285,80 360,92 425,104"/>
+                          <g fill="#fff" stroke="#EC8913" stroke-width="1.6">
+                            <circle cx="60" cy="104" r="3"/><circle cx="135" cy="86" r="3"/><circle cx="210" cy="65" r="3"/><circle cx="285" cy="80" r="3"/><circle cx="360" cy="92" r="3"/><circle cx="425" cy="104" r="3"/>
+                          </g>
+                          <!-- 지표면 수위 (blue) values: 3, 4, 7, 5, 4, 3 -->
+                          <polyline fill="none" stroke="#2C7BF2" stroke-width="1.8" stroke-linejoin="round"
+                            points="60,131 135,128 210,119 285,125 360,128 425,131"/>
+                          <g fill="#fff" stroke="#2C7BF2" stroke-width="1.6">
+                            <circle cx="60" cy="131" r="3"/><circle cx="135" cy="128" r="3"/><circle cx="210" cy="119" r="3"/><circle cx="285" cy="125" r="3"/><circle cx="360" cy="128" r="3"/><circle cx="425" cy="131" r="3"/>
+                          </g>
+                        </svg>
+                        <div class="legend-row">
+                          <div class="legend-item"><span class="legend-dot" style="background:#EC8913"></span>맨홀 수위</div>
+                          <div class="legend-item"><span class="legend-dot" style="background:#2C7BF2"></span>지표면 수위</div>
+                        </div>
+                        <div class="sect-title" style="margin-top:10px">위험 상태 상세</div>
+                        <div class="detail-list">
+                          <div class="detail-row">
+                            <div class="ic-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 11 a10 10 0 0 1 16 0 M7.5 14 a6 6 0 0 1 9 0 M10.5 17 a2.5 2.5 0 0 1 3 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg></div>
+                            <div class="lbl">AIoT 수위센서</div>
+                            <div class="val">12개소 정상</div>
+                            <div class="chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2"/></svg></div>
+                          </div>
+                          <div class="detail-row">
+                            <div class="ic-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 17 V11 a6 6 0 0 1 12 0 V17 L20 19 H4 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 19 a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.5"/></svg></div>
+                            <div class="lbl">최근 위험 알림</div>
+                            <div class="val">없음</div>
+                            <div class="chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2"/></svg></div>
+                          </div>
+                          <div class="detail-row">
+                            <div class="ic-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="6" width="16" height="12" stroke="currentColor" stroke-width="1.5"/><line x1="4" y1="10" x2="20" y2="10" stroke="currentColor" stroke-width="1.2"/><line x1="4" y1="14" x2="20" y2="14" stroke="currentColor" stroke-width="1.2"/><line x1="9" y1="6" x2="9" y2="18" stroke="currentColor" stroke-width="1.2"/><line x1="15" y1="6" x2="15" y2="18" stroke="currentColor" stroke-width="1.2"/></svg></div>
+                            <div class="lbl">IoT 그린배리어</div>
+                            <div class="val">4개소 연계</div>
+                            <div class="chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2"/></svg></div>
+                          </div>
+                          <div class="detail-row">
+                            <div class="ic-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 4 L22 20 H2 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><line x1="12" y1="10" x2="12" y2="15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="17.5" r="1" fill="currentColor"/></svg></div>
+                            <div class="lbl">경보등급</div>
+                            <div class="val">관심</div>
+                            <div class="chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2"/></svg></div>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+            
+                  <!-- =================================================================== -->
+                  <!-- DATA MILE — PURPLE                                                   -->
+                  <!-- =================================================================== -->
+                  <div id="data" class="modal modal--data" data-component="mile-card" data-mile="data" aria-label="데이터 마일" data-color="purple" data-interval="9000">
+                    <div class="m-header">
+                      <div class="m-logo">
+                        <img src="./img/00_DM.svg" alt="" />
+                      </div>
+                      <div class="m-titlewrap">
+                        <div class="m-title">데이터 마일</div>
+                        <div class="m-subtitle">데이터 통합 플랫폼 · 데이터 개방 현황</div>
+                      </div>
+                      <button class="m-info-btn" type="button" aria-label="데이터 마일 설명" data-mile-info="data">
+                        <img src="./img/ic_info.svg" width="24" height="24" alt="" />
+                      </button>
+                      <div class="m-controls">
+                        <div class="m-dots">
+                          <button class="m-dot active" data-i="0"></button>
+                          <button class="m-dot" data-i="1"></button>
+                        </div>
+                        <button class="m-playbtn" aria-label="일시정지">
+                          <svg class="icn-pause" width="9" height="9" viewBox="0 0 10 10"><rect x="2" y="1.5" width="2" height="7" rx=".5" fill="currentColor"/><rect x="6" y="1.5" width="2" height="7" rx=".5" fill="currentColor"/></svg>
+                          <svg class="icn-play" width="9" height="9" viewBox="0 0 10 10"><path d="M2.5 1.4 L8.4 5 L2.5 8.6 Z" fill="currentColor"/></svg>
+                          <svg class="m-ring" viewBox="0 0 26 26"><circle cx="13" cy="13" r="11.5" fill="none" stroke="#E1E5EB" stroke-width="1.5"/><circle class="m-ring-fg" cx="13" cy="13" r="11.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="72.26" stroke-dashoffset="72.26" transform="rotate(-90 13 13)"/></svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="m-body">
+                      <section class="m-slide active" data-slide="0">
+                        <div class="stat-row">
+                          <div class="stat-card">
+                            <div class="ic">
+                              <img src="./img/01_DM.svg?v=2" alt="" />
+                            </div>
+                            <div class="meta">
+                              <span class="stat-label">금일 데이터 수집</span>
+                              <span class="stat-value">18,420<span class="unit">건</span></span>
+                              <span class="stat-foot">전일 대비 <span class="up">↑ +6.2%</span></span>
+                            </div>
+                          </div>
+                          <div class="stat-card">
+                            <div class="ic">
+                              <img src="./img/02_DM.svg?v=2" alt="" />
+                            </div>
+                            <div class="meta">
+                              <span class="stat-label">일일 API 호출</span>
+                              <span class="stat-value">8,540<span class="unit">건</span></span>
+                              <span class="stat-foot">전일 대비 <span class="up">↑ +9.4%</span></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="sect-row"><span class="sect-title">시간대별 데이터 수집량</span><span class="sect-unit">단위: 건</span></div>
+                        <svg class="line-chart" viewBox="0 0 430 200" preserveAspectRatio="xMidYMid meet">
+                          <g font-family="Pretendard" font-size="9" fill="#9AA1AC">
+                            <text x="22" y="20" text-anchor="end">250</text>
+                            <text x="22" y="55" text-anchor="end">200</text>
+                            <text x="22" y="90" text-anchor="end">150</text>
+                            <text x="22" y="125" text-anchor="end">100</text>
+                            <text x="22" y="160" text-anchor="end">50</text>
+                          </g>
+                          <g stroke="#EEF1F5" stroke-width="1">
+                            <line x1="28" y1="18" x2="426" y2="18"/>
+                            <line x1="28" y1="53" x2="426" y2="53"/>
+                            <line x1="28" y1="88" x2="426" y2="88"/>
+                            <line x1="28" y1="123" x2="426" y2="123"/>
+                            <line x1="28" y1="158" x2="426" y2="158"/>
+                          </g>
+                          <g font-family="Pretendard" font-size="9" fill="#9AA1AC" text-anchor="middle">
+                            <text x="60"  y="178">06</text>
+                            <text x="135" y="178">09</text>
+                            <text x="210" y="178">12</text>
+                            <text x="285" y="178">15</text>
+                            <text x="360" y="178">18</text>
+                            <text x="425" y="178">21</text>
+                          </g>
+                          <!-- area: 60→ ~140 → ~110 → ~55 → ~85 → ~125 → ~140 -->
+                          <path d="M60,140 L135,110 L210,55 L285,85 L360,125 L425,140 L425,158 L60,158 Z" fill="#636CCC" opacity=".18"/>
+                          <polyline fill="none" stroke="#636CCC" stroke-width="2" stroke-linejoin="round"
+                            points="60,140 135,110 210,55 285,85 360,125 425,140"/>
+                          <g fill="#fff" stroke="#636CCC" stroke-width="1.6">
+                            <circle cx="60" cy="140" r="3"/><circle cx="135" cy="110" r="3"/><circle cx="210" cy="55" r="3.5"/><circle cx="285" cy="85" r="3"/><circle cx="360" cy="125" r="3"/><circle cx="425" cy="140" r="3"/>
+                          </g>
+                        </svg>
+                      </section>
+                      <section class="m-slide" data-slide="1">
+                        <div class="sect-title" style="margin-top:6px">분야별 데이터 개방 분포</div>
+                        <div class="donut-row">
+                          <svg viewBox="0 0 120 120" width="120" height="120">
+                            <!-- donut: total 360°, 38% orange, 24% purple, 22% blue, 16% yellow -->
+                            <!-- circumference = 2π·45 = 282.74 -->
+                            <g transform="rotate(-90 60 60)" fill="none" stroke-width="22">
+                              <circle cx="60" cy="60" r="45" stroke="#F2A33A" stroke-dasharray="107.44 282.74" stroke-dashoffset="0"/>
+                              <circle cx="60" cy="60" r="45" stroke="#A78BD8" stroke-dasharray="67.86 282.74" stroke-dashoffset="-107.44"/>
+                              <circle cx="60" cy="60" r="45" stroke="#5AA8E8" stroke-dasharray="62.20 282.74" stroke-dashoffset="-175.30"/>
+                              <circle cx="60" cy="60" r="45" stroke="#F2D24A" stroke-dasharray="45.24 282.74" stroke-dashoffset="-237.50"/>
+                            </g>
+                            <circle cx="60" cy="60" r="30" fill="#fff"/>
+                            <g>
+                              <text x="60" y="58" text-anchor="middle" font-size="9" fill="#636CCC" font-family="Pretendard" font-weight="700">DATA</text>
+                              <rect x="51" y="62" width="18" height="10" rx="1" fill="none" stroke="#636CCC" stroke-width="1.2"/>
+                              <line x1="54" y1="68" x2="54" y2="70" stroke="#636CCC" stroke-width="1"/>
+                              <line x1="58" y1="66" x2="58" y2="70" stroke="#636CCC" stroke-width="1"/>
+                              <line x1="62" y1="64" x2="62" y2="70" stroke="#636CCC" stroke-width="1"/>
+                              <line x1="66" y1="65" x2="66" y2="70" stroke="#636CCC" stroke-width="1"/>
+                            </g>
+                          </svg>
+                          <div class="donut-legend">
+                            <div class="item"><span class="sw" style="background:#F2A33A"></span><span class="name">교통·이동</span><span class="pct">38%</span></div>
+                            <div class="item"><span class="sw" style="background:#A78BD8"></span><span class="name">환경·기후</span><span class="pct">24%</span></div>
+                            <div class="item"><span class="sw" style="background:#5AA8E8"></span><span class="name">안전·재난</span><span class="pct">22%</span></div>
+                            <div class="item"><span class="sw" style="background:#F2D24A"></span><span class="name">행정·기타</span><span class="pct">16%</span></div>
+                          </div>
+                        </div>
+                        <div class="detail-list" style="margin-top:6px">
+                          <div class="detail-row">
+                            <div class="ic-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 18 L10 12 L14 16 L20 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6 H20 V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+                            <div class="lbl">개방 데이터셋</div>
+                            <div class="val">518<span class="u">종</span></div>
+                            <div class="chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2"/></svg></div>
+                          </div>
+                          <div class="detail-row">
+                            <div class="ic-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="18" cy="6" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="18" r="2" stroke="currentColor" stroke-width="1.5"/><line x1="7.4" y1="7.4" x2="10.6" y2="16.6" stroke="currentColor" stroke-width="1.4"/><line x1="16.6" y1="7.4" x2="13.4" y2="16.6" stroke="currentColor" stroke-width="1.4"/><line x1="8" y1="6" x2="16" y2="6" stroke="currentColor" stroke-width="1.4"/></svg></div>
+                            <div class="lbl">연계 시스템</div>
+                            <div class="val">13<span class="u">개</span></div>
+                            <div class="chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2"/></svg></div>
+                          </div>
+                          <div class="detail-row">
+                            <div class="ic-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3 L20 6 V12 C20 17 16 20 12 21 C8 20 4 17 4 12 V6 Z" stroke="currentColor" stroke-width="1.5"/><path d="M9 12 L11 14 L15.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                            <div class="lbl">데이터 수집 상태</div>
+                            <div class="val">정상</div>
+                            <div class="chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2"/></svg></div>
+                          </div>
+                        </div>
+                        <div class="detail-foot">
+                          <div class="foot-link">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 20 H21 M5 20 V8 H10 V20 M14 20 V12 H19 V20" stroke="#9AA1AC" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                            <span>광명 스마트데이터 통합플랫폼 연계 · ㈜이든티앤에스</span>
+                          </div>
+                          <button class="foot-btn">상세보기 <svg width="9" height="9" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2"/></svg></button>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+          </div>
+
+          <div class="gm2-wrap">
+          <!-- ===== 1. 시정 소식 ===== -->
+          <section class="gm2-news" aria-label="시정 소식">
+            <div class="gm2-news__bar">
+              <span class="gm2-news__badge"><img src="./img/gm2_news_ic.svg" alt="" />시정소식</span>
+              <span class="gm2-news__count"><b>01</b> / 05</span>
+              <strong class="gm2-news__lead">광명시, 탄소중립 실천 경제 활성화</strong>
+              <span class="gm2-news__sub">· 광명시, 2026년 신재생에너지 보급 확대 추진</span>
+              <span class="gm2-news__sub gm2-hide-1500">· 광명시, 전기차 충전 인프라 추가 구축</span>
+              <div class="gm2-news__ctrl">
+                <button type="button" aria-label="이전 소식"><img src="./img/gm2_news_arrow.svg" alt="" /></button>
+                <button type="button" aria-label="다음 소식"><img class="gm2-flip" src="./img/gm2_news_arrow.svg" alt="" /></button>
+                <button type="button" class="js-pause" aria-label="슬라이드 일시 정지"><img src="./img/gm2_news_pause.svg?v=2" alt="" /></button>
+              </div>
+            </div>
+            <div class="gm2-promo">
+              <article class="gm2-card2 gm2-card2--blue">
+                <div class="gm2-card2__txt">
+                  <span class="gm2-tag gm2-tag--blue">Open Lab</span>
+                  <strong class="gm2-card2__ttl">탄소중립 혁신 아이디어 공모전</strong>
+                  <span class="gm2-dday gm2-dday--blue"><i>D-15</i> 접수중</span>
+                  <button type="button" class="gm2-more gm2-more--blue">자세히보기 <svg class="gm2-arr" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+                </div>
+                <span class="gm2-card2__art" aria-hidden="true" style="background-image:url(./img/gm2_ill_blue.png?v=2)"></span>
+              </article>
+              <article class="gm2-card2 gm2-card2--purple">
+                <div class="gm2-card2__txt">
+                  <span class="gm2-tag gm2-tag--purple">Living Lab</span>
+                  <strong class="gm2-card2__ttl">우리 동네 환경 개선단 모집</strong>
+                  <span class="gm2-dday gm2-dday--purple"><i>D-7</i> 모집중</span>
+                  <button type="button" class="gm2-more gm2-more--purple">자세히보기 <svg class="gm2-arr" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+                </div>
+                <span class="gm2-card2__art" aria-hidden="true" style="background-image:url(./img/gm2_ill_purple.png?v=2)"></span>
+              </article>
+              <article class="gm2-card2 gm2-card2--green">
+                <div class="gm2-card2__txt">
+                  <span class="gm2-tag gm2-tag--green">기후의병 참여</span>
+                  <p class="gm2-card2__lead">오늘 광명시가 심은 나무</p>
+                  <div class="gm2-card2__big"><strong>1,248</strong><em>그루</em></div>
+                  <button type="button" class="gm2-more gm2-more--green" onclick="window.open('https://netzero.gm.go.kr/contents/content.php?cIdx=43&fboard=board_point1&actionMode=intro','_blank','noopener')">자세히보기 <svg class="gm2-arr" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+                </div>
+                <span class="gm2-card2__art" aria-hidden="true" style="background-image:url(./img/gm2_ill_green.png?v=2)"></span>
+              </article>
+            </div>
+          </section>
+
+          <!-- ===== 2. 오늘의 핵심 도시지표 ===== -->
+          <section class="gm2-kpi" aria-label="오늘의 핵심 도시지표">
+            <h2 class="gm2-title"><i></i>오늘의 핵심 도시지표</h2>
+            <div class="gm2-kpi__grid">
+              <article class="gm2-card">
+                <div class="gm2-card__hd"><img src="./img/gmk_carbon.svg" alt="" /><b style="color:#044e9e">실시간 탄소 배출</b></div>
+                <div class="gm2-card__stats">
+                  <div class="gm2-stat"><span>탄소 배출 지수</span><strong style="color:#256ef4">72</strong></div>
+                  <div class="gm2-stat gm2-stat--r"><span>총 배출량</span><strong>239 <i>tCO₂eq</i></strong></div>
+                </div>
+                <div class="gm2-rate"><span>목표 대비 저감률</span><b style="color:#256ef4">30.52 <i>%</i></b></div>
+                <div class="gm2-chart">
+                  <div class="gm2-yaxis"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div>
+                  <div class="gm2-plot">
+                    <svg viewBox="0 0 280 96" preserveAspectRatio="none" class="gm2-grid"><line x1="0" y1="1" x2="280" y2="1"/><line x1="0" y1="24" x2="280" y2="24"/><line x1="0" y1="48" x2="280" y2="48"/><line x1="0" y1="72" x2="280" y2="72"/><line x1="0" y1="95" x2="280" y2="95"/></svg>
+                    <img class="gm2-cline" src="./img/gmk_c_line.svg" alt="" />
+                  </div>
+                  <div class="gm2-xaxis"><span>11월</span><span>12월</span><span>1월</span><span>2월</span><span>3월</span></div>
+                </div>
+              </article>
+              <article class="gm2-card">
+                <div class="gm2-card__hd"><img src="./img/gmk_energy.svg" alt="" /><b style="color:#044e9e">신재생 에너지 생산현황</b></div>
+                <div class="gm2-card__stats">
+                  <div class="gm2-stat"><span>금월 생산량</span><strong style="color:#0c8ae5">11.88 <i>KWh</i></strong></div>
+                  <div class="gm2-stat"><span>당월 누적</span><strong>56.00 <i>KWh</i></strong></div>
+                </div>
+                <div class="gm2-chart">
+                  <div class="gm2-yaxis"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div>
+                  <div class="gm2-plot">
+                    <svg viewBox="0 0 280 96" preserveAspectRatio="none" class="gm2-grid"><line x1="0" y1="1" x2="280" y2="1"/><line x1="0" y1="24" x2="280" y2="24"/><line x1="0" y1="48" x2="280" y2="48"/><line x1="0" y1="72" x2="280" y2="72"/><line x1="0" y1="95" x2="280" y2="95"/></svg>
+                    <div class="gm2-bars">
+                      <div class="gm2-bar"><b>8.21</b><i style="height:34px"></i></div>
+                      <div class="gm2-bar"><b>10.45</b><i style="height:59px"></i></div>
+                      <div class="gm2-bar"><b>13.64</b><i style="height:70px"></i></div>
+                      <div class="gm2-bar"><b>11.45</b><i style="height:59px"></i></div>
+                      <div class="gm2-bar gm2-bar--on"><b>14.98</b><i style="height:89px"></i></div>
+                    </div>
+                  </div>
+                  <div class="gm2-xaxis"><span>11월</span><span>12월</span><span>1월</span><span>2월</span><span>3월</span></div>
+                </div>
+              </article>
+              <article class="gm2-card">
+                <div class="gm2-card__hd"><span class="gm2-cic gm2-cic--green"><img src="./img/gmk_bus.svg" alt="" /></span><b style="color:#267337">스마트 모빌리티 운영현황</b></div>
+                <div class="gm2-card__stats">
+                  <div class="gm2-stat"><span>친환경 EV-DSRT</span><strong style="color:#06a85b">23 <i>대 운행중</i></strong></div>
+                  <div class="gm2-stat"><span>친환경 이동 이용률</span><strong style="color:#3fa654">0.8 <i>%</i></strong></div>
+                </div>
+                <div class="gm2-chart">
+                  <div class="gm2-yaxis"><span>2.0</span><span>1.5</span><span>1.0</span><span>0.5</span><span>0.0</span></div>
+                  <div class="gm2-plot">
+                    <svg viewBox="0 0 280 96" preserveAspectRatio="none" class="gm2-grid"><line x1="0" y1="1" x2="280" y2="1"/><line x1="0" y1="24" x2="280" y2="24"/><line x1="0" y1="48" x2="280" y2="48"/><line x1="0" y1="72" x2="280" y2="72"/><line x1="0" y1="95" x2="280" y2="95"/></svg>
+                    <svg viewBox="0 0 280 96" class="gm2-svgline" preserveAspectRatio="none">
+                      <polyline class="gm2-line gm2-line--green" points="22,73 82,58 143,58 201,48 259,53"/>
+                      <circle class="gm2-pt gm2-pt--green" cx="22" cy="73"/><circle class="gm2-pt gm2-pt--green" cx="82" cy="58"/><circle class="gm2-pt gm2-pt--green" cx="143" cy="58"/><circle class="gm2-pt gm2-pt--green" cx="201" cy="48"/><circle class="gm2-pt gm2-pt--green" cx="259" cy="53"/>
+                    </svg>
+                    <div class="gm2-ptlabels"><span style="left:7.9%;top:66%">0.4</span><span style="left:29.3%;top:50%">0.7</span><span style="left:51.1%;top:50%">0.6</span><span style="left:71.8%;top:40%">0.9</span><span style="left:92.5%;top:45%">0.8</span></div>
+                  </div>
+                  <div class="gm2-xaxis"><span>11월</span><span>12월</span><span>1월</span><span>2월</span><span>3월</span></div>
+                </div>
+              </article>
+              <article class="gm2-card">
+                <div class="gm2-card__hd"><span class="gm2-cic gm2-cic--orange"><img src="./img/gmk_wind.svg" alt="" /></span><b style="color:#ec8913">통합대기환경지수</b></div>
+                <div class="gm2-air">
+                  <div class="gm2-air__item">
+                    <span class="gm2-air__name">초미세먼지</span>
+                    <div class="gm2-donut"><svg viewBox="0 0 90 90"><circle cx="44.89" cy="44.89" r="41.89" fill="none" stroke="#D8EEDD" stroke-width="6"/><path d="M45.748 46.5C45.748 22.5677 26.9323 3 3 3" transform="translate(41.89 -1.61)" fill="none" stroke="#3FA654" stroke-width="6" stroke-linecap="round"/></svg><span class="gm2-donut__v" style="color:#267337">16<em>㎍/m³</em></span></div>
+                    <span class="gm2-air__st gm2-air__st--green">보통</span>
+                  </div>
+                  <div class="gm2-air__item">
+                    <span class="gm2-air__name">미세먼지</span>
+                    <div class="gm2-donut"><svg viewBox="0 0 90 90"><circle cx="44.89" cy="44.89" r="41.89" fill="none" stroke="#D3EBFD" stroke-width="6"/><path d="M45.748 46.5C45.748 22.5677 26.9323 3 3 3" transform="translate(41.89 -1.61)" fill="none" stroke="#0B78CB" stroke-width="6" stroke-linecap="round"/></svg><span class="gm2-donut__v" style="color:#044e9e">23<em>㎍/m³</em></span></div>
+                    <span class="gm2-air__st gm2-air__st--blue">보통</span>
+                  </div>
+                  <div class="gm2-air__item">
+                    <span class="gm2-air__name">오존</span>
+                    <div class="gm2-donut"><svg viewBox="0 0 90 90"><circle cx="44.89" cy="44.89" r="41.89" fill="none" stroke="#D8EEDD" stroke-width="6"/><path d="M45.748 46.5C45.748 22.5677 26.9323 3 3 3" transform="translate(41.89 -1.61)" fill="none" stroke="#3FA654" stroke-width="6" stroke-linecap="round"/></svg><span class="gm2-donut__v" style="color:#267337">0.012<em>ppm</em></span></div>
+                    <span class="gm2-air__st gm2-air__st--green">보통</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <!-- ===== 3. 마일별 데이터 바로가기 ===== -->
+          <section class="gm2-mile" aria-label="마일별 데이터 바로가기">
+            <h2 class="gm2-title"><i></i>마일별 데이터 바로가기</h2>
+            <div class="gm2-mile__grid">
+              <a class="gm2-mc" href="#energy">
+                <span class="gm2-mc__ic gm2-mc__ic--energy"><img src="./img/gms_energy_ic.svg" alt="" /></span>
+                <span class="gm2-mc__tx"><strong style="color:#0c8ae5">Energy Mile</strong><small>신재생에너지 생산량,상계 결과,<br/>탄소저감량을 확인합니다.</small></span>
+                <img class="gm2-mc__go" src="./img/gms_arrow_e.svg" alt="" />
+              </a>
+              <a class="gm2-mc" href="#mobility">
+                <span class="gm2-mc__ic"><img src="./img/gms_mobility.svg" alt="" /></span>
+                <span class="gm2-mc__tx"><strong style="color:#228738">Mobility Mile</strong><small>DRT,친환경 이동, BSS 관련<br/>데이터를 확인합니다.</small></span>
+                <img class="gm2-mc__go" src="./img/gms_arrow_m.svg" alt="" />
+              </a>
+              <a class="gm2-mc" href="#safety">
+                <span class="gm2-mc__ic"><img src="./img/gms_safety.svg" alt="" /></span>
+                <span class="gm2-mc__tx"><strong style="color:#ec8913">Safety Mile</strong><small>미세먼지,침수 위험,<br/>기후위기 대응 데이터를 확인합니다.</small></span>
+                <img class="gm2-mc__go" src="./img/gms_arrow_s.svg" alt="" />
+              </a>
+              <a class="gm2-mc" href="#data">
+                <span class="gm2-mc__ic"><img src="./img/gms_data.svg" alt="" /></span>
+                <span class="gm2-mc__tx"><strong style="color:#5917b8">Data Mile</strong><small>공공데이터 개방,API 연계,<br/>데이터 통합 현황을 확인합니다.</small></span>
+                <img class="gm2-mc__go" src="./img/gms_arrow_d.svg" alt="" />
+              </a>
+            </div>
+          </section>
+          </div>
+
+          <button class="top-button" type="button" aria-label="최상단으로 이동">
+            <svg class="top-button__chevron" viewBox="0 0 15 9" fill="none" aria-hidden="true"><path d="M7.49976 0C7.7777 0 8.04299 0.115755 8.23219 0.319336L14.7322 7.31934C15.1079 7.72395 15.0849 8.35659 14.6804 8.73242C14.2758 9.10813 13.6432 9.08509 13.2673 8.68066L7.49976 2.46875L1.73219 8.68066C1.35635 9.08509 0.723712 9.10813 0.319101 8.73242C-0.0853217 8.35659 -0.108367 7.72395 0.267343 7.31934L6.76734 0.319336L6.84156 0.24707C7.02291 0.0885245 7.25656 0 7.49976 0Z" fill="currentColor"/></svg>
+          </button>
+        </section>
+      </main>
+
+      <footer class="site-footer" data-component="site-footer">
+        <div class="site-footer__inner">
+          <img class="site-footer__logo" src="./img/f_logo.png" alt="광명시" />
+          <p>
+            우)14234|경기도 광명시 시청로 20| 광명시 민원콜센터: 1688-3399 (02-2680-2114)<br />
+            COPYRIGHT(C) 2022 GWANGMYEONG CITY. ALL RIGHTS RESERVED.
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script src="./js/main.js"></script>
+    <script>
+      window.lottieAnim = lottie.loadAnimation({
+        container: document.getElementById('lottie-bg'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: './data.json?v=10',
+        rendererSettings: {
+          preserveAspectRatio: 'xMidYMid slice'
+        }
+      });
+
+      /* Hover any moving marker (pin/bus/배민/obj) → ease-out the whole map animation
+         to a stop (and ease back in on leave) by ramping Lottie playback speed.
+         Per-frame bounding-box check: robust for tiny markers, transparent gaps,
+         and even a marker that slides under a stationary cursor. */
+      (function () {
+        var pins = [];
+        var mx = -1, my = -1, pad = 6;
+        var DURATION = 900;           // 감속/가속에 걸리는 시간(ms)
+        var lastOver = false;
+        var fromSpeed = 1, toSpeed = 1, startT = -1;
+        var curSpeed = 1, lastSet = 1;
+        function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+        document.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; }, { passive: true });
+        document.addEventListener('mouseleave', function () { mx = -1; my = -1; });
+        window.lottieAnim.addEventListener('DOMLoaded', function () {
+          pins = Array.prototype.slice.call(document.querySelectorAll('#lottie-bg .lt-pinhover'));
+          window.requestAnimationFrame(loop);
+        });
+        function loop(now) {
+          var over = false;
+          if (mx >= 0) {
+            for (var i = 0; i < pins.length; i++) {
+              var r = pins[i].getBoundingClientRect();
+              if (r.width && r.height &&
+                  mx >= r.left - pad && mx <= r.right + pad &&
+                  my >= r.top - pad && my <= r.bottom + pad) { over = true; break; }
+            }
+          }
+          if (window.__busModalOpen) {
+            // 모달 열림 → 즉시 정지(복제 스냅샷 정합). 닫히면 정상 로직 복귀.
+            if (lastSet !== 0) { window.lottieAnim.setSpeed(0); lastSet = 0; }
+            curSpeed = 0; lastOver = true; startT = -1;
+            window.requestAnimationFrame(loop); return;
+          }
+          // hover 상태가 바뀌는 순간 새 전환(감속/가속) 시작
+          if (over !== lastOver) {
+            fromSpeed = curSpeed;
+            toSpeed = over ? 0 : 1;
+            startT = now;
+            lastOver = over;
+          }
+          if (startT >= 0) {
+            var p = Math.min(1, (now - startT) / DURATION);
+            curSpeed = fromSpeed + (toSpeed - fromSpeed) * easeOutCubic(p);  // ease-out 감속
+            if (Math.abs(curSpeed - lastSet) > 0.002) {
+              window.lottieAnim.setSpeed(curSpeed < 0.005 ? 0 : curSpeed);
+              lastSet = curSpeed;
+            }
+          }
+          window.requestAnimationFrame(loop);
+        }
+      })();
+
+      /* 버스 클릭 → DRT 운행정보 모달 (Figma 1925:46527). 모달은 버스를 따라다님.
+         모달 마크업이 이 스크립트보다 뒤에 있으므로 DOMContentLoaded 이후 실행. */
+      document.addEventListener('DOMContentLoaded', function () {
+        var modal = document.getElementById('bus-modal');          // 버스: DRT 운행정보
+        var bssModal = document.getElementById('bss-card');        // 오토바이: BSS 위치정보
+        var drtModal = document.getElementById('drt-modal');       // 버스 상세보기 → DRT 운행정보 상세
+        var drtBackdrop = document.getElementById('drt-modal-backdrop');
+        var bssDetailModal = document.getElementById('bss-detail-modal');   // 오토바이 상세보기 → BSS 운영 거점 정보
+        var bssDetailBackdrop = document.getElementById('bss-detail-backdrop');
+        var backdrop = document.getElementById('bus-modal-backdrop');
+        var routeOvl = document.getElementById('bus-route-ovl');   // 노선도 오버레이
+        if (!modal) return;
+        var activeModal = modal;     // 현재 열린 카드(버스/오토바이에 따라 분기)
+        var bssCards = [];           // 공유거점 핀별 BSS 카드 [{el, pin}]
+        // 공유거점(6곳) 각각의 데이터
+        var BSS_STATIONS = [
+          { status: '운행중', gj: '6', main: '광명역 BSS', avail: '7' },
+          { status: '운행중', gj: '4', main: '철산상업지구', avail: '5' },
+          { status: '운행중', gj: '5', main: '광명사거리역', avail: '3' },
+          { status: '운행중', gj: '3', main: '하안동 복지센터', avail: '6' },
+          { status: '점검중', gj: '4', main: '소하동 LG', avail: '2' },
+          { status: '운행중', gj: '5', main: '일직동 역세권', avail: '8' }
+        ];
+        var buses = [];
+        var activeBus = null;
+        var cutout = null;            // active 마커 복제 오버레이(SVG)
+        var PAD = 10; // 클릭 허용 여유(px) — 작은 마커·투명 여백도 잡히도록
+        window.lottieAnim.addEventListener('DOMLoaded', function () {
+          buses = Array.prototype.slice.call(document.querySelectorAll('#lottie-bg .lt-bus'));
+        });
+        function busAt(x, y) {
+          if (!buses.length) { buses = Array.prototype.slice.call(document.querySelectorAll('#lottie-bg .lt-bus')); }
+          for (var i = 0; i < buses.length; i++) {
+            var r = buses[i].getBoundingClientRect();
+            if (r.width && r.height &&
+                x >= r.left - PAD && x <= r.right + PAD &&
+                y >= r.top - PAD && y <= r.bottom + PAD) { return buses[i]; }
+          }
+          return null;
+        }
+        // 클릭한 마커의 짝(버스↔핀)을 90px 이내 가장 가까운 lt-bus에서 찾음
+        function pairOf(el) {
+          var r = el.getBoundingClientRect();
+          var cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2, bestD = 90, pair = null;
+          for (var i = 0; i < buses.length; i++) {
+            if (buses[i] === el) continue;
+            var b = buses[i].getBoundingClientRect();
+            if (!b.width) continue;
+            var d = Math.hypot((b.left + b.right) / 2 - cx, (b.top + b.bottom) / 2 - cy);
+            if (d < bestD) { bestD = d; pair = buses[i]; }
+          }
+          return pair;
+        }
+        function activeRect() {
+          var groups = [activeBus]; var p = pairOf(activeBus); if (p) groups.push(p);
+          var L = 1e9, T = 1e9, R = -1e9, B = -1e9;
+          groups.forEach(function (g) { var r = g.getBoundingClientRect(); L = Math.min(L, r.left); T = Math.min(T, r.top); R = Math.max(R, r.right); B = Math.max(B, r.bottom); });
+          return { left: L, top: T, right: R, bottom: B };
+        }
+        // active 버스+핀을 "정확한 모양 그대로" 딤 위에 복제: 전체 SVG를 복제하되
+        // visibility:hidden 으로 가리고 활성 그룹만 visible 처리(조상 transform/defs 그대로 유지)
+        function buildCutout() {
+          removeCutout();
+          var src = document.querySelector('#lottie-bg svg');
+          if (!src || !activeBus) return;
+          var groups = [activeBus]; var p = pairOf(activeBus); if (p) groups.push(p);
+          groups.forEach(function (g) { g.classList.add('lt-active'); });
+          cutout = src.cloneNode(true);
+          groups.forEach(function (g) { g.classList.remove('lt-active'); });
+          cutout.removeAttribute('id');
+          cutout.setAttribute('class', 'bus-modal-cutout');
+          Array.prototype.forEach.call(cutout.querySelectorAll('.lt-active'), function (g) { g.style.visibility = 'visible'; });
+          document.body.appendChild(cutout);
+          positionCutout();
+        }
+        function positionCutout() {
+          if (!cutout) return;
+          var src = document.querySelector('#lottie-bg svg');
+          if (!src) return;
+          var r = src.getBoundingClientRect();
+          cutout.style.left = r.left + 'px';
+          cutout.style.top = r.top + 'px';
+          cutout.style.width = r.width + 'px';
+          cutout.style.height = r.height + 'px';
+        }
+        function removeCutout() { if (cutout && cutout.parentNode) cutout.parentNode.removeChild(cutout); cutout = null; }
+        function positionRouteOvl() {
+          if (!routeOvl) return;
+          var bg = document.getElementById('lottie-bg'); if (!bg) return;
+          var r = bg.getBoundingClientRect();
+          routeOvl.style.left = r.left + 'px'; routeOvl.style.top = r.top + 'px';
+          routeOvl.style.width = r.width + 'px'; routeOvl.style.height = r.height + 'px';
+        }
+        // 공유거점 핀마다 BSS 카드 배치 (데이터 각각 다름)
+        function clearBssCards() {
+          var cont = document.getElementById('bss-cards');
+          if (cont) cont.innerHTML = '';
+          bssCards = [];
+        }
+        var bssHideTimer = null;
+        // 핀마다 hover 카드 생성 — type: 'bss'(오토바이/공유거점) | 'bus'(DRT 정류장)
+        function buildPinCards(type) {
+          clearBssCards();
+          if (!routeOvl) return;
+          var cont = document.getElementById('bss-cards'); if (!cont) return;
+          var isBss = (type === 'bss');
+          var template = isBss ? bssModal : modal;
+          if (!template) return;
+          var pins = routeOvl.querySelectorAll(isBss ? '.route-pins--bss > g' : '.route-pins--bus > g');
+          Array.prototype.forEach.call(pins, function (pinG, i) {
+            var card = template.cloneNode(true);
+            card.removeAttribute('id');
+            card.classList.remove('is-on');
+            card.classList.add(isBss ? 'bss-card--pin' : 'bus-modal--pin');   // is-on 없이 시작 → 숨김
+            card.setAttribute('aria-hidden', 'true');
+            if (isBss) {
+              var dta = BSS_STATIONS[i % BSS_STATIONS.length];
+              var badge = card.querySelector('.bss-card__badge'); if (badge) badge.innerHTML = '<i></i>' + dta.status;
+              var vals = card.querySelectorAll('.bss-card__values p');
+              if (vals[0]) vals[0].innerHTML = '<b>' + dta.gj + '</b><span> 개</span>';
+              if (vals[1]) { vals[1].textContent = dta.main; vals[1].className = 'bss-card__strong'; }
+              if (vals[2]) vals[2].innerHTML = '<b>' + dta.avail + '</b><span> 대</span>';
+              var bfoot = card.querySelector('.bss-card__foot'); if (bfoot) bfoot.addEventListener('click', openBssDetailModal);
+            } else {
+              var dfoot = card.querySelector('.bus-modal__foot'); if (dfoot) dfoot.addEventListener('click', openDrtModal);
+            }
+            cont.appendChild(card);
+            var entry = { el: card, pin: pinG };
+            bssCards.push(entry);
+            // 핀 hover → 해당 카드 표시, 핀/카드에서 벗어나면 숨김(약간 지연 → 카드로 이동 가능)
+            pinG.addEventListener('mouseenter', function () { showBssCard(entry); });
+            pinG.addEventListener('mouseleave', function () { scheduleHideBss(); });
+            // 핀 클릭 → 상세보기를 거치지 않고 바로 모달 표출(버스=DRT, 오토바이=BSS 상세)
+            pinG.addEventListener('click', isBss ? openBssDetailModal : openDrtModal);
+            // 카드 영역 어디를 클릭해도 모달 표출(상세보기 버튼 외에도)
+            card.addEventListener('click', isBss ? openBssDetailModal : openDrtModal);
+            card.addEventListener('mouseenter', function () { if (bssHideTimer) { clearTimeout(bssHideTimer); bssHideTimer = null; } });
+            card.addEventListener('mouseleave', function () { scheduleHideBss(); });
+          });
+        }
+        function showBssCard(c) {
+          if (bssHideTimer) { clearTimeout(bssHideTimer); bssHideTimer = null; }
+          bssCards.forEach(function (o) { if (o !== c) o.el.classList.remove('is-on'); });
+          c.el.classList.add('is-on');
+          positionBssCard(c);
+        }
+        function scheduleHideBss() {
+          if (bssHideTimer) clearTimeout(bssHideTimer);
+          bssHideTimer = setTimeout(function () {
+            bssCards.forEach(function (o) { o.el.classList.remove('is-on'); });
+            bssHideTimer = null;
+          }, 140);
+        }
+        function positionBssCard(c) {
+          var vw = window.innerWidth;
+          var r = c.pin.getBoundingClientRect();
+          if (!r.width || !r.height) return;
+          var cw = c.el.offsetWidth || 180, ch = c.el.offsetHeight || 150;
+          var left = (r.right + 8 + cw > vw - 6) ? (r.left - 8 - cw) : (r.right + 8);
+          var top = r.top + r.height / 2 - ch / 2;
+          c.el.style.left = Math.round(left) + 'px';
+          c.el.style.top = Math.round(top) + 'px';
+        }
+        function positionBssCards() {
+          // 표시 중인 카드만 핀 따라 재배치(스크롤 대응)
+          bssCards.forEach(function (c) { if (c.el.classList.contains('is-on')) positionBssCard(c); });
+        }
+        // 정류장/공유거점 라벨 칩: 텍스트 실제 길이에 맞춰 좌·우 "보이는" 여백 16px 일괄 적용.
+        // 핀(풍선 반경 21)이 칩 좌측을 덮으므로, 좌측은 풍선 우단(21)→텍스트 16,
+        // 우측은 텍스트 끝→칩 우단(코너 반경 14 포함) 16 으로 균형 맞춤.
+        var CHIP_PAD = 16, BALLOON_R = 21, CHIP_CORNER = 14;
+        var CHIP_TEXT_X = BALLOON_R + CHIP_PAD - 4;  // 33 — 라벨을 핀 쪽으로 4px 이동
+        function fitChips() {
+          if (!routeOvl) return;
+          var sel = routeOvl.classList.contains('is-bss') ? '.route-pins--bss' : '.route-pins--bus';
+          var grp = routeOvl.querySelector(sel); if (!grp) return;
+          Array.prototype.forEach.call(grp.querySelectorAll('g'), function (g) {
+            var chip = g.querySelector('path');   // 첫 path = 칩 배경
+            var label = g.querySelector('text');  // 첫 text = 라벨
+            if (!chip || !label) return;
+            var L = label.getComputedTextLength(); if (!L) return;
+            label.setAttribute('x', CHIP_TEXT_X);                       // 핀과 16 간격
+            var rx = (CHIP_TEXT_X + L + CHIP_PAD) - CHIP_CORNER;        // 우단(코너 포함) = 텍스트끝 + 16
+            chip.setAttribute('d', 'M12,-46 H' + rx.toFixed(1) + ' a14,14 0 0 1 14,14 V-32 a14,14 0 0 1 -14,14 H12 Z');
+          });
+        }
+        function position() {
+          if (!activeBus || !activeModal) return;
+          positionCutout();
+          positionRouteOvl();
+          var ar = activeRect();
+          var mw = activeModal.offsetWidth, mh = activeModal.offsetHeight;
+          var left = (ar.left + ar.right) / 2 - mw / 2;
+          var top = ar.top - mh - 10;                // 마커 위쪽
+          if (top < 8) top = ar.bottom + 10;         // 위 공간 부족하면 아래쪽
+          left = Math.max(8, Math.min(left, window.innerWidth - mw - 8));
+          top = Math.max(8, Math.min(top, window.innerHeight - mh - 8));
+          activeModal.style.left = left + 'px';
+          activeModal.style.top = top + 'px';
+        }
+        // 클릭한 마커가 오토바이(공유 모빌리티)인지 — 본인 또는 짝이 lt-scooter
+        function isScooter(bus) {
+          if (bus.classList && bus.classList.contains('lt-scooter')) return true;
+          var p = pairOf(bus);
+          return !!(p && p.classList && p.classList.contains('lt-scooter'));
+        }
+        function open(bus) {
+          activeBus = bus;
+          var scooter = bssModal && isScooter(bus);
+          window.__busModalOpen = true;             // 지도 애니메이션 즉시 정지(복제 정합)
+          if (backdrop) { backdrop.classList.add('is-on'); backdrop.setAttribute('aria-hidden', 'false'); }
+          // 오버레이 표시: 오토바이(is-bss)는 공유거점 핀만(노선 점선은 CSS로 숨김), 버스는 노선+번호 정류장
+          if (routeOvl) {
+            routeOvl.classList.toggle('is-bss', !!scooter);
+            routeOvl.classList.add('is-on'); routeOvl.setAttribute('aria-hidden', 'false'); positionRouteOvl();
+          }
+          // 버스·오토바이 공통: 단일 모달 없이 핀마다 hover 카드
+          activeModal = null;
+          modal.classList.remove('is-on'); if (bssModal) bssModal.classList.remove('is-on');
+          requestAnimationFrame(function () { buildCutout(); positionRouteOvl(); fitChips(); buildPinCards(scooter ? 'bss' : 'bus'); });
+        }
+        function close() {
+          activeBus = null;
+          window.__busModalOpen = false;            // 지도 애니메이션 재개
+          removeCutout();
+          clearBssCards();
+          modal.classList.remove('is-on'); modal.setAttribute('aria-hidden', 'true');
+          if (bssModal) { bssModal.classList.remove('is-on'); bssModal.setAttribute('aria-hidden', 'true'); }
+          activeModal = modal;
+          if (backdrop) { backdrop.classList.remove('is-on'); backdrop.setAttribute('aria-hidden', 'true'); }
+          if (routeOvl) { routeOvl.classList.remove('is-on'); routeOvl.setAttribute('aria-hidden', 'true'); }
+        }
+        // 마커 클릭 → 열기 / 바깥 클릭 → 닫기 (모달 내부 클릭은 유지)
+        document.addEventListener('click', function (e) {
+          if (modal.contains(e.target) || (bssModal && bssModal.contains(e.target)) ||
+              (e.target.closest && e.target.closest('#bss-cards, #drt-modal, #drt-modal-backdrop, #bss-detail-modal, #bss-detail-backdrop'))) return;
+          if (activeBus) { if (!busAt(e.clientX, e.clientY)) close(); return; }
+          var bus = busAt(e.clientX, e.clientY);
+          if (bus) open(bus);
+        });
+        // 상세보기 → 모빌리티 데이터 지도로 이동 (버스/오토바이 공통)
+        function gotoMobility() {
+          if (window.parent !== window) {
+            window.parent.postMessage({ type: 'gm-navigate', page: 'map', mile: 'mobility' }, '*');
+          }
+          close();
+        }
+        // 버스 DRT 모달 상세보기 → DRT 운행정보 상세 모달
+        modal.querySelector('.bus-modal__foot').addEventListener('click', openDrtModal);
+        function showOverlay(m, b) { if (b) { b.classList.add('is-on'); b.setAttribute('aria-hidden', 'false'); } if (m) { m.classList.add('is-on'); m.setAttribute('aria-hidden', 'false'); } }
+        function hideOverlay(m, b) { if (m) { m.classList.remove('is-on'); m.setAttribute('aria-hidden', 'true'); } if (b) { b.classList.remove('is-on'); b.setAttribute('aria-hidden', 'true'); } }
+        function openDrtModal(e) { if (e) { e.preventDefault(); e.stopPropagation(); } showOverlay(drtModal, drtBackdrop); }
+        function closeDrtModal(e) { if (e) e.stopPropagation(); hideOverlay(drtModal, drtBackdrop); }
+        function openBssDetailModal(e) { if (e) { e.preventDefault(); e.stopPropagation(); } showOverlay(bssDetailModal, bssDetailBackdrop); }
+        function closeBssDetailModal(e) { if (e) e.stopPropagation(); hideOverlay(bssDetailModal, bssDetailBackdrop); }
+        if (drtModal) { var dc = drtModal.querySelector('.drt-modal__close'); if (dc) dc.addEventListener('click', closeDrtModal); }
+        if (drtBackdrop) drtBackdrop.addEventListener('click', closeDrtModal);
+        if (bssDetailModal) { var bc = bssDetailModal.querySelector('.drt-modal__close'); if (bc) bc.addEventListener('click', closeBssDetailModal); }
+        if (bssDetailBackdrop) bssDetailBackdrop.addEventListener('click', closeBssDetailModal);
+        // 버스가 움직이는 동안 모달이 따라가도록 매 프레임 위치 갱신
+        (function follow() {
+          if (activeBus) {
+            if (activeModal) position();
+            else { positionCutout(); positionRouteOvl(); positionBssCards(); }
+          }
+          window.requestAnimationFrame(follow);
+        })();
+
+        /* ── 버스/오토바이 hover → 차량 모양대로 outline (멈춤은 ease-out 루프가 담당) ──
+           모달은 클릭으로만 열림. */
+        (function () {
+          // 차량 outline 필터 1회 주입
+          var ns = 'http://www.w3.org/2000/svg';
+          var fsvg = document.createElementNS(ns, 'svg');
+          fsvg.setAttribute('width', '0'); fsvg.setAttribute('height', '0');
+          fsvg.style.cssText = 'position:absolute;width:0;height:0';
+          fsvg.innerHTML =
+            '<defs><filter id="lt-outline" x="-50%" y="-50%" width="200%" height="200%">' +
+            '<feMorphology in="SourceAlpha" operator="dilate" radius="40" result="d"/>' +
+            '<feFlood flood-color="#06A85B" result="c"/>' +
+            '<feComposite in="c" in2="d" operator="in" result="ring"/>' +
+            '<feComposite in="ring" in2="SourceAlpha" operator="out" result="outline"/>' +
+            '<feMerge><feMergeNode in="outline"/><feMergeNode in="SourceGraphic"/></feMerge>' +
+            '</filter></defs>';
+          document.body.appendChild(fsvg);
+
+          var mx = -1, my = -1, outlined = [];
+          document.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; }, { passive: true });
+          document.addEventListener('mouseleave', function () { mx = -1; my = -1; });
+          function setOutline(els) {
+            outlined.forEach(function (el) { if (els.indexOf(el) < 0) el.style.filter = ''; });
+            els.forEach(function (el) { if (outlined.indexOf(el) < 0) el.style.filter = 'url(#lt-outline)'; });
+            outlined = els;
+          }
+          function vehiclesAt(x, y) {
+            var vs = [];
+            for (var i = 0; i < buses.length; i++) {
+              var el = buses[i];
+              if (!el.classList || !el.classList.contains('lt-vehicle')) continue;
+              var r = el.getBoundingClientRect();
+              if (r.width && r.height &&
+                  x >= r.left - PAD && x <= r.right + PAD &&
+                  y >= r.top - PAD && y <= r.bottom + PAD) { if (vs.indexOf(el) < 0) vs.push(el); }
+            }
+            var hov = busAt(x, y);
+            if (hov && !(hov.classList && hov.classList.contains('lt-vehicle'))) {
+              var p = pairOf(hov);
+              if (p && p.classList && p.classList.contains('lt-vehicle') && vs.indexOf(p) < 0) vs.push(p);
+            }
+            return vs;
+          }
+          var stageEl = document.querySelector('.map-stage');
+          (function tick() {
+            // 모달 열림 중에는 cutout이 강조하므로 라이브 outline 해제
+            if (window.__busModalOpen || mx < 0) {
+              if (outlined.length) setOutline([]);
+              if (stageEl) stageEl.style.cursor = '';
+            } else {
+              setOutline(vehiclesAt(mx, my));
+              // 클릭 가능한 마커(버스·바이크) 위에서는 포인터 커서 표시
+              if (stageEl) stageEl.style.cursor = busAt(mx, my) ? 'pointer' : '';
+            }
+            window.requestAnimationFrame(tick);
+          })();
+        })();
+      });
+    </script>
+
+    <!-- Building Modal Overlay -->
+    <div id="building-modal-overlay" class="bldg-modal-overlay">
+      <div class="bldg-modal-backdrop"></div>
+      <div class="bldg-modal" role="dialog" aria-modal="true">
+        <header class="bldg-modal__header">
+          <div class="bldg-modal__icon"><img id="bldg-modal-icon-img" src="./img/00_E_O.svg" alt="" /></div>
+          <div class="bldg-modal__title-wrap">
+            <h2 class="bldg-modal__title">에너지 마일</h2>
+            <p class="bldg-modal__subtitle">신재생에너지 생산 · 가상거래 현황</p>
+          </div>
+          <button class="bldg-modal__close" aria-label="닫기">✕</button>
+        </header>
+        <div class="bldg-modal__body">
+          <!-- Content cloned from mile-card via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Mile tooltip (shared, fixed-position) -->
+    <div id="mile-tooltip" class="mile-tooltip" role="tooltip" aria-hidden="true">
+      <div class="mile-tooltip__header">
+        <div class="mile-tooltip__icon"><img src="" alt="" /></div>
+        <div class="mile-tooltip__name"></div>
+      </div>
+      <div class="mile-tooltip__desc"></div>
+      <div class="mile-tooltip__hint">클릭하여 자세히보기 <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+
+    <!-- Bus click modal — DRT 운행정보 (Figma 1925:46527) -->
+    <svg id="bus-route-ovl" class="bus-route-ovl" viewBox="0 0 1920 3139" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><filter id="bus-route-glow" x="-100%" y="-100%" width="300%" height="300%"><feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#5BFFA6" flood-opacity="1"/><feDropShadow dx="0" dy="0" stdDeviation="9" flood-color="#16D26E" flood-opacity="0.95"/><feDropShadow dx="0" dy="0" stdDeviation="22" flood-color="#06A85B" flood-opacity="0.85"/></filter><filter id="pin-glow" x="-120%" y="-120%" width="340%" height="340%"><feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#06A85B" flood-opacity="0.9"/><feDropShadow dx="0" dy="0" stdDeviation="9" flood-color="#06A85B" flood-opacity="0.6"/></filter><filter id="pin-glow-blue" x="-120%" y="-120%" width="340%" height="340%"><feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#0c8ae5" flood-opacity="0.9"/><feDropShadow dx="0" dy="0" stdDeviation="9" flood-color="#0c8ae5" flood-opacity="0.6"/></filter></defs><path d="M592.5,317.0 C592.5,317.0 631.0,401.0 648.0,416.0 C719.5,476.0 734.4,447.4 753.8,503.0 C770.8,518.0 809.9,602.3 809.9,602.3 C819.9,631.0 898.9,620.0 889.1,665.1 C889.1,665.1 948.2,693.9 935.8,735.3 C926.0,780.4 903.8,776.5 898.0,839.2 C885.6,880.6 829.5,945.3 861.5,983.8 C855.6,1046.5 889.7,1114.3 908.4,1129.1 C940.4,1167.7 1017.8,1183.9 1023.8,1235.9 C1042.6,1250.8 1126.5,1306.8 1097.8,1327.0 C1101.7,1361.0 1029.2,1346.6 1032.5,1389.1 C1003.8,1409.3 919.5,1441.3 970.4,1476.6 C973.7,1519.0 1022.7,1561.5 1022.7,1561.5 C1073.6,1596.7 1506.6,1916.7 1506.6,1916.7" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-dasharray="10 20" filter="url(#bus-route-glow)" class="bus-route-line"/><g class="route-pins route-pins--bus"><g transform="translate(592.5,317)"><path d="M12,-46 H78 a14,14 0 0 1 14,14 V-32 a14,14 0 0 1 -14,14 H12 Z" fill="#fff" stroke="#d8d8d8" stroke-width="1"/><text x="28" y="-28" font-family="Pretendard,Pretendard GOV,sans-serif" font-size="12" font-weight="700" fill="#234178" letter-spacing="0.24">1번 정류장</text><path d="M0,0 C-8,-15 -21,-20 -21,-32 A21,21 0 1 1 21,-32 C21,-20 8,-15 0,0 Z" fill="#06A85B" filter="url(#pin-glow)"/><circle cx="0" cy="-32" r="16" fill="#fff"/><text x="0" y="-26" text-anchor="middle" font-family="Pretendard GOV,sans-serif" font-size="17" font-weight="700" fill="#1e2124">1</text></g><g transform="translate(809.9,602.3)"><path d="M12,-46 H78 a14,14 0 0 1 14,14 V-32 a14,14 0 0 1 -14,14 H12 Z" fill="#fff" stroke="#d8d8d8" stroke-width="1"/><text x="28" y="-28" font-family="Pretendard,Pretendard GOV,sans-serif" font-size="12" font-weight="700" fill="#234178" letter-spacing="0.24">2번 정류장</text><path d="M0,0 C-8,-15 -21,-20 -21,-32 A21,21 0 1 1 21,-32 C21,-20 8,-15 0,0 Z" fill="#06A85B" filter="url(#pin-glow)"/><circle cx="0" cy="-32" r="16" fill="#fff"/><text x="0" y="-26" text-anchor="middle" font-family="Pretendard GOV,sans-serif" font-size="17" font-weight="700" fill="#1e2124">2</text></g><g transform="translate(898,839.2)"><path d="M12,-46 H78 a14,14 0 0 1 14,14 V-32 a14,14 0 0 1 -14,14 H12 Z" fill="#fff" stroke="#d8d8d8" stroke-width="1"/><text x="28" y="-28" font-family="Pretendard,Pretendard GOV,sans-serif" font-size="12" font-weight="700" fill="#234178" letter-spacing="0.24">3번 정류장</text><path d="M0,0 C-8,-15 -21,-20 -21,-32 A21,21 0 1 1 21,-32 C21,-20 8,-15 0,0 Z" fill="#06A85B" filter="url(#pin-glow)"/><circle cx="0" cy="-32" r="16" fill="#fff"/><text x="0" y="-26" text-anchor="middle" font-family="Pretendard GOV,sans-serif" font-size="17" font-weight="700" fill="#1e2124">3</text></g><g transform="translate(1023.8,1235.9)"><path d="M12,-46 H78 a14,14 0 0 1 14,14 V-32 a14,14 0 0 1 -14,14 H12 Z" fill="#fff" stroke="#d8d8d8" stroke-width="1"/><text x="28" y="-28" font-family="Pretendard,Pretendard GOV,sans-serif" font-size="12" font-weight="700" fill="#234178" letter-spacing="0.24">4번 정류장</text><path d="M0,0 C-8,-15 -21,-20 -21,-32 A21,21 0 1 1 21,-32 C21,-20 8,-15 0,0 Z" fill="#06A85B" filter="url(#pin-glow)"/><circle cx="0" cy="-32" r="16" fill="#fff"/><text x="0" y="-26" text-anchor="middle" font-family="Pretendard GOV,sans-serif" font-size="17" font-weight="700" fill="#1e2124">4</text></g><g transform="translate(970.4,1476.6)"><path d="M12,-46 H78 a14,14 0 0 1 14,14 V-32 a14,14 0 0 1 -14,14 H12 Z" fill="#fff" stroke="#d8d8d8" stroke-width="1"/><text x="28" y="-28" font-family="Pretendard,Pretendard GOV,sans-serif" font-size="12" font-weight="700" fill="#234178" letter-spacing="0.24">5번 정류장</text><path d="M0,0 C-8,-15 -21,-20 -21,-32 A21,21 0 1 1 21,-32 C21,-20 8,-15 0,0 Z" fill="#06A85B" filter="url(#pin-glow)"/><circle cx="0" cy="-32" r="16" fill="#fff"/><text x="0" y="-26" text-anchor="middle" font-family="Pretendard GOV,sans-serif" font-size="17" font-weight="700" fill="#1e2124">5</text></g><g transform="translate(1506.6,1916.7)"><path d="M12,-46 H78 a14,14 0 0 1 14,14 V-32 a14,14 0 0 1 -14,14 H12 Z" fill="#fff" stroke="#d8d8d8" stroke-width="1"/><text x="28" y="-28" font-family="Pretendard,Pretendard GOV,sans-serif" font-size="12" font-weight="700" fill="#234178" letter-spacing="0.24">6번 정류장</text><path d="M0,0 C-8,-15 -21,-20 -21,-32 A21,21 0 1 1 21,-32 C21,-20 8,-15 0,0 Z" fill="#06A85B" filter="url(#pin-glow)"/><circle cx="0" cy="-32" r="16" fill="#fff"/><text x="0" y="-26" text-anchor="middle" font-family="Pretendard GOV,sans-serif" font-size="17" font-weight="700" fill="#1e2124">6</text></g></g><g class="route-pins route-pins--bss"><g transform="translate(800,410)"><path d="M12,-46 H94 a14,14 0 0 1 14,14 V-32 a14,14 0 0 1 -14,14 H12 Z" fill="#fff" stroke="#d8d8d8" stroke-width="1"/><text x="28" y="-28" font-family="Pretendard,Pretendard GOV,sans-serif" font-size="12" font-weight="700" fill="#234178" letter-spacing="0.24">공유거점 1</text><path d="M0,0 C-8,-15 -21,-20 -21,-32 A21,21 0 1 1 21,-32 C21,-20 8,-15 0,0 Z" fill="#0c8ae5" filter="url(#pin-glow-blue)"/><circle cx="0" cy="-32" r="16" fill="#fff"/><text x="0" y="-28.5" text-anchor="middle" font-family="Pretendard GOV,sans-serif" font-size="11" font-weight="700" fill="#131416">BSS</text></g><g transform="translate(960,560)"><path d="M12,-46 H94 a14,14 0 0 1 14,14 V-32 a14,14 0 0 1 -14,14 H12 Z" fill="#fff" stroke="#d8d8d8" stroke-width="1"/><text x="28" y="-28" font-family="Pretendard,Pretendard GOV,sans-serif" font-size="12" font-weight="700" fill="#234178" letter-spacing="0.24">공유거점 2</text><path d="M0,0 C-8,-15 -21,-20 -21,-32 A21,21 0 1 1 21,-32 C21,-20 8,-15 0,0 Z" fill="#0c8ae5" filter="url(#pin-glow-blue)"/><circle cx="0" cy="-32" r="16" fill="#fff"/><text x="0" y="-28.5" text-anchor="middle" font-family="Pretendard GOV,sans-serif" font-size="11" font-weight="700" fill="#131416">BSS</text></g><g transform="translate(1110,890)"><path d="M12,-46 H94 a14,14 0 0 1 14,14 V-32 a14,14 0 0 1 -14,14 H12 Z" fill="#fff" stroke="#d8d8d8" stroke-width="1"/><text x="28" y="-28" font-family="Pretendard,Pretendard GOV,sans-serif" font-size="12" font-weight="700" fill="#234178" letter-spacing="0.24">공유거점 3</text><path d="M0,0 C-8,-15 -21,-20 -21,-32 A21,21 0 1 1 21,-32 C21,-20 8,-15 0,0 Z" fill="#0c8ae5" filter="url(#pin-glow-blue)"/><circle cx="0" cy="-32" r="16" fill="#fff"/><text x="0" y="-28.5" text-anchor="middle" font-family="Pretendard GOV,sans-serif" font-size="11" font-weight="700" fill="#131416">BSS</text></g><g transform="translate(1170,1120)"><path d="M12,-46 H94 a14,14 0 0 1 14,14 V-32 a14,14 0 0 1 -14,14 H12 Z" fill="#fff" stroke="#d8d8d8" stroke-width="1"/><text x="28" y="-28" font-family="Pretendard,Pretendard GOV,sans-serif" font-size="12" font-weight="700" fill="#234178" letter-spacing="0.24">공유거점 4</text><path d="M0,0 C-8,-15 -21,-20 -21,-32 A21,21 0 1 1 21,-32 C21,-20 8,-15 0,0 Z" fill="#0c8ae5" filter="url(#pin-glow-blue)"/><circle cx="0" cy="-32" r="16" fill="#fff"/><text x="0" y="-28.5" text-anchor="middle" font-family="Pretendard GOV,sans-serif" font-size="11" font-weight="700" fill="#131416">BSS</text></g><g transform="translate(985,1090)"><path d="M12,-46 H94 a14,14 0 0 1 14,14 V-32 a14,14 0 0 1 -14,14 H12 Z" fill="#fff" stroke="#d8d8d8" stroke-width="1"/><text x="28" y="-28" font-family="Pretendard,Pretendard GOV,sans-serif" font-size="12" font-weight="700" fill="#234178" letter-spacing="0.24">공유거점 5</text><path d="M0,0 C-8,-15 -21,-20 -21,-32 A21,21 0 1 1 21,-32 C21,-20 8,-15 0,0 Z" fill="#0c8ae5" filter="url(#pin-glow-blue)"/><circle cx="0" cy="-32" r="16" fill="#fff"/><text x="0" y="-28.5" text-anchor="middle" font-family="Pretendard GOV,sans-serif" font-size="11" font-weight="700" fill="#131416">BSS</text></g><g transform="translate(1325,1520)"><path d="M12,-46 H94 a14,14 0 0 1 14,14 V-32 a14,14 0 0 1 -14,14 H12 Z" fill="#fff" stroke="#d8d8d8" stroke-width="1"/><text x="28" y="-28" font-family="Pretendard,Pretendard GOV,sans-serif" font-size="12" font-weight="700" fill="#234178" letter-spacing="0.24">공유거점 6</text><path d="M0,0 C-8,-15 -21,-20 -21,-32 A21,21 0 1 1 21,-32 C21,-20 8,-15 0,0 Z" fill="#0c8ae5" filter="url(#pin-glow-blue)"/><circle cx="0" cy="-32" r="16" fill="#fff"/><text x="0" y="-28.5" text-anchor="middle" font-family="Pretendard GOV,sans-serif" font-size="11" font-weight="700" fill="#131416">BSS</text></g></g></svg>
+    <div id="bus-modal-backdrop" class="bus-modal-backdrop" aria-hidden="true"></div>
+    <div id="bus-modal" class="bus-modal" aria-hidden="true">
+      <div class="bus-modal__head">
+        <span class="bus-modal__title">DRT 운행정보</span>
+        <span class="bus-modal__badge"><i></i>운행중</span>
+      </div>
+      <div class="bus-modal__body">
+        <div class="bus-modal__cols">
+          <div class="bus-modal__labels">
+            <p>노선 :</p>
+            <p>정류장 :</p>
+            <p>차량 :</p>
+          </div>
+          <div class="bus-modal__values">
+            <p>광명역세권 순환</p>
+            <p><b>6</b><span> 개</span></p>
+            <p><b>2</b><span> 대</span></p>
+          </div>
+        </div>
+        <div class="bus-modal__foot">
+          <span>상세보기</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- 오토바이(공유 모빌리티) hover 카드 — BSS 위치정보 (Figma 1935:50512) -->
+    <div id="bss-card" class="bss-card" aria-hidden="true">
+      <div class="bss-card__head">
+        <span class="bss-card__title">BSS 위치정보</span>
+        <span class="bss-card__badge"><i></i>운행중</span>
+      </div>
+      <div class="bss-card__body">
+        <div class="bss-card__cols">
+          <div class="bss-card__labels">
+            <p>거점 :</p>
+            <p>주요거점 :</p>
+            <p>대여가능 :</p>
+          </div>
+          <div class="bss-card__values">
+            <p><b>6</b><span> 개</span></p>
+            <p class="bss-card__strong">광명역 BSS</p>
+            <p><b>7</b><span> 대</span></p>
+          </div>
+        </div>
+        <div class="bss-card__foot">
+          <span>상세보기</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+    <!-- 공유거점 핀별 BSS 카드 컨테이너 -->
+    <div id="bss-cards" class="bss-cards" aria-hidden="true"></div>
+
+    <!-- BSS 상세보기 → 친환경 DRT 운행정보 상세 모달 (Figma 1967:45030) -->
+    <div id="drt-modal-backdrop" class="drt-modal-backdrop" aria-hidden="true"></div>
+    <div id="drt-modal" class="drt-modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <button class="drt-modal__close" type="button" aria-label="닫기">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6 L18 18 M18 6 L6 18" stroke="#1e2124" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="drt-modal__head">
+        <h2 class="drt-modal__title">친환경 DRT 운행정보</h2>
+        <span class="drt-modal__badge"><i></i>운행중</span>
+      </div>
+      <div class="drt-modal__type"><span class="l">운행 유형</span><span class="v">광명역세권 순환 DRT</span></div>
+      <div class="drt-modal__stats">
+        <div class="drt-stat">
+          <div class="drt-stat__top">
+            <span class="drt-stat__ic"><svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M23 14.6113C25.4848 14.6115 27.4989 16.6917 27.499 19.2568C27.4989 20.9148 26.6567 22.3685 25.3906 23.1904L22.625 26.999L20.0713 22.7812C19.1101 21.9294 18.5001 20.6671 18.5 19.2568C18.5001 16.6915 20.515 14.6113 23 14.6113ZM20.1357 3C22.2689 3.00002 23.9978 4.72919 23.998 6.8623V9.9668H24.7275C25.154 9.96701 25.5 10.3128 25.5 10.7393V13.0654C25.4999 13.4465 25.2235 13.762 24.8604 13.8252C24.1335 13.5024 23.3326 13.3233 22.4912 13.3232C22.2399 13.3233 21.9922 13.3411 21.749 13.3721V9.19141C21.749 8.76491 21.403 8.41916 20.9766 8.41895H7.52246C7.09592 8.41906 6.75004 8.76485 6.75 9.19141V14.6143C6.75015 15.0407 7.09599 15.3866 7.52246 15.3867H18.0225C17.0716 16.4827 16.4922 17.9295 16.4922 19.5166C16.4923 21.2314 17.1697 22.7812 18.2607 23.9023H9.75V24.7256C9.74982 25.5537 9.07819 26.2255 8.25 26.2256C7.42188 26.2254 6.75018 25.5537 6.75 24.7256V23.8994C5.91769 23.8754 5.25 23.1955 5.25 22.3574V13.8379H3.77246C3.34606 13.8377 3.00016 13.4918 3 13.0654V10.7393C3.00004 10.3127 3.34599 9.96699 3.77246 9.9668H5.25V6.8623C5.25021 4.7294 6.97943 3.00036 9.1123 3H20.1357ZM23 16.9346C21.7576 16.9346 20.7502 17.9744 20.75 19.2568C20.75 20.5395 21.7575 21.5801 23 21.5801C24.2424 21.58 25.25 20.5395 25.25 19.2568C25.2498 17.9744 24.2423 16.9347 23 16.9346ZM8.25 17.709C7.42171 17.7091 6.75 18.4027 6.75 19.2578C6.75025 20.1127 7.42186 20.8056 8.25 20.8057C9.07814 20.8056 9.74975 20.1127 9.75 19.2578C9.75 18.4027 9.0783 17.7091 8.25 17.709ZM12.0244 5.32227C11.5969 5.32234 11.25 5.66916 11.25 6.09668C11.2501 6.52409 11.597 6.87102 12.0244 6.87109H16.4756C16.9029 6.87094 17.2489 6.52404 17.249 6.09668C17.249 5.66921 16.903 5.32242 16.4756 5.32227H12.0244Z" fill="#06A85B"/></svg></span>
+            <span class="drt-stat__lbl">운행 차량</span>
+          </div>
+          <div class="drt-stat__val"><b>23</b><span>대</span></div>
+        </div>
+        <div class="drt-stat">
+          <div class="drt-stat__top">
+            <span class="drt-stat__ic"><svg width="19" height="20" viewBox="0 0 19 20.0556" fill="none"><circle cx="9.5" cy="4.22222" r="4.22222" fill="#06A85B"/><path d="M0 16.8889C0 13.3911 2.83553 10.5556 6.33333 10.5556H12.6667C16.1645 10.5556 19 13.3911 19 16.8889V20.0556H0V16.8889Z" fill="#06A85B"/></svg></span>
+            <span class="drt-stat__lbl">오늘 이용 건수</span>
+          </div>
+          <div class="drt-stat__val"><b>1,245</b><span>건</span></div>
+        </div>
+        <div class="drt-stat">
+          <div class="drt-stat__top">
+            <span class="drt-stat__ic"><svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M24.8123 5V7.20137C24.8123 17.7976 18.8983 22.6109 11.6041 22.6109H9.5106C9.74394 19.2957 10.7764 17.2891 13.4709 14.905C14.7961 13.7328 14.6838 13.0559 14.0311 13.4444C9.53591 16.1191 7.30373 19.7337 7.20467 25.5057L7.20137 25.913H5C5 24.4127 5.12768 23.0512 5.38084 21.8052C5.12768 20.3809 5 18.4481 5 16.0068C5 9.92776 9.92776 5 16.0068 5C18.2082 5 20.4096 6.10068 24.8123 5Z" fill="#06A85B"/></svg></span>
+            <span class="drt-stat__lbl">예상 탄소저감</span>
+          </div>
+          <div class="drt-stat__val"><b>18.4</b><span>CO₂eq</span></div>
+        </div>
+        <div class="drt-stat">
+          <div class="drt-stat__top">
+            <span class="drt-stat__ic"><svg width="21" height="17" viewBox="0 0 21.3499 17.5957" fill="none"><path d="M1 12.7049L7.95499 5.36238L12.5923 9.61328L19.3845 1.47333" stroke="#06A85B" stroke-width="2" stroke-linecap="round"/><path d="M12.985 1.14246L19.7685 1.01718L20.3498 8.18831" stroke="#06A85B" stroke-width="2" stroke-linecap="round"/><line x1="1.14519" y1="16.5957" x2="20.1452" y2="16.5957" stroke="#06A85B" stroke-width="2" stroke-linecap="round"/></svg></span>
+            <span class="drt-stat__lbl">전월 대비</span>
+          </div>
+          <div class="drt-stat__val"><b>+12.3</b><span>%</span></div>
+        </div>
+      </div>
+      <div class="drt-flow">
+        <div class="drt-flow__title">운행 흐름</div>
+        <svg class="drt-flow__svg" viewBox="0 0 380 128" aria-hidden="true">
+          <defs>
+            <radialGradient id="drtHubGrad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(187 68.996) rotate(55.4915) scale(9.70824)">
+              <stop stop-color="#03A95A"/><stop offset="1" stop-color="#97E6C1"/>
+            </radialGradient>
+            <filter id="drtHubShadow" x="177" y="60" width="26" height="26" filterUnits="userSpaceOnUse">
+              <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#06A85B" flood-opacity="0.26"/>
+            </filter>
+          </defs>
+          <!-- 바깥 구간: 점선 / 허브 연결: 실선 (Figma) -->
+          <path d="M44 77.996 H102" stroke="#06A85B" stroke-linecap="round" stroke-dasharray="2 2"/>
+          <path d="M271.5 78.468 H334.5" stroke="#06A85B" stroke-linecap="round" stroke-dasharray="2 2"/>
+          <path d="M110.5 77.996 L184.5 72.496" stroke="#06A85B"/>
+          <path d="M199.5 70.996 L262.5 78.468" stroke="#06A85B"/>
+          <circle cx="39.5" cy="78.468" r="4" fill="#fff" stroke="#06A85B" stroke-width="2"/>
+          <circle cx="106" cy="78.468" r="4" fill="#fff" stroke="#06A85B" stroke-width="2"/>
+          <circle cx="267.5" cy="78.468" r="4" fill="#fff" stroke="#06A85B" stroke-width="2"/>
+          <circle cx="339.5" cy="78.468" r="4" fill="#fff" stroke="#06A85B" stroke-width="2"/>
+          <circle cx="190" cy="71.996" r="9" fill="#fff" stroke="#A9DAB4" stroke-width="2"/>
+          <circle cx="190" cy="71.996" r="5" fill="url(#drtHubGrad)" filter="url(#drtHubShadow)"/>
+          <text x="39.5" y="101" text-anchor="middle" font-size="12" fill="#1e2124">광명역</text>
+          <text x="106" y="101" text-anchor="middle" font-size="12" fill="#1e2124">역세권센터</text>
+          <text x="190" y="101" text-anchor="middle" font-size="12" fill="#1e2124">모빌리티 허브</text>
+          <text x="267.5" y="101" text-anchor="middle" font-size="12" fill="#1e2124">BSS</text>
+          <text x="339.5" y="101" text-anchor="middle" font-size="12" fill="#1e2124">광명역</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- BSS 공유거점 상세보기 → BSS 운영 거점 정보 모달 (Figma 1970:10860) -->
+    <div id="bss-detail-backdrop" class="drt-modal-backdrop" aria-hidden="true"></div>
+    <div id="bss-detail-modal" class="drt-modal drt-modal--bss" role="dialog" aria-modal="true" aria-hidden="true">
+      <button class="drt-modal__close" type="button" aria-label="닫기">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6 L18 18 M18 6 L6 18" stroke="#1e2124" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="drt-modal__head">
+        <h2 class="drt-modal__title">BSS 운영 거점 정보</h2>
+        <span class="drt-modal__badge"><i></i>운영중</span>
+      </div>
+      <div class="bss-info">
+        <div class="bss-info__row"><span class="l">거점명</span><span class="v">광명역 BSS</span></div>
+        <div class="bss-info__row"><span class="l">위치</span><span class="v">광명역세권 남측 환승 연계 구역</span></div>
+        <div class="bss-info__row"><span class="l">운영 유형</span><span class="v">이륜차 공유 거점</span></div>
+      </div>
+      <div class="drt-modal__stats">
+        <div class="drt-stat">
+          <div class="drt-stat__top">
+            <span class="drt-stat__ic"><svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M21.7344 15.9008C21.7344 15.702 21.9272 15.5603 22.1169 15.6195L24.1009 16.2396C24.6828 16.4215 25.039 16.9592 24.8938 17.5513C24.6988 18.3464 24.4198 19.3187 24.4198 19.6815" stroke="#06A85B" stroke-width="2" stroke-linecap="round"/><path d="M15.5204 4H17.2792C17.8812 4 18.4152 4.38645 18.6033 4.95828L21.5762 13.9937C22.0271 15.3642 21.7397 16.8703 20.8158 17.9785L17.7799 21.6199C17.515 21.9376 17.1228 22.1212 16.7092 22.1212H9.95312" stroke="#06A85B" stroke-width="2" stroke-linecap="round"/><path d="M13.6898 11.6668H4.07354C3.33138 11.6668 3.10334 12.6724 3.7729 12.9926L6.01209 14.0632C6.69791 14.3911 6.99455 15.208 6.67892 15.8995L4.73957 20.1486C4.31824 21.0718 4.99294 22.1214 6.00767 22.1214H13.326C14.26 22.1214 14.9297 21.2209 14.6611 20.3264L13.6275 16.8853C13.5606 16.6624 13.5505 16.4262 13.5982 16.1984L14.3719 12.5067C14.4627 12.0737 14.1322 11.6668 13.6898 11.6668Z" fill="#06A85B" stroke="#06A85B" stroke-width="1.60303" stroke-linecap="round"/><path d="M24 26C25.6569 26 27 24.6569 27 23C27 21.3431 25.6569 20 24 20C22.3431 20 21 21.3431 21 23C21 24.6569 22.3431 26 24 26Z" fill="#fff" stroke="#06A85B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.1016 4L22.5066 4" stroke="#06A85B" stroke-width="2" stroke-linecap="round"/><path d="M9.5 26C11.1569 26 12.5 24.6569 12.5 23C12.5 21.3431 11.1569 20 9.5 20C7.84315 20 6.5 21.3431 6.5 23C6.5 24.6569 7.84315 26 9.5 26Z" fill="#fff" stroke="#06A85B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="drt-stat__lbl">운영 차량</span>
+          </div>
+          <div class="drt-stat__val"><b>18</b><span>대</span></div>
+        </div>
+        <div class="drt-stat">
+          <div class="drt-stat__top">
+            <span class="drt-stat__ic"><svg width="19" height="20" viewBox="0 0 19 20.0556" fill="none"><circle cx="9.5" cy="4.22222" r="4.22222" fill="#06A85B"/><path d="M0 16.8889C0 13.3911 2.83553 10.5556 6.33333 10.5556H12.6667C16.1645 10.5556 19 13.3911 19 16.8889V20.0556H0V16.8889Z" fill="#06A85B"/></svg></span>
+            <span class="drt-stat__lbl">대여 가능</span>
+          </div>
+          <div class="drt-stat__val"><b>7</b><span>대</span></div>
+        </div>
+        <div class="drt-stat">
+          <div class="drt-stat__top">
+            <span class="drt-stat__ic drt-stat__ic--p"><span>P</span></span>
+            <span class="drt-stat__lbl">반납 가능</span>
+          </div>
+          <div class="drt-stat__val"><b>11</b><span>건</span></div>
+        </div>
+        <div class="drt-stat">
+          <div class="drt-stat__top">
+            <span class="drt-stat__ic"><svg width="21" height="17" viewBox="0 0 21.3499 17.5957" fill="none"><path d="M1 12.7049L7.95499 5.36238L12.5923 9.61328L19.3845 1.47333" stroke="#06A85B" stroke-width="2" stroke-linecap="round"/><path d="M12.985 1.14246L19.7685 1.01718L20.3498 8.18831" stroke="#06A85B" stroke-width="2" stroke-linecap="round"/><line x1="1.14519" y1="16.5957" x2="20.1452" y2="16.5957" stroke="#06A85B" stroke-width="2" stroke-linecap="round"/></svg></span>
+            <span class="drt-stat__lbl">오늘 이용 건수</span>
+          </div>
+          <div class="drt-stat__val"><b>285</b><span>건</span></div>
+        </div>
+      </div>
+      <div class="bss-usage">
+        <div class="bss-usage__title">거점 이용 현황</div>
+        <div class="bss-usage__flow">
+          <div class="bss-usage__node">
+            <span class="bss-usage__circle">
+              <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                <g clip-path="url(#bssRentClip)">
+                  <rect width="60" height="60" fill="white"/>
+                  <circle cx="30" cy="30" r="29.3" fill="#F4FAFF" stroke="#B1CEFB" stroke-width="1.4"/>
+                  <path d="M36.1406 29.9008C36.1406 29.6995 36.3327 29.5538 36.5265 29.6081L38.8554 30.2602C39.4574 30.4288 39.8251 30.9754 39.6594 31.5781C39.4422 32.3682 39.1378 33.3228 39.1378 33.6815" stroke="#044E9E" stroke-width="1.60303" stroke-linecap="round"/>
+                  <path d="M29.2057 18H31.3215C31.906 18 32.4285 18.3647 32.63 18.9134L35.8884 27.7866C36.4313 29.2653 36.0974 30.9236 35.0243 32.0768L31.6745 35.6768C31.4108 35.9602 31.0411 36.1212 30.654 36.1212H22.9922" stroke="#044E9E" stroke-width="1.60303" stroke-linecap="round"/>
+                  <path d="M27.2418 25.6668H16.3969C15.6389 25.6668 15.4257 26.706 16.1225 27.0044L18.6033 28.0672C19.3444 28.3847 19.6625 29.2628 19.2965 29.9812L17.2011 34.0947C16.7287 35.0221 17.4024 36.1214 18.4432 36.1214H26.911C27.8635 36.1214 28.5354 35.1874 28.2327 34.2844L27.1052 30.9208C27.023 30.6755 27.0106 30.4122 27.0695 30.1603L27.9204 26.5225C28.0227 26.0853 27.6908 25.6668 27.2418 25.6668Z" fill="url(#bssRentGrad)" stroke="#044E9E" stroke-width="1.60303" stroke-linecap="round"/>
+                  <path d="M22.6445 41C24.5473 41 26.0899 39.4398 26.0899 37.5151C26.0899 35.5905 24.5473 34.0303 22.6445 34.0303C20.7417 34.0303 19.1992 35.5905 19.1992 37.5151C19.1992 39.4398 20.7417 41 22.6445 41Z" fill="#D8EEFF" stroke="#044E9E" stroke-width="1.60303" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M38.3984 41C40.3012 41 41.8438 39.4398 41.8438 37.5151C41.8438 35.5905 40.3012 34.0303 38.3984 34.0303C36.4956 34.0303 34.9531 35.5905 34.9531 37.5151C34.9531 39.4398 36.4956 41 38.3984 41Z" fill="#D8EEFF" stroke="#044E9E" stroke-width="1.60303" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M34.7031 18L36.2713 18" stroke="#044E9E" stroke-width="1.60303" stroke-linecap="round"/>
+                </g>
+                <defs>
+                  <linearGradient id="bssRentGrad" x1="20.9242" y1="25.6668" x2="20.9242" y2="33.8392" gradientUnits="userSpaceOnUse"><stop stop-color="#84CAFF"/><stop offset="1" stop-color="#E7F4FE"/></linearGradient>
+                  <clipPath id="bssRentClip"><rect width="60" height="60" fill="white"/></clipPath>
+                </defs>
+              </svg>
+            </span>
+            <span class="bss-usage__lbl">대여 가능<b>7대</b></span>
+          </div>
+          <span class="bss-usage__arrow"></span>
+          <div class="bss-usage__node">
+            <span class="bss-usage__circle bss-usage__circle--bss">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+                <rect x="8.6" y="4.6" width="6.8" height="14.8" rx="0.6" fill="#EDFFF0" stroke="#228738" stroke-width="1.4"/>
+                <rect x="4.4" y="9.4" width="5.4" height="10" rx="0.6" fill="#EDFFF0" stroke="#228738" stroke-width="1.4"/>
+                <rect x="14.2" y="9.4" width="5.4" height="10" rx="0.6" fill="#EDFFF0" stroke="#228738" stroke-width="1.4"/>
+                <path d="M10.4 19.4v-2.1a1.6 1.6 0 0 1 3.2 0v2.1" stroke="#228738" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M10.6 8h2.8M10.6 11h2.8M6 13h1.6M16.4 13h1.6" stroke="#228738" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="bss-usage__lbl bss-usage__lbl--center"><b>BSS 거점</b></span>
+          </div>
+          <span class="bss-usage__arrow"></span>
+          <div class="bss-usage__node">
+            <span class="bss-usage__circle bss-usage__circle--ret"><span class="bss-usage__p">P</span></span>
+            <span class="bss-usage__lbl">반납 가능<b>11대</b></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./js/buildingInteraction.js?v=84"></script>
+    <script src="./js/mapGuide.js?v=30"></script>
+
+    <!-- 시정소식 슬라이더: 5개 소식 자동 슬라이드(3초) + 이전/다음/일시정지 -->
+    <script>
+      (function () {
+        var NEWS = [
+          '광명시, 탄소중립 실천 경제 활성화',
+          '광명시, 수요응답형 교통(DRT) 운행 노선 확대',
+          '광명시, AI 기반 스마트 안전망 강화',
+          '광명 스마트데이터포털, 개방 데이터셋 500종 돌파',
+          '광명시, 공유 자전거·스쿠터(BSS) 거점 확대'
+        ];
+        var INTERVAL = 4000;
+        function init() {
+          var sec = document.querySelector('.gm2-news');
+          if (!sec) return;
+          var lead = sec.querySelector('.gm2-news__lead');
+          var subs = sec.querySelectorAll('.gm2-news__sub');
+          var countB = sec.querySelector('.gm2-news__count b');
+          var btns = sec.querySelectorAll('.gm2-news__ctrl button');
+          var prevBtn = btns[0], nextBtn = btns[1];
+          var pauseBtn = sec.querySelector('.js-pause');
+          var n = NEWS.length, i = 0, timer = null, paused = false;
+          var pauseHTML = pauseBtn ? pauseBtn.innerHTML : '';
+          var playHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+
+          // 헤드라인 + 서브(내용)를 한 트랙으로 묶어 '함께' 가로 슬라이드
+          var ROLL = 200, first = true, track = null;
+          var subsArr = Array.prototype.slice.call(subs);
+          if (lead) {
+            var clip = document.createElement('span');
+            clip.style.cssText = 'display:inline-flex;flex:none;align-items:center;overflow:hidden;height:24px;';
+            track = document.createElement('span');
+            track.style.cssText = 'display:inline-flex;align-items:center;gap:14px;white-space:nowrap;will-change:transform;';
+            lead.parentNode.insertBefore(clip, lead);
+            track.appendChild(lead);                       // lead + subs를 같은 트랙으로 이동
+            subsArr.forEach(function (s) { track.appendChild(s); });
+            clip.appendChild(track);
+            lead.style.lineHeight = '24px';
+            track.style.transform = 'translateX(0)';
+          }
+          function setTexts() {
+            if (lead) lead.textContent = NEWS[i];
+            if (subsArr[0]) subsArr[0].textContent = '· ' + NEWS[(i + 1) % n];
+            if (subsArr[1]) subsArr[1].textContent = '· ' + NEWS[(i + 2) % n];
+            if (countB) countB.textContent = ('0' + (i + 1)).slice(-2);
+          }
+          function render() {
+            if (!track) { setTexts(); return; }
+            if (first) { first = false; setTexts(); return; }
+            track.style.transition = 'transform ' + ROLL + 'ms ease';
+            track.style.transform = 'translateX(-100%)';         // 헤드라인+내용이 함께 왼쪽으로 빠짐
+            setTimeout(function () {
+              setTexts();
+              track.style.transition = 'none';
+              track.style.transform = 'translateX(100%)';        // 오른쪽에 대기
+              void track.offsetWidth;                             // reflow 강제
+              track.style.transition = 'transform ' + ROLL + 'ms ease';
+              track.style.transform = 'translateX(0)';           // 함께 오른쪽에서 진입
+            }, ROLL);
+          }
+          function go(d) { i = (i + d + n) % n; render(); }
+          function stop() { if (timer) { clearInterval(timer); timer = null; } }
+          function start() { stop(); if (!paused) timer = setInterval(function () { go(1); }, INTERVAL); }
+
+          if (prevBtn) prevBtn.addEventListener('click', function () { go(-1); start(); });
+          if (nextBtn) nextBtn.addEventListener('click', function () { go(1); start(); });
+          if (pauseBtn) pauseBtn.addEventListener('click', function () {
+            paused = !paused;
+            if (paused) { stop(); pauseBtn.innerHTML = playHTML; pauseBtn.setAttribute('aria-label', '슬라이드 재생'); }
+            else { pauseBtn.innerHTML = pauseHTML; pauseBtn.setAttribute('aria-label', '슬라이드 일시 정지'); start(); }
+          });
+
+          render();
+          start();
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+        else init();
+      })();
+    </script>
+
+    <!-- React 앱(부모)으로 네비게이션 전달: iframe 내부 메뉴 클릭 → 부모 라우팅 -->
+    <script>
+      (function () {
+        if (window.parent === window) return; // iframe이 아니면 무시(독립 실행 시 기존 동작 유지)
+
+        // 부모(React) GNB를 사용하므로 메인 자체 헤더는 숨김
+        var ownHeader = document.querySelector('.site-header');
+        if (ownHeader) ownHeader.style.display = 'none';
+
+        // 메인 네비 href → React 페이지 매핑
+        var routeByHref = {
+          '#carbon-city': 'intro',
+          '#city-index': 'map',
+          '#data': 'dataList',
+          '#activity': 'personalCarbon',
+          '#platform': 'relatedPlatforms',
+          '#citizen': 'notice',
+          '#guide': 'admin'
+        };
+
+        function go(page) {
+          window.parent.postMessage({ type: 'gm-navigate', page: page }, '*');
+        }
+
+        // 상단 주요 메뉴
+        document.querySelectorAll('.site-nav a').forEach(function (a) {
+          var href = a.getAttribute('href');
+          var page = routeByHref[href];
+          if (!page) return;
+          a.addEventListener('click', function (e) {
+            e.preventDefault();
+            go(page);
+          });
+        });
+
+        // 계정 / 알림 버튼 → 로그인
+        document.querySelectorAll('.site-actions__user, .site-actions__alarm').forEach(function (btn) {
+          btn.addEventListener('click', function () { go('login'); });
+        });
+
+        // 마일별 데이터 바로가기 카드 → 데이터 지도 > 마일별 데이터 (해당 마일 탭 선택)
+        var mileByHref = { '#energy': 'energy', '#mobility': 'mobility', '#safety': 'safety', '#data': 'data' };
+        document.querySelectorAll('.gm2-mc').forEach(function (card) {
+          var mile = mileByHref[card.getAttribute('href')];
+          if (!mile) return;
+          card.addEventListener('click', function (e) {
+            e.preventDefault();
+            window.parent.postMessage({ type: 'gm-navigate', page: 'map', mile: mile }, '*');
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

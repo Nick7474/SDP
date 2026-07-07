@@ -1,0 +1,97 @@
+/* ─────────────────────────────────────────────────────────
+   지도 인터랙션 온보딩 가이드 (스포트라이트 코치마크)
+   - 첫 진입 1회 자동 / '?' 버튼으로 재생
+   - 대상: 버스(DRT) · 바이크(공유모빌리티) · 솔루션(4대 마일)
+   ───────────────────────────────────────────────────────── */
+.mapguide-root { position: fixed; inset: 0; z-index: 12000; font-family: 'Pretendard GOV', sans-serif; }
+
+/* 클릭 차단(가이드 중 지도 오조작 방지) */
+.mapguide-catch { position: fixed; inset: 0; z-index: 12000; cursor: default; }
+
+/* 스포트라이트: 투명 구멍 + box-shadow 로 주변 딤 */
+.mapguide-spot {
+  position: fixed; z-index: 12001; pointer-events: none; border-radius: 50%;
+  box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.58);
+  transition: opacity .2s ease;
+}
+.mapguide-spot::after {
+  content: ''; position: absolute; inset: -2px; border-radius: inherit;
+  border: 2.5px solid #256ef4; box-shadow: 0 0 14px 2px rgba(37, 110, 244, 0.6); opacity: 0;
+}
+.mapguide-spot.is-pulse::after { opacity: 1; animation: mapguidePulse 1.8s ease-out infinite; }
+@keyframes mapguidePulse {
+  0%   { box-shadow: 0 0 14px 2px rgba(37, 110, 244, 0.6), 0 0 0 0 rgba(37, 110, 244, 0.4); }
+  100% { box-shadow: 0 0 14px 2px rgba(37, 110, 244, 0.5), 0 0 0 15px rgba(37, 110, 244, 0); }
+}
+
+/* 툴팁 말풍선 (Figma 2071-23344 · 2076-41779) */
+.mapguide-tip {
+  position: fixed; z-index: 12002; width: 297px; box-sizing: border-box;
+  background: #fff; border-radius: 12px; padding: 18px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.22);
+  transition: left .28s cubic-bezier(.4,0,.2,1), top .28s cubic-bezier(.4,0,.2,1), opacity .2s ease;
+}
+.mapguide-tip__badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #d8e5fd; color: #044e9e; font-size: 14px; font-weight: 700;
+  line-height: 1.5; padding: 2px 8px; border-radius: 4px; margin-bottom: 13px;
+}
+.mapguide-tip__badge .num { font-weight: 700; }
+.mapguide-tip__title { margin: 0 0 8px; font-size: 16px; font-weight: 700; color: #000; line-height: 1.5; }
+.mapguide-tip__desc  { margin: 0; font-size: 14px; font-weight: 400; color: #464c53; line-height: 1.5; }
+
+/* 하단: 점(좌) · 버튼(가운데) · 건너뛰기(우) */
+.mapguide-tip__foot { position: relative; height: 32px; margin-top: 30px; }
+.mapguide-dots { position: absolute; left: 0; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 6px; }
+.mapguide-dots i {
+  width: 7px; height: 7px; border-radius: 999px; background: #cdd1d5; display: block;
+  transition: width .25s ease, background .25s ease;
+}
+.mapguide-dots i.on { width: 18px; background: #044e9e; }
+
+.mapguide-actions { position: absolute; left: 50%; top: 0; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; }
+.mapguide-btn {
+  font-family: inherit; font-size: 14px; font-weight: 600; line-height: 1.5; height: 32px;
+  min-width: 56px; padding: 0 8px; border-radius: 8px; border: 1px solid #044e9e; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
+  transition: background .15s ease, color .15s ease;
+}
+.mapguide-btn--line { background: #fff; color: #044e9e; }
+.mapguide-btn--line:hover { background: #f4f7fb; }
+.mapguide-btn--solid { background: #044e9e; color: #fff; }
+.mapguide-btn--solid:hover { background: #033d7d; }
+
+.mapguide-skip {
+  position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+  background: transparent; border: none; cursor: pointer;
+  font-family: inherit; font-size: 12px; font-weight: 400; color: #464c53; padding: 0;
+}
+.mapguide-skip:hover { color: #1e2124; }
+
+/* 지도 사용법 재생 버튼 (상시) — 파란 원 + 지도 아이콘 (Figma 2096-34638) */
+.mapguide-help {
+  position: fixed; right: 22px; bottom: 78px; z-index: 11000; /* TOP 버튼(bottom:22) 위 12px 간격 */
+  width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer; padding: 0;
+  background: #0c8ae5;
+  box-shadow: 0 4px 10px rgba(12, 138, 229, 0.35);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .15s ease, background .15s ease;
+}
+.mapguide-help svg { width: 24px; height: 24px; display: block; }
+.mapguide-help:hover { background: #0b78cb; transform: translateY(-2px); }
+.mapguide-help__tip {
+  position: fixed; right: 22px; bottom: 130px; z-index: 11000; /* 지도 버튼(bottom:78) 위 */
+  background: #131416; color: #fff; font-size: 12px; font-weight: 600;
+  padding: 6px 10px; border-radius: 8px; white-space: nowrap; opacity: 0; pointer-events: none;
+  transform: translateY(4px); transition: opacity .15s ease, transform .15s ease;
+}
+.mapguide-help:hover + .mapguide-help__tip { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 640px) {
+  .mapguide-tip { width: calc(100vw - 28px); }
+  .mapguide-help { right: 16px; bottom: 72px; } /* TOP 버튼(bottom:16) 위 12px */
+}
+@media (prefers-reduced-motion: reduce) {
+  .mapguide-spot.is-pulse::after { animation: none; }
+  .mapguide-spot, .mapguide-tip { transition: none; }
+}

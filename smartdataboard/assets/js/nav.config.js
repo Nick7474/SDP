@@ -62,3 +62,7 @@ window.GMSB_BRAND = {
   user: '홍길동',
   alerts: 1
 };
+
+/* 스마트데이터포털 배포 URL — 계정 메뉴 "포털 관리자 콘솔" 링크 대상.
+   로컬: http://localhost:3000 / 배포 시 Vercel 주소로 교체 (예: https://xxx.vercel.app) */
+window.GMSB_PORTAL_URL = 'http://localhost:3000';

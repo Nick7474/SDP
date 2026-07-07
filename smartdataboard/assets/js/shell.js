@@ -28,6 +28,8 @@
   var NAV   = window.GMSB_NAV   || [];
   var BRAND = window.GMSB_BRAND || {};
   var PAGE  = window.GMSB_PAGE  || { active: 'home' };
+  // 스마트데이터포털 배포 URL (배포 확정 시 nav.config.js의 GMSB_PORTAL_URL 값만 교체)
+  var PORTAL_URL = (window.GMSB_PORTAL_URL || 'http://localhost:3000').replace(/\/$/, '');
 
   function url(href) {
     if (!href || href === '#' || /^(https?:|mailto:|#)/.test(href)) return href || '#';
@@ -112,6 +114,10 @@
               '</a>' +
               '<a class="tb__drop-item" href="' + url('pages/system-prefs.html') + '" role="menuitem">' +
                 '<i data-lucide="settings"></i>시스템 설정' +
+              '</a>' +
+              '<hr class="tb__drop-sep">' +
+              '<a class="tb__drop-item" href="' + PORTAL_URL + '/?page=login" target="_blank" rel="noopener" role="menuitem">' +
+                '<i data-lucide="external-link"></i>포털 관리자 콘솔' +
               '</a>' +
               '<hr class="tb__drop-sep">' +
               '<button class="tb__drop-item tb__drop-item--out" id="gmsb-logout" type="button" role="menuitem">' +

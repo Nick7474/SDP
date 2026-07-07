@@ -1,0 +1,1 @@
+import React from 'react'; import { renderToString } from 'react-dom/server'; import PersonalCarbon from './src/components/PersonalCarbon.tsx'; try { console.log(renderToString(<PersonalCarbon />)); } catch (e) { console.error('RENDER_ERROR:', e); }
